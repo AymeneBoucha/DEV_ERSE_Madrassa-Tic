@@ -63,7 +63,7 @@ export default {
     methods: {
     async login() {
       try {
-          const res = await axios.post('http://localhost:3000/user/login',this.object)
+          const res = await axios.post('http://localhost:8080/api/auth/signin',this.object)
           console.log(res)
           alert('Logged in !');
           localStorage.setItem('token',res.data.token)
@@ -76,6 +76,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .infos{
   border-radius: 20px;

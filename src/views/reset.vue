@@ -10,17 +10,17 @@
                  <form @submit.prevent="handleSubmit">
                   <v-text-field  class="text-center mt-10"
                     label="Nouveau Mot de passe"
-                    v-model="password"
+                    v-model="newpassword" 
                     required
-                   type="passeword"
+                   type="password"
                    prepend-icon="lock"
                    color="blue"
                   ></v-text-field>
                   <v-text-field  class="text-center mt-1"
                     label="Confirmer Mot de passe"
-                    v-model="password_confirm"
+                    v-model="confirmpassword"
                     required
-                   type="passeword"
+                   type="password"
                    prepend-icon="lock"
                    color="blue"
                   ></v-text-field>
@@ -28,7 +28,11 @@
                 </v-card-text>
                 </v-col>
           </v-row>
-          <v-btn  class="envoie" color="#0E84D9">Envoyer</v-btn>
+          <v-card-actions>
+                 <v-btn  class="envoie" color="#0E84D9" @click="handleSubmit()">
+                       Envoyer
+                    </v-btn>
+          </v-card-actions>
         </div>
    </v-app>
 </template>
@@ -36,24 +40,23 @@
 
 <script>
  import axios from "axios"
-
  export default {
      name: 'reset',
      data() {
          return{
-         password: '',
-         password_confirm: ''
+         newpassword: '',
+         confirmpassword: ''
      }
      },
      methods : {
         async handleSubmit (){
-            const response= await axios.post('reset', {
-                password: this.password,
-                password_confirm:this.password_confirm,
+            const response= await axios.put(`http://localhost:8080/api/auth/resetPassword?token=${this.$route.params.token}`, {
+                newpassword: this.newpassword,
+                confirmpassword:this.confirmpassword,
                 token: this.$route.params.token
             } );
-
             console.log (response);
+            alert('password is changed !');
             this.$router.push('/');
         }
      }

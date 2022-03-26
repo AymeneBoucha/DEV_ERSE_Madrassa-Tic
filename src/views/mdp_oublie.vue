@@ -12,6 +12,7 @@
                     label="Adresse email"
                     v-model="email"
                     required
+                    :rules="[(v) => !!v || 'veuillez saisir votre adresse email']"
                    type="email"
                    prepend-icon="email"
                    color="blue"
@@ -21,8 +22,12 @@
                  </v-card-text>
                 </v-col>
           </v-row>
-          <v-btn  class="envoie" color="#0E84D9"> Envoyer</v-btn>
-          <v-btn  href="/" class="annuler" color="#0E84D9"> Annuler </v-btn>
+          <v-card-actions>
+                 <v-btn  class="envoie" color="#0E84D9" @click="handleSubmit()">
+                       Envoyer
+                    </v-btn>
+              <v-btn  href="/" class="annuler" color="#0E84D9"> Annuler </v-btn>
+          </v-card-actions>
         </div>
    </v-app>
 </template>
@@ -39,12 +44,19 @@
      }
      },
      methods : {
+       
         async handleSubmit (){
-            const response= await axios.post('mdp_oublie', {
+          try {
+            const response= await axios.put('http://localhost:8080/api/auth/forgotPassword', {
                 email: this.email
             } );
 
             console.log (response);
+            alert('email has been sent, check your email');
+          }catch(e) {
+          alert('Adresse incorrect');
+          //router.push({ name: 'connexion' });
+      }
         }
      }
  }
