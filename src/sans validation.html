@@ -260,3 +260,326 @@ border-radius: 20px;
 }
 </style>
 }
+
+<!--................................................-->
+<template>
+  <v-app elevation="104">
+   <v-app-bar app color="#C5CFD6"> 
+     <v-toolbar color="#C5CFD6">
+   <v-spacer />
+   <div id="title">
+   <v-toolbar-title>
+     MADRASA-TIC
+   </v-toolbar-title>
+   </div>
+   <v-spacer />
+ </v-toolbar>
+   </v-app-bar>
+   <img src="@/assets/singup.png"/>
+   <v-container >
+     <v-row  >
+       <v-col >
+         <v-card  class="elevation-6 mt-10" color="#C5CFD6" >
+           <v-window v-model="step">
+             <v-window-item :value="1">
+               <v-row>
+                 <v-col >
+                    <v-card-text>
+                     <h1 class="text-center"  >
+                       Créer un compte</h1>
+                   </v-card-text>
+                 </v-col>
+               </v-row>
+              
+               <v-row align="center" justify="center">
+                 <v-col cols="10" sm="11">
+                   <v-form @submit.prevent="submitForm">
+                         <v-text-field
+                             class="form-control"
+                             v-model.trim="$v.user.$model" :class="{'is-invalid':$v.user.$error, 'is-valid':!$v.user.$invalid}" 
+                             label="Nom d'utilisateur *"
+                             name="user"
+                             prepend-icon="person"
+                             type="text"
+                             color="blue"
+                          > <div class="valid-feedback"> Votre Nom d'utilisateur est valide!</div>
+                          <div class="invalide-feedback">
+                            <span v-if="!$v.user.required">Nom d'utilisateur est obligatoire.</span>
+                            <span v-if="!$v.user.isUnique">Nom d'utilisateur déja pris.</span>
+                          </div>
+                         </v-text-field>
+                     
+                      <v-text-field 
+                             label="Adresse email *"
+                             name="email"
+                             class="form-control"
+                             v-model.trim="$v.email.$model" :class="{'is-invalid':$v.email.$error, 'is-valid':!$v.email.$invalid}" 
+                             prepend-icon="email"
+                             type="email"
+                             color="blue"
+                    ><div class="valid-feedback">Emailest valide!</div>
+                          <div class="invalide-feedback">
+                            <span v-if="!$v.email.required">Email est obligatoire.</span>
+                            <span v-if="!$v.email.isUnique">Email déja pris.</span>
+                          </div>
+                         </v-text-field>
+                    <v-text-field 
+                             id="phone"
+                             label="Numéro Téléphone*"
+                             name="phone"
+                             class="form-control"
+                             v-model.trim="$v.phone.$model" :class="{'is-invalid':$v.phone.$error, 'is-valid':!$v.phone.$invalid}" 
+                             type="number"
+                             prepend-icon="phone"
+                             color="blue"
+                   ><div class="valid-feedback">Numéro Tel est valide!</div>
+                          <div class="invalide-feedback">
+                            <span v-if="!$v.phone.required">Numéro Tel est obligatoire.</span>
+                            <span v-if="!$v.phone.minLength">{{$v.password.$params.minLength.min}} invalide Numéro Tel.</span>
+                          </div>
+                         </v-text-field>
+                    <v-text-field 
+                             label="Date de naissance *"
+                             name="Date de naissance"
+                             prepend-icon="event"
+                             type="Date"
+                             color="blue"
+                    />
+                     <v-text-field 
+                             id="password"
+                             label="Mot de passe *"
+                             name="password"
+                              class="form-control"
+                             v-model.trim="$v.password.$model" :class="{'is-invalid':$v.password.$error, 'is-valid':!$v.password.$invalid}" 
+                             prepend-icon="lock"
+                              type="password"
+                             color="blue"
+                     ><div class="valid-feedback">Mot passe est valide!</div>
+                          <div class="invalide-feedback">
+                            <span v-if="!$v.password.required">Mot passe est obligatoire.</span>
+                            <span v-if="!$v.password.minLength">{{$v.password.$params.minLength.min}} caractéres minimum.</span>
+                          </div>
+                         </v-text-field>
+                     <div class="form-group form-check">
+                       <input type="checkbox" id="showpassword" class="form-check-input" @click="toggleShowPassword" v-model="showpassword">
+                     </div>
+                     <v-text-field 
+                             id="password"
+                             label="Confirmer mot de passe *"
+                             name="repeatpassword"
+                             class="form-control"
+                             v-model.trim="$v.repeatpassword.$model" :class="{'is-invalid':$v.repeatpassword.$error, 'is-valid':(password !='')? !$v.repeatpassword.$invalid: ''}"
+                             prepend-icon="lock"
+                             type="password"
+                             color="blue"
+                      >
+                      <div class="valid-feedback">Mot passe est identique!</div>
+                          <div class="invalide-feedback">
+                            <span v-if="!$v.repeatpassword.sameAsPassword">Mot passe doit etre identique!</span>
+                          </div>
+                         </v-text-field>
+                   </v-form>
+                 </v-col>
+               </v-row>
+             
+                 <div ><p>* Requis</p></div>
+                 <v-card-actions >
+                   <v-btn id="log" class="S'inscrire" color="blue" @click="login()">
+                     S'inscrire
+                   </v-btn>
+              </v-card-actions>
+               <div>
+                 <p class="text-center">Vous avez déja un compte ?</p>
+               </div>
+               <div class="text-center">
+                 <v-btn id="authe" color="#C5CFD6" @click="step++"
+                   >S'authentifier !</v-btn
+                 >
+               </div>
+              
+             </v-window-item>
+           </v-window>
+         </v-card>
+       </v-col> 
+     </v-row>
+   </v-container>  
+  </v-app>
+   
+ </template>
+ <script>
+ export default {
+   name: 'App',
+   data () {
+     return {
+       //variable utilisée
+       user:'',
+       email:'',
+       phone:'',
+       password:'',
+       repeatpassword:'',
+     }
+   },
+   validations:{
+     user:{
+       required,
+       isUnique (value){
+         if (value === '') return true
+         return new Promise((resolve) => {
+           setTimeout(()=>{
+             resolve (typeof value === 'string' && value.length % 2 !==0)
+ 
+           }, 350+ Math.random() * 300)
+         })
+       }
+     },
+     email:{
+       required,
+       email,
+       isUnique (value){
+         
+         var email_regex = RegExp(
+     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+   )
+         return new Promise((resolve)=>{
+           setTimeout(()=>{
+             resolve (email_regex.test(value))
+ 
+           }, 350+ Math.random() * 300)
+         })
+       }
+       
+     },
+     password:{
+       required,
+       minLength: minLength(6) 
+     },
+     repeatpassword:{
+       sameAsPassword: sameAs('password')
+     }
+   },
+   phone:{
+     required,
+     minLength: minLength(10)
+   },
+   methods: {
+     toggleShowPassword(){
+       var show = document.getElementById('password')
+       if(this.showpassword== false){
+         this.showpassword=true
+         show.type ="text"
+ 
+       } else{
+         this.showpassword=false
+         show.type ="password"
+       }
+     }
+   ,
+   SubmitForm (){
+     this.$v.$touch()
+     if(this.$v.$invalid){
+       this.Submitstatus ="Fail"
+     } else {
+       this.Submitstatus = "success"
+     }
+   }
+ }
+ }
+ </script>
+ <style scoped>
+   @import url("https://fonts.googleapis.com/css2?family=Creepster&display=swap");
+   #title {
+     font-family: "Roboto", normal;
+     font-weight: Bold;
+     font-size: 200px;
+     line-height: 58.59%;
+     color: #0084fe;
+     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+   }
+   img {
+     height: 450px;
+     width: 500px;
+     position: relative;
+     left: 4cm;
+     top: 5cm;
+     padding: 12px 20px;
+   }
+   h1 {
+     color: white;
+     text-align: center;
+     font-size: 25px;
+   }
+   #log {
+     background-color: #0E84D9;
+     text-align: center;
+     width: 60%;
+     left:2cm;
+     padding: 12px 20px;
+     position:relative;
+     color:white;
+     border: 1px solid #238DEF;
+     border-radius: 20px;
+     font-size: 20px;
+     
+   }
+   #authe {
+     text-align: center;
+     width: 60%;
+     padding: 12px 20px;
+     position:relative;
+     color:#0E84D9;
+     border: 1px solid #238DEF;
+     font-size: 20px;
+   }
+   p {
+     color: white;
+     font-style: bold;
+     font-weight: 400;
+     font-size: 20px;
+     line-height: 30px;
+   }
+   
+   .v-card {
+     border-radius: 20px;
+     background-color: #c5cfd6;
+     padding: 5px;
+     position: absolute;
+     top: 50px;
+     right: 3.5cm;
+     width: 450px;
+     height: 688px;
+   }
+   .inscription {
+     text-align: center;
+     width: 50%;
+     left: 2.4cm;
+     padding: 12px 20px;
+     position: relative;
+     background-color: #238def;
+     color: white;
+     border: 1px solid #238def;
+     border-radius: 20px;
+     font-size: 20px;
+   }
+   /*.v-text-field{
+   background: #EDF2F4;
+   border: 3px solid #8D99AE;
+   box-sizing: border-box;
+   height: 65px;
+   box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.25);
+   border-radius: 20px;
+   }*/
+   .mdp {
+     color: #0e84d9;
+     font-size: 16px;
+   }
+   .compte {
+     font-size: 16px;
+   }
+   .v-application .rounded-bl-xl {
+     border-bottom-left-radius: 300px !important;
+   }
+   .v-application .rounded-br-xl {
+     border-bottom-right-radius: 300px !important;
+   }
+   </style>
+   }
