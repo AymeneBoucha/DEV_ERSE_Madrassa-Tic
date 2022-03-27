@@ -1,0 +1,262 @@
+<template>
+  <v-app elevation="104">
+    <v-app-bar app color="#C5CFD6">
+      <v-toolbar color="#C5CFD6">
+        <v-spacer /> 
+        <div id="title">
+          <v-toolbar-title> MADRASA-TIC </v-toolbar-title>
+        </div>
+        <v-spacer />
+      </v-toolbar>
+    </v-app-bar>
+    <img src="@/assets/singup.png" />
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-card class="elevation-6 mt-10" color="#C5CFD6">
+            <v-window v-model="step">
+              <v-window-item :value="1">
+                <v-row>
+                  <v-col>
+                    <v-card-text>
+                      <h1 class="text-center">Créer un compte</h1>
+                    </v-card-text>
+                  </v-col>
+                </v-row>
+
+                <v-row align="center" justify="center">
+                  <v-col cols="10" sm="11">
+                    <v-form v-on:submit.prevent="submit">
+              
+                      <v-text-field
+                        label="Nom d'utilisateur *"
+                        v-model.trim="user"
+                        prepend-icon="person"
+                        type="text"
+                        color="blue"
+                      />
+
+                      <v-text-field
+                        label="Adresse email *"
+                        v-model.trim="email"
+                        prepend-icon="email"
+                        type="email"
+                        color="blue"
+                      />
+                      <v-text-field
+                        id="phone"
+                        label="Numéro Téléphone*"
+                        v-model.trim="phone"
+                        type="number"
+                        prepend-icon="phone"
+                        color="blue"
+                      />
+                      <v-text-field
+                        label="Date de naissance *"
+                        v-model.trim="birthdate"
+                        prepend-icon="event"
+                        type="Date"
+                        color="blue"
+              
+                      />
+                      <v-text-field
+                        id="password"
+                        label="Mot de passe *"
+                        v-model.trim="password"
+                        prepend-icon="lock"
+                        type="password"
+                        color="blue"
+                      />
+                      <v-text-field
+                        id="password"
+                        label="Confirmer mot de passe *"
+                        v-model.trim="password_confirm"
+                        prepend-icon="lock"
+                        type="password"
+                        color="blue"
+                      />
+                    </v-form>
+                  </v-col>
+                </v-row>
+
+                <div><p>* Requis</p></div>
+                <!--<div id="log" class="inscription text-center">
+                  <button >S'inscrire</button>
+                </div>-->
+                <v-card-actions >
+                    <v-btn id="log" class="S'inscrire" color="blue" @click="login()">
+                      S'inscrire
+                    </v-btn>
+               </v-card-actions>
+                <div>
+                  <p class="text-center">Vous avez déja un compte ?</p>
+                </div>
+                <div class="text-center">
+                  <v-btn id="authe" color="#C5CFD6" @click="step++"
+                    >S'authentifier !</v-btn
+                  >
+                </div>
+              </v-window-item>
+            </v-window>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-app>
+</template>
+<script>
+//import axios from 'axios'
+import {required} from 'vuelidate/lib/validators'
+export default {
+  name: "App",
+  data: function() {
+      return{
+      //variable utilisée
+      user:'',
+      email:'',
+      phone:'',
+      birthdate:'',
+      password:'',
+      password_confirm:''
+      }
+    },
+    validation: {
+      user: { required },
+      email:{ required },
+      phone: { required },
+      birthdate: { required },
+      password: {required},
+      password_confirm: { required },
+    },
+
+    methods:{
+      submit: function(){
+        this.$v.$touch();
+        if (this.$v.$pendding || this.$v.error) return;
+
+        alert('Data Submit');
+      }
+    }
+  }
+  /*methods: {
+   handleSubmit() 
+      const data ={
+        user: this.user,
+        email: this.email,
+        phone: this.phone,
+        birthdate: this.birthdate,
+        password: this.password,
+        password_confirm: this.password_confirm,
+      };
+      //request
+       axios.post('App',data)
+       .then(
+          res => { 
+            console.log(response);  
+       }
+       ).catch((err) => {
+         console.log(err)
+       });
+        
+    }
+  }*/
+
+</script>
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Creepster&display=swap");
+#title {
+  font-family: "Roboto", normal;
+  font-weight: Bold;
+  font-size: 200px;
+  line-height: 58.59%;
+  color: #0084fe;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+img {
+  height: 450px;
+  width: 500px;
+  position: relative;
+  left: 4cm;
+  top: 5cm;
+  padding: 12px 20px;
+}
+h1 {
+  color: white;
+  text-align: center;
+  font-size: 25px;
+}
+#log {
+  background-color: #0E84D9;
+  text-align: center;
+  width: 60%;
+  left:2cm;
+  padding: 12px 20px;
+  position:relative;
+  color:white;
+  border: 1px solid #238DEF;
+  border-radius: 20px;
+  font-size: 20px;
+  
+}
+#authe {
+  text-align: center;
+  width: 60%;
+  padding: 12px 20px;
+  position:relative;
+  color:#0E84D9;
+  border: 1px solid #238DEF;
+  font-size: 20px;
+}
+p {
+  color: white;
+  font-style: bold;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.v-card {
+  border-radius: 20px;
+  background-color: #c5cfd6;
+  padding: 5px;
+  position: absolute;
+  top: 50px;
+  right: 3.5cm;
+  width: 450px;
+  height: 688px;
+}
+.inscription {
+  text-align: center;
+  width: 50%;
+  left: 2.4cm;
+  padding: 12px 20px;
+  position: relative;
+  background-color: #238def;
+  color: white;
+  border: 1px solid #238def;
+  border-radius: 20px;
+  font-size: 20px;
+}
+/*.v-text-field{
+background: #EDF2F4;
+border: 3px solid #8D99AE;
+box-sizing: border-box;
+height: 65px;
+box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.25);
+border-radius: 20px;
+}*/
+.mdp {
+  color: #0e84d9;
+  font-size: 16px;
+}
+.compte {
+  font-size: 16px;
+}
+.v-application .rounded-bl-xl {
+  border-bottom-left-radius: 300px !important;
+}
+.v-application .rounded-br-xl {
+  border-bottom-right-radius: 300px !important;
+}
+</style>
+}
