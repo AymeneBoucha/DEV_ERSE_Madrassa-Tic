@@ -63,18 +63,32 @@
                     <v-col>
                         <v-text-field class="text-center"
                             v-model="object.currentpassword"
-                            type="old_password"
-                            counter=20
+                           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            
+                            :type="show1 ? 'text' : 'password'"
+                            hint="au moins 6 charactère"
+                            counter
+                            @click:append="show1 = !show1"
+                            prepend-icon="lock"
                           ></v-text-field>
                           <v-text-field class="text-center"
                             v-model="object.newpassword"
-                            type="text"
-                            counter=20
+                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="show1 ? 'text' : 'password'"
+                            hint="au moins 6 charactère"
+                            counter
+                            @click:append="show1 = !show1"
+                            prepend-icon="lock"
                           ></v-text-field>
                           <v-text-field class="text-center"
                             v-model="object.confirmpassword"
-                            type="text"
-                            counter=20
+                            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            
+                            :type="show1 ? 'text' : 'password'"
+                            hint="au moins 6 charactère"
+                            counter
+                            @click:append="show1 = !show1"
+                            prepend-icon="lock"
                           ></v-text-field>
                     </v-col>
                   </v-row>
@@ -94,7 +108,6 @@
         <div class="sidenav">
           <div class="pagePrincipale"><h2>Page prinicpale</h2></div>
           <div class="alerte"><h2>Signaler alerte</h2></div>
-          <div class="annonce"><h2>Ecrire annonce</h2></div>
           <div class="propos"><h2>A propos de site</h2></div>
           <div class="profile"><h2>Houssam</h2></div>
         </div>
@@ -112,6 +125,7 @@ export default {
   data() {   
     return {
       step: 1,
+        show1: false,
       object: {
         username: "",
           usernameRules: [ 
@@ -299,7 +313,7 @@ img {
 .propos {
   color: white;
   position: relative;
-  top: 180px;
+  top: 150px;
   text-align: left;
   left: 20%;
 }
