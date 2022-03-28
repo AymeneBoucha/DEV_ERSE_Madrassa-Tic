@@ -70,7 +70,7 @@ export default {
           console.log(res)
           alert('Logged in !');
           localStorage.setItem('token',res.data.token)
-          router.push({ name: 'acceuil' });
+          router.push({ name: 'user' });
       } catch(e) {
           alert('Adresse ou mot de passe incorrect');
           router.push({ name: 'connexion' });

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import connexion from '../views/connexion.vue'
-import accueil from '../views/accueil.vue'
+import inscription from '../views/inscription.vue'
 import mdp_oublie from '../views/mdp_oublie.vue'
 import reset from '../views/reset.vue'
 import user from '../views/user.vue'
@@ -16,9 +16,9 @@ const routes = [
     component: connexion
   },
   {
-    path: '/accueil',
-    name: 'accueil',
-    component: accueil
+    path: '/inscription',
+    name: 'inscription',
+    component: inscription
   },
   {
     path: '/mdp_oublie',
