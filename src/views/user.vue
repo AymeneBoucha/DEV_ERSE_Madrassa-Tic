@@ -37,7 +37,7 @@
                     counter=9
                   ></v-text-field>
                   <v-text-field class="text-center mt-0"
-                    v-model="object.date"
+                    v-model="object.birthDay"
                     label="date de naissance"
                     type="date"
                     prepend-icon="event"
@@ -62,18 +62,18 @@
                     </v-col>
                     <v-col>
                         <v-text-field class="text-center"
-                            v-model="object.password"
+                            v-model="object.currentpassword"
                             type="old_password"
                             counter=20
                           ></v-text-field>
                           <v-text-field class="text-center"
                             v-model="object.newpassword"
-                            type="new_password"
+                            type="text"
                             counter=20
                           ></v-text-field>
                           <v-text-field class="text-center"
                             v-model="object.confirmpassword"
-                            type="new_password"
+                            type="text"
                             counter=20
                           ></v-text-field>
                     </v-col>
@@ -113,24 +113,24 @@ export default {
     return {
       step: 1,
       object: {
-        name: "example name",
-          nameRules: [ 
+        username: "",
+          usernameRules: [ 
               v => ( v && v.length >= 3 ) || "Le nom doit être plus de 3 caracteres",
               v => ( v && v.length <= 20 ) || "Le nom doit être moins de 20 caracteres",
           ],
-        phone: "",
-          phoneRules: [ 
+        phoneTel: "",
+          phoneTelRules: [ 
               v => ( v && v.length == 9 ) || "Le numéro doit être sur 9 caracteres",
           ],
-        date: "",
-        password: "",
-        new_password: "",
-          new_passwordRules: [ 
+        birthDay: "",
+        currentpassword: "",
+        newpassword: "",
+          newpasswordRules: [ 
               v => ( v && v.length >= 6 ) || "Le mot de passe doit être plus de 6 caracteres",
               v => ( v && v.length <= 20 ) || "Le mot de passe doit être moins de 20 caracteres",
           ],
-        new_password_again: "",
-          new_password_againRules: [ 
+        confirmpassword: "",
+          confirmpasswordRules: [ 
               v => ( v && v.length >= 6 ) || "Le mot de passe doit être plus de 6 caracteres",
               v => ( v && v.length <= 20 ) || "Le mot de passe doit être moins de 20 caracteres",
           ],
@@ -139,19 +139,19 @@ export default {
   },
   methods: {
     async modifier() {
-      try {
-        const res = await axios.post(
-          "http://localhost:3000/api/auth/signin",
-          this.object
-        );
-        console.log(res);
-        alert("Logged in !");
-        localStorage.setItem("token", res.data.token);
-        router.push({ name: "acceuil" });
-      } catch (e) {
-        alert("Informations incorrect");
-        router.push({ name: "connexion" });
-      }
+    axios.put('http://localhost:8080/api/auth/updateUser',this.object)
+            .then(
+                res => {
+                    console.log(res)
+                    alert('Vous avez modifier votre profil');
+                    router.push('/user');
+                }
+            ).catch (
+                err => {
+                    console.log(err)
+                    alert('Veillez remplir tout les champs correctement.');
+                }
+            )
     },
   },
 };

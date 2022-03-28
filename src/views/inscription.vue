@@ -116,7 +116,7 @@ import axios from "axios"
         rules: {
           required: value => !!value || 'Required.',
           min1: v =>  v.length == 9 || '9 chiffres',
-          min: v => v.length >= 6 || 'Min 8 characters',
+          min: v => v.length >= 6 || 'Min 6 characters',
           emailMatch: () => (`The email and password you entered don't match`),
         },
       }
@@ -149,7 +149,7 @@ import axios from "axios"
                     alert('Vous vous etes inscrit , Veuillez verfiez votre email pour pouvoir vous authentifier ');
                     this.$router.push('/');
                 }
-            ).cath (
+            ).catch (
                 err => {
                     console.log(err)
                     alert('Veillez remplir tout les champs correctement.');

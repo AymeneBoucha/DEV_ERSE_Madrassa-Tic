@@ -10,17 +10,28 @@
                  <form @submit.prevent="handleSubmit">
                   <v-text-field  class="text-center mt-10"
                     label="Nouveau Mot de passe"
+                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            :rules="[rules.required, rules.min]"
+                            :type="show1 ? 'text' : 'password'"
+                            hint="au moins 6 charactère"
+                            counter
+                            @click:append="show1 = !show1"
                     v-model="newpassword" 
                     required
-                   type="password"
                    prepend-icon="lock"
                    color="blue"
                   ></v-text-field>
                   <v-text-field  class="text-center mt-1"
                     label="Confirmer Mot de passe"
                     v-model="confirmpassword"
+                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                            :rules="[rules.required, rules.min]"
+                            :type="show1 ? 'text' : 'password'"
+                            hint="au moins 6 charactère"
+                            counter
+                            @click:append="show1 = !show1"
+     
                     required
-                   type="password"
                    prepend-icon="lock"
                    color="blue"
                   ></v-text-field>
@@ -44,8 +55,13 @@
      name: 'reset',
      data() {
          return{
+               show1: false,
          newpassword: '',
-         confirmpassword: ''
+         confirmpassword: '',
+         rules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 6 || 'Min 6 characters',
+        },
      }
      },
      methods : {
@@ -60,7 +76,7 @@
             alert('password is changed !');
             this.$router.push('/');
         }catch(e) {
-          alert('Veuillez entrer le meme mot de passe');
+          alert('Veuillez remplir les champs correctement');
           //router.push({ name: 'connexion' });
         }
         }

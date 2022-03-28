@@ -26,6 +26,7 @@
                    required
                    :rules="[(v) => !!v || 'veuillez saisir votre mot de passe']"
                    prepend-icon="lock"
+                   counter
                   ></v-text-field>
                   <p>{{ email }}{{ password }}</p>
                  </v-form>
@@ -37,7 +38,7 @@
                </v-card-actions>
                  <div class="text-center mt-15">
                  <p class="compte white--text">Vous n'avez pas de compte?</p> 
-                   <h3 class="inscription"><a href="/accueil">Inscrivez-vous!</a></h3>
+                   <h3 class="inscription"><a href="/inscription">Inscrivez-vous!</a></h3>
                 </div>
                </v-card-text>
              </v-col>
@@ -51,6 +52,7 @@
 
 import axios from "axios"
 import router from '../router/index'
+import setAuthHeader from '@/utils/setAuthHeader'
 //import Footer from '../components/Footer.vue'
 //import Navbar from '../components/Navbar.vue'
 export default {
@@ -67,9 +69,11 @@ export default {
     async login() {
       try {
           const res = await axios.post('http://localhost:8080/api/auth/signin',this.object)
+          localStorage.se 
           console.log(res)
           alert('Logged in !');
-          localStorage.setItem('token',res.data.token)
+          localStorage.setItem('xaccesstoken',res.data.accessToken);
+          setAuthHeader(res.data.accessToken);
           router.push({ name: 'user' });
       } catch(e) {
           alert('Adresse ou mot de passe incorrect');
