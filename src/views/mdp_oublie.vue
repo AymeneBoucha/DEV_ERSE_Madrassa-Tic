@@ -26,7 +26,7 @@
                  <v-btn  class="envoie" color="#0E84D9" @click="handleSubmit()">
                        Envoyer
                     </v-btn>
-              <v-btn  href="/" class="annuler" color="#0E84D9"> Annuler </v-btn>
+              <v-btn  href="/user" class="annuler" color="#0E84D9"> Annuler </v-btn>
           </v-card-actions>
         </div>
    </v-app>

@@ -19,8 +19,10 @@
                   ></v-text-field>
                   <v-text-field class="text-center mt-1"
                    label="Mot de passe"
+                   :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"    
+                  :type="show1 ? 'text' : 'password'"
+                   @click:append="show1 = !show1"
                    v-model="object.password"
-                   type="password"
                    required
                    :rules="[(v) => !!v || 'veuillez saisir votre mot de passe']"
                    prepend-icon="lock"
@@ -54,6 +56,7 @@ import router from '../router/index'
 export default {
   data(){
     return {
+      show1: false,
         object : {
             email: "",
             password: "",

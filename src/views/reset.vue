@@ -50,6 +50,7 @@
      },
      methods : {
         async handleSubmit (){
+          try {
             const response= await axios.put(`http://localhost:8080/api/auth/resetPassword?token=${this.$route.params.token}`, {
                 newpassword: this.newpassword,
                 confirmpassword:this.confirmpassword,
@@ -58,6 +59,10 @@
             console.log (response);
             alert('password is changed !');
             this.$router.push('/');
+        }catch(e) {
+          alert('Veuillez entrer le meme mot de passe');
+          //router.push({ name: 'connexion' });
+        }
         }
      }
  }
