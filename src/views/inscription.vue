@@ -2,7 +2,7 @@
     <v-app>
      <div class="topnav"> <h1>MADRASA-TIC</h1></div>
       <img src="@/assets/connexion.png"/>
-        <div class="infos">
+        <div class="infos" fluid>
           <v-row >
              <v-col>
                  <v-card-text  >
@@ -168,12 +168,12 @@ import axios from "axios"
 .infos{
   border-radius: 20px;
   background-color: #C5CFD6;
-  padding: 5px;
+  margin-bottom: 30px;
   position: absolute;
   top: 100px;
   right:3.5cm;
   width: 400px;
-  height: 630px;
+  height: auto;
 }
 .forgot{
   color: white;
@@ -186,7 +186,7 @@ import axios from "axios"
   background-color: #C5CFD6;
   color: #0084FE;
   text-align: center;
-  width: 1400px;
+  width: 100%;
   height: 60px;
   float: left;
 }

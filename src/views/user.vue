@@ -1,6 +1,9 @@
 <template>
   <v-app>
-    <div class="topnav"><h1>MADRASA-TIC</h1></div>
+    <div class="topnav">
+      <h1>MADRASA-TIC</h1>
+      <h3 class="logout "><a href="/">Logout</a></h3>
+    </div>
         <v-container class="infos" fluid>
           <v-row>
             <v-card-text class="text-center">
@@ -240,6 +243,13 @@ export default {
   padding: 10px;
   float: left;
   z-index: 1;
+}
+.logout {
+  color: white;
+  position: absolute;
+  top: 15px;
+  text-align: right;
+  right: 30px;
 }
 .Confirmer {
   color: white;

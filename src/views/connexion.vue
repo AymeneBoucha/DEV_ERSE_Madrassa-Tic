@@ -106,7 +106,7 @@ export default {
   background-color: #C5CFD6;
   color: #0084FE;
   text-align: center;
-  width: 1400px;
+  width: 100%;
   height: 60px;
   float: left;
 }
