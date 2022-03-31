@@ -1,20 +1,25 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
-import Projects from '../views/Projects.vue'
-import Team from '../views/Team.vue'
+import Projects from '../views/Signalements.vue'
+import Comptes from '../views/Comptes.vue'
 
 Vue.use(VueRouter)
 
+
 const routes = [
+ /*{
+    path: '/dashboard',
+    name: 'Madrassa-Tic'
+    },*/
   {
     path: '/',
     name: 'dashboard',
     component: Dashboard
   },
   {
-    path: '/projects',
-    name: 'projects',
+    path: '/signalements',
+    name: 'signalements',
     component: Projects
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -22,16 +27,23 @@ const routes = [
     //component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/team',
-    name: 'team',
-    component: Team
+    path: '/comptes',
+    name: 'comptes',
+    component: Comptes
   }
 ]
+
+
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = to.name;
+  next();
+});
 
 export default router

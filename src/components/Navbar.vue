@@ -3,8 +3,7 @@
        <v-app-bar  color="red" dark app >
            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
            <v-toolbar-title class="text-uppercase ">
-               <span class="font-weight-light">AAE</span>
-               <span>IdeaPro</span>
+               <span>Madrassa-Tic</span>
            </v-toolbar-title>
            <v-spacer></v-spacer>
            <v-menu offset-y>
@@ -34,10 +33,10 @@
                     <v-avatar size="100">
                             <img src="/img1.png" alt="">
                     </v-avatar>
-                    <p class="white--text subheading mt-1 text-center">Username</p>
+                    <p class="white--text subheading mt-1 text-center">Aymen</p>
                </v-flex>
                <v-flex class="mt-4 mb-4">
-                <Popup />
+                <!--<Popup />-->
                </v-flex>
           </v-layout>
           <v-list flat>
@@ -54,19 +53,19 @@
    </nav>
 </template>
 <script>
-import Popup from './Popup.vue'
+//import Popup from './Popup.vue'
 export default {
    data: () => ({
       drawer: true,
       links :[
           {icon: 'dashboard', text:'Dashboard', route: '/'},
-          {icon: 'folder', text:'My Project', route: '/projects'},
-          {icon: 'person', text:'Team', route: '/team'}
+          {icon: 'folder', text:'Signalements', route: '/signalements'},
+          {icon: 'person', text:'Comptes', route: '/comptes'}
       ]
      
     }),
     components: {
-    Popup
+    //Popup
   },
 
    

@@ -15,7 +15,7 @@
     >
 
       <v-card-text class="py-2 white--text text-center">
-        {{ new Date().getFullYear() }} — <strong>AAE IdeaPro</strong>
+          <strong>DEV_ERSE</strong> — {{ new Date().getFullYear() }}
       </v-card-text>
     </v-card>
   </v-footer>

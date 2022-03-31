@@ -1,6 +1,6 @@
 <template>
-  <div class="projects">
-    <h1 class="subheading grey--text">Project</h1>
+  <div class="Signalements">
+    <h1 class="subheading grey--text">Signalements</h1>
     <v-container>
       <v-layout row wrap class="mb-4">
       <v-tooltip bottom>
@@ -22,19 +22,19 @@
         <span>Sort person</span>
       </v-tooltip>
       </v-layout>
-      <v-card flat  v-for="project in projects" :key="project.title" class="mb-1">
-          <v-layout row wrap :class="`pa-3 project ${project.status}`">
+      <v-card flat  v-for="signalement in signalements" :key="signalement.title" class="mb-1">
+          <v-layout row wrap :class="`pa-3 signalement ${signalement.status}`">
             <v-flex xs12 md6>
-                <div class="caption grey--text">Project title</div>
-                <div >{{project.title}}</div>
+                <div class="caption grey--text">Signalement title</div>
+                <div >{{signalement.title}}</div>
             </v-flex>
             <v-flex xs6 sm4 md2>
                 <div class="caption grey--text">Person</div>
-                <div >{{project.person}}</div>
+                <div >{{signalement.person}}</div>
             </v-flex>
             <v-flex xs6 sm4 md2>
                 <div class="caption grey--text">Due By</div>
-                <div >{{project.due}}</div>
+                <div >{{signalement.due}}</div>
             </v-flex>
           </v-layout>
       </v-card>
@@ -47,12 +47,12 @@
 
 
 export default {
-  name: 'projects',
+  name: 'signalements',
   components: {
    
   },
   data: () => ({
-    projects : [
+    signalements : [
       {title: 'Site web ', person :'khaled', due: '10/10/1987', status:'no'},
       {title: 'Application mobile', person :'Iyad', due: '02/07/1990', status:'complete'},
       {title: 'Gestion de stock', person :'Zineb', due: '01/05/1987', status:'yes'},
@@ -61,22 +61,22 @@ export default {
   }),
   methods: {
     sortBy(prop){
-      this.projects.sort((a,b) => a[prop] < b[prop] ? -1:1)
+      this.signalements.sort((a,b) => a[prop] < b[prop] ? -1:1)
     }
   }
 }
 </script>
 <style >
-  .project.complete {
+  .signalement.complete {
       border-left: 4px solid #3cd1c2;
   }
-  .project.no {
+  .signalement.no {
       border-left: 4px solid orange;
   }
-  .project.up {
+  .signalement.up {
       border-left: 4px solid red;
   }
-  .project.yes {
+  .signalement.yes {
       border-left: 4px solid yellow;
   }
    .v-chip.complete {
