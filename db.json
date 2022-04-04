@@ -1,8 +1,6 @@
 {
-    "accounts": [
-        {"username": "Aymen", "email": "a.boucha@esi-sba.dz", "avatar":"/img1.png"},
-      {"username": "Rachid", "email": "rn.benbetka@esi-sba.dz", "avatar":"/img2.png"},
-      {"username": "Mokhtaria", "email": "m.chebab@esi-sba.dz", "avatar":"/img3.png"},
-      {"username": "Tinihinane", "email": "t.sait@esi-sba.dz", "avatar":"/img4.png"}
-    ]
+  "accounts": [
+      {"username": "Aymen", "email": "a.boucha@esi-sba.dz", "avatar":"/img1.png"},
+    {"username": "Rachid", "email": "rn.benbetka@esi-sba.dz", "avatar":"/img2.png"}
+  ]
 }
