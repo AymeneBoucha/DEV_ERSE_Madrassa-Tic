@@ -6,7 +6,7 @@ const setAuthHeader = (accessToken) => {
             xaccesstoken :  accessToken,
         } 
     }else {
-        delete axios.defaults.headers.xaccesstoken ;
+        delete axios.defaults.headers.head ;
     }
 };
 

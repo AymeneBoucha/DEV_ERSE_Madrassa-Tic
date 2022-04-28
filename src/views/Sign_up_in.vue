@@ -85,6 +85,7 @@
                             prepend-icon="email"
                             color="blue"
                             :rules="[rules.required]"
+                            hint="email doit etre : 'username@esi-sba.dz'"
                         ></v-text-field>
                         <v-text-field  class="text-center mt-1"
                             label="Numéro de téléphone"
@@ -222,10 +223,10 @@ export default {
           alert('Logged in !');
           localStorage.setItem('xaccesstoken',res.data.accessToken);
           setAuthHeader(res.data.accessToken);
-          router.push({ name: 'user' });
+          router.push({ name: 'DashboardUser' });
       } catch(e) {
           alert('Adresse ou mot de passe incorrect');
-          router.push({ name: 'connexion' });
+          router.push({ name: 'Sign_up_in' });
       }
     },
     async handleSubmit (){ //c'est tout ce que dont tu as besoin
