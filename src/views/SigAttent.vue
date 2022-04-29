@@ -20,7 +20,7 @@
                    <v-card-actions>
                       <v-btn outlined color="green" class="tr">
                           <v-icon small left >mdi-checkbox-marked-circle</v-icon>
-                          <span>Traiter</span>
+                          <span >Traiter</span>
                       </v-btn>
                   </v-card-actions>
                   <!--<v-card-actions >
@@ -177,7 +177,6 @@ export default {
     font-size: 18px;
 }
 .titre{
-    color: "dark";
     margin-left: 25px;
     line-height: 250%;
     text-align: left;

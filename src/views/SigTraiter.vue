@@ -36,7 +36,7 @@
 
 
 export default {
-  name: 'Signalementtraiter',
+  name: 'SignalementTraiter',
   components: {
    
   },

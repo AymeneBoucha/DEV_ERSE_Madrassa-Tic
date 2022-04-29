@@ -1,14 +1,41 @@
 <template>
-    <div class="MesSignalements">
+    <div class="LesSignalements">
         <h1 class="subheading grey--text">Mes Signalements</h1>
         <v-container>
-            <v-card
+          <v-col cols="5" xs6 sm4 md2 class="filtre">
+                            <v-menu offset-x>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                small
+                                outlined
+                                color="green"
+                                class="mr-2"
+                                dark
+                                v-bind="attrs"
+                                v-on="on"
+                                >
+                                    <v-icon left small>check</v-icon>
+                                    <span class="caption text-lowercase">Filtrer par catégories</span>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item
+                                v-for="Service in Services"
+                                :key="Service.nom"
+                                @click="Filtrer(Service.nom)"
+                                >
+                                <v-list-item-title>{{ Service.nom }}</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                            </v-menu>
+                </v-col>
+          <v-card
           class="cardS"
       min-width="950"
       width="950"
       tile
     >
-      <v-list dense class="listS">
+      <v-list dense>
         <v-list-item-group
         class="lig"
           v-model="selectedItem"
@@ -21,7 +48,7 @@
           </v-list-item>
           <v-divider vertical></v-divider>
           <v-list-item>
-            <v-list-item-content @click="SignenAtt()">
+            <v-list-item-content @click="SignEnAtt()">
               <v-list-item-title >Signalements En Attente</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -74,7 +101,7 @@ import axios from 'axios'
 
 
 export default {
-    name : 'MesSignalements',
+    name : 'LesSignalements',
     components : {
 
     },
@@ -86,37 +113,45 @@ export default {
                     titre : 'Fuite de gaz',
                     Catégorie: 'Plomberie',
                     Date_de_publication: '10/12/2021',
-                    Etat: 'Validé',
-                    Avatar: '/sig.png'
-                },
-                {
-                    titre : 'Animal sauvage',
-                    Catégorie: 'Securité',
-                    Date_de_publication: '15/4/2020',
-                    Etat: 'En attente',
-                    Avatar: '/sig.png'
-                }
-            ],
-            Signalements1 : [
-                {
-                    titre : 'Fuite de gaz',
-                    Catégorie: 'Plomberie',
-                    Date_de_publication: '10/12/2021',
                     publisher: 'Aymen',
                     Etat: 'Validé',
                     Avatar: '/sig.png'
                 },
-            ],
-            Signalements2 : [
                 {
                     titre : 'Animal sauvage',
                     Catégorie: 'Securité',
                     Date_de_publication: '15/4/2020',
                     publisher: 'TipTop',
+                    Etat: 'Rejeté',
+                    Avatar: '/sig.png'
+                },
+                {
+                    titre : 'Animal sauvage',
+                    Catégorie: 'Santé',
+                    Date_de_publication: '15/4/2020',
+                    publisher: 'TipTop',
                     Etat: 'Traité',
                     Avatar: '/sig.png'
-                }
-            ]
+                },
+                {
+                    titre : 'Animal sauvage',
+                    Catégorie: 'Electricité',
+                    Date_de_publication: '15/4/2020',
+                    publisher: 'TipTop',
+                    Etat: 'En Attente',
+                    Avatar: '/sig.png'
+                },
+            ],
+            Services : [
+              {nom: 'Securité'},
+              {nom: 'Plomberie'},
+              {nom: 'Electricité'},
+              {nom: 'Hygiéne'},
+              {nom: 'Santé'},
+              {nom: 'Probleme technique'},
+              {nom: "Probléme d'équipement"},
+              {nom: 'Objet perdu'}
+    ],
         }
     },
     async created() {
@@ -127,21 +162,70 @@ export default {
       alert("Missing data from database");
     }
   },
-    metthods: {
+    methods: {
         TousSign() {
-
+          const res = axios.get(`http://localhost:3000/MesSignalements`);
+          this.Signalements = res.data;
         },
-        SignenAtt() {
-
+        SignEnAtt() {
+          /*const res = axios.get(`http://localhost:3000/MesSignalements`);
+          this.Signalements = res.data;*/
+            let i = 0
+          while (i < this.Signalements.length){
+            if (this.Signalements[i].Etat !== 'En Attente'){
+              this.Signalements.splice(i, 1)
+            }else {
+              i++
+            }
+          }
         },
-       SignVal() {
-            this.Signalements = this.Signalements1
+        SignVal() {
+          /*const res = axios.get(`http://localhost:3000/MesSignalements`);
+          this.Signalements = res.data;*/
+            let i = 0
+          while (i < this.Signalements.length){
+            if (this.Signalements[i].Etat !== 'Validé'){
+              this.Signalements.splice(i, 1)
+            }else {
+              i++
+            }
+          }
         },
         SignTrait() {
-            this.Signalements = this.Signalements2
+          /*const res = axios.get(`http://localhost:3000/MesSignalements`);
+          this.Signalements = res.data;*/
+            let i = 0
+          while (i < this.Signalements.length){
+            if (this.Signalements[i].Etat !== 'Traité'){
+              this.Signalements.splice(i, 1)
+            }else {
+              i++
+            }
+          }
         },
         SignRej() {
-            
+          /*const res = axios.get(`http://localhost:3000/MesSignalements`);
+          this.Signalements = res.data;*/
+            let i = 0
+          while (i < this.Signalements.length){
+            if (this.Signalements[i].Etat !== 'Rejeté'){
+              this.Signalements.splice(i, 1)
+            }else {
+              i++
+            }
+          }
+        },
+        Filtrer(categorie) {
+          /*const res = axios.get(`http://localhost:3000/MesSignalements`);
+          this.Signalements = res.data;*/
+          let i = 0
+          while (i < this.Signalements.length){
+            if (this.Signalements[i].Catégorie !== categorie){
+              this.Signalements.splice(i, 1)
+            }else {
+              i++
+            }
+          }
         }
     }
 }
@@ -176,25 +260,16 @@ export default {
 .deleteS{
     margin-right: 40px;
 }
-/*.toolbar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 950px;
-    min-width: 950px;
-    height: 40px;
-}
-.textS {
-    font-size: 15px;
-    text-transform: capitalize;
-    color: rgb(255, 255, 255);
-}*/
-.lig {
+.lig{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
     height: 25px;
+}
+.filtre{
+  display: flex;
+  flex-direction: row;
+  margin-left: -14px;
 }
 </style>
