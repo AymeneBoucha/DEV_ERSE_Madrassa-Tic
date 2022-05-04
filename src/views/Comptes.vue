@@ -60,8 +60,9 @@
               prepend-icon="event"
             ></v-text-field>
             <v-select
-                    v-model="e6"
+                    v-model="defaultRoles"
                     :items="roles"
+                    item-text="name"
                     :menu-props="{ maxHeight: '200' }"
                     label="Modifier les roles"
                     multiple
@@ -83,7 +84,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-          <v-btn color="green" text outlined @click="UpdateUser()">Save</v-btn>
+          <v-btn color="green" text outlined @click="UpdateUser(index)">Save</v-btn>
         </v-card-actions>
          </v-form>
       </v-card>
@@ -119,7 +120,7 @@ export default {
       date: new Date().toISOString().substr(0, 10),
       birthDay: '11/11/2001',
       menu1: false,
-      e6: '',
+      
         accounts: {
           username: '',
           email: '',
@@ -127,7 +128,7 @@ export default {
         },
         NewAccount: '',
         roles: [
-          "User", "Admin", "Responsable", "Employer"
+          {name:"User"}, {name:"Admin"},{name: "Responsable"}, {name:"Employer"}
         ]
      }
     },
@@ -137,6 +138,7 @@ export default {
     },
      async UpdateUser () {
         try{
+          this.defaultRole = this.Signalements[index].roles
          await axios.put("http://localhost:3000/accounts",
           this.accounts)
           alert("Account has been modified")

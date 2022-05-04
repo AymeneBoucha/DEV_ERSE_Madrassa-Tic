@@ -1,29 +1,29 @@
 <template>
   <div class="team">
-    <h1 class="subheading grey--text">Dashboard</h1>
+    <h1 class="subheading grey--text">Signalements</h1>
     <v-container >
       <v-layout row wrap>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SignalDashRes">
+                <router-link to="Res_sig_att">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="red lighten-2">
-                     <img src="/fig2.png" alt="" >
+                     <img src="/mes.jpg" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Gestion des Signalements</div>
+                  <div class="subheading">Signalements Utilisateurs</div>
                 </v-card-text>
                 </router-link>
               </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="Annonces">
+                <router-link to="Res_sig_val">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="red lighten-2">
-                     <img src="/fig3.png" alt="" >
+                     <img src="/mes.jpg" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Gestion des annonces</div>
+                  <div class="subheading">Signalements Orienté</div>
                 </v-card-text>
                 </router-link>
               </v-card>
@@ -37,7 +37,6 @@
 
 
 export default {
-  name: 'teamItem',
   components: {
    
   },

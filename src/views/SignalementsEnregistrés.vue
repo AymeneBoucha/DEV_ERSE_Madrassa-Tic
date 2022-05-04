@@ -21,14 +21,15 @@
                         <template v-slot:activator="{ on }">
                         <v-btn outlined color="blue" class="deleteM" v-on="on" >
                              <v-icon small left > mdi-wrench</v-icon>
-                             <span>Modifier</span>
+                             <span @click="Modifier(index)">Modifier</span>
                         </v-btn>
                         </template>
                         <v-card class="text-center  cardM">
                 <v-card-text>
                   <div class="signal">
                         <v-select
-                            v-model="catégorie"
+                            v-model="defaultCatégorie"
+                            item-text="nom"
                             :items="catégories"
                             label="Catégorie"
                             prepend-icon="category"
@@ -48,26 +49,37 @@
                             label="Description (optionnelle)"
                             v-model="descriptif"
                             prepend-icon="description"
+                            rows="2"
                         ></v-textarea>
                         <div class="lieu">
-                          <div class="form-group">
-                        <label for="cycle">Cycle :</label>
-                          <select class="text1 form-control" name="cycle" id="cycle" v-model="cycle">
-                            <option v-for="option in cycles_options" v-bind:value="option.value">{{option.text}}</option>
-                          </select>
-                        </div>
-                        <div class="salle form-group">
-                          <label for="salle">Salle :</label>
-                          <select class="text2 form-control " name="salle" id="salle" v-model="salle">
-                            <option v-for="option in salles_options[cycle]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
-                          </select>
-                        </div>
+                        <div class=" form-group">
+                       <label for="site">Site</label>
+                        <select class="text1 form-control" name="site" id="site" v-model="site" @change="onChange1($event)">
+                          <option value='' disabled selected>Selectionnez le site</option>
+                          <option v-for="option in sites_options" v-bind:value="option.value" v-bind:key="option.text" >{{option.text}}</option>
+                        </select>
                       </div>
+                      <div class="form-group">
+                        <label for="etage">Etage</label>
+                        <select class="text2 form-control " name="etage" id="etage" v-model="etage" @change="onChange2($event)">
+                          <option value="" disabled selected>Selectionnez l'etage</option>
+                          <option v-for="option in etages_options[site]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="salle">Salle</label>
+                        <select class="text3 form-control " name="salle" id="salle" v-model="salle" @change="onChange3($event)">
+                          <option value="" disabled selected>Selectionnez la salle</option>
+                          <option v-for="option in salles_options[etage]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
+                        </select>
+                      </div>
+                       </div>
                       <v-text-field 
                         label="lieu"
                         v-model="lieu"
                         prepend-icon="place"
                         type="text"
+                        disabled
                         ></v-text-field>
                         <v-file-input
                           v-model="image"
@@ -78,7 +90,7 @@
                   </div>
                   <div class="bouttonsD">
                   <v-btn class=" blue-grey lighten-3 " @click="enregistrer()"><span>Enregistrer</span></v-btn>
-                                    <v-btn class="" @click="dialog = false"><span>Annuler</span></v-btn>
+                                    <v-btn class="" @click="dialog = false" ><span>Annuler</span></v-btn>
                   <v-btn class=" blue-grey darken-2" @click="envoyer()"><span>Envoyer</span></v-btn>
                   </div>
                 </v-card-text>
@@ -108,32 +120,54 @@ export default {
         return {
             selectedItem: 0,
             dialog: false,
-            titre: 'Fuite de gaz',
-            descriptif: '',
-            catégories: ["Hygiène", "Sécurité", "Problèmes techniques", "Santé","Electricité","Plomberie","Problèmes d'équipement","Objet perdu"],
-            cycle: '',
-            salle: '',
-            cycles_options: [
-            {text: "Cycle préparatoire, rez-de-chaussée",value: 'Cycle préparatoire, rez-de-chaussée'},
-            {text: "Cycle préparatoire, 1er étage",value:'Cycle préparatoire, 1er étage' },
-            {text: "Cycle préparatoire, 2ème étage",value:'Cycle préparatoire, 2ème étage'},
-            {text: "Cycle préparatoire 3ème étage",value:'Cycle préparatoire 3ème étage'},
-            {text: "Cycle supérieur, rez-de-chaussée",value:'Cycle supérieur, rez-de-chaussée'},
-            {text: "Cycle supérieur, 1er étage",value: 'Cycle supérieur, 1er étage'},
-            {text: "Cycle supérieur, 2ème étage",value: 'Cycle supérieur, 2ème étage'}
-        ],
-            salles_options: {
-            'Cycle préparatoire, rez-de-chaussée' : [{text:"Amphi A"},{text: "Amphi B"}],
-            'Cycle préparatoire, 1er étage': [{text: "Salle1"},{text: "Salle2"}],
-            'Cycle préparatoire, 2ème étage': [{text: "Salle1"},{text: "Salle2"}],
-            'Cycle préparatoire 3ème étage': [{text: "Salle1"},{text: "Salle2"}],
-            'Cycle supérieur, rez-de-chaussée': [{text: "Amphi C"},{text: "Amphi D"},{text: "Amphi E"},{text: "Local Alphabit"},{text: "Local Ingeniums"},
-            {text: "Local GDG"},{text: "Loge des agents"},{text: "Sanitaires"},{text: "Salle de soutenance et réunion"},
-            {text: "Moussala homme"},{text: "Moussala Femme"},{text: "Foyer"},{text: "Salle TD 1"},{text: "Salle TD 2"},
-            {text: "Salle TD 3"},{text: "Salle TD 4"},{text: "Salle TD 5"},{text: "Salle TD 6"},{text: "Salle A1"},{text: "Salle A2"}
-            ,{text: "Salle A3"},],
-            'Cycle supérieur, 1er étage': [{text: "Salle de lecture"},{text: "Salle TP 4"}],
-            'Cycle supérieur, 2ème étage': [{text: "Salle TP 8"}],
+            titre: 'Probleme',
+        descriptif: "c'est un descriptif",
+        catégorie:'Hygiéne',
+        image: [],
+        defaultCatégorie : '',
+        catégories: [{nom:"Hygiène"}, 
+                            {nom:"Sécurité"}, 
+                            {nom:"Problèmes techniques"},
+                            {nom:"Santé"},
+                            {nom:"Electricité"},
+                            {nom:"Plomberie"},
+                            {nom:"Problèmes d'équipement"}
+                            ,{nom:"Objet perdu"}
+                          ],
+        site: '',
+        salle: '',
+        etage: '',
+        sites_options: [
+          {text: "Site Préparatoire",value: 'Site Préparatoire'},
+          {text: "Site Supérieur",value:'Site Supérieur' },
+       ],
+        etages_options: {
+          'Site Préparatoire' : [{text:"Rez-de-chaussée", value: 'Rez-de-chaussée '},
+                                 {text:"1er Etage", value: '1er Etage'},
+                                 ],
+          'Site Supérieur': [{text: "rez-de-chaussée", value: 'rez-de-chaussée'},
+                             {text: "1er étage", value: '1er étage'},
+                             {text: "2ème étage", value: '2ème étage'},
+                             ],
+          },
+        salles_options: {
+          'Rez-de-chaussée' : [{text:"Amphi A"},{text: "Amphi B"},{text: "Salle TD 1"},{text: "Salle TD 2"},
+          {text: "Salle TD 3"},{text: "Salle TD 4"},{text: "Salle TD 5"},{text: "Salle TD 6"},{text: "Couloir"},
+          {text: "hall"},{text:"Bureau"},{text: "Sanitaires"}],
+          'rez-de-chaussée' : [{text:"Amphi C"},{text: "Amphi D"},{text: "Amphi E"},{text:"Cabinet de Médecin"},
+          {text:"Parking"},{text: "Local Alphabit"},{text: "Local Ingeniums"},{text: "Local GDG"},
+          {text: "Loge des agents"},{text: "Sanitaires"},{text: "Salle de soutenance"},{text: "Salle de réunion "},
+          {text: "Moussala Homme"},{text: "Moussala Femme"},{text: "Foyer"},{text: "Bibliothèque"},{text: "hall"},{text: "Couloir"},{text:"Bureau"},{text: "Salle TD 1"},
+          {text: "Salle TD 2"},{text: "Salle TD 3"},{text: "Salle TD 4"},{text: "Salle TD 5"},{text: "Salle TD 6"},
+          {text: "Salle A1"},{text: "Salle A2"},{text: "Salle A3"},{text: "Salle A4"},{text: "Cour"}],
+          '1er Etage' : [{text:"Salle TD 7"},{text: "Salle TD 8"},{text: "Salle TD B1"},{text: "Salle TD B2"},
+          {text:"Salle TP 1"},{text: "Salle TP 2"},{text: "Salle TP 3"},{text: "Salle TP 4"},
+          {text:"Salle de réunion"},{text:"Bureau"},{text: "Couloir"},{text: "hall"},{text: "Sanitaires"}],
+          '1er étage' : [{text:"Salle TP 1"},{text: "Salle TP 2"},{text: "Salle TP 3"},{text: "Salle TP 4"},{text: "Salle TP 5"},
+          {text: "Salle TP 6"},{text: "Salle TP 7"},{text: "Salle de lecture"},{text: "Cabinet de Médecin"},{text: "Magasin"},
+          {text: "Administration"},{text: "Couloir"},{text: "Sanitaires"},{text: "hall"}],
+          '2ème étage' : [{text:"Salle TP 8"},{text: "Salle TP 9"},{text: "Salle TP 10"},{text: "Laboratoire de recherche"},
+          {text: "Couloir"},{text: "Sanitaires"},{text: "hall"}],
             },
             Signalements : [
                 {
@@ -144,51 +178,29 @@ export default {
                     Etat: 'Validé',
                     Avatar: '/sig.png',
                     Description: "c'est un descriptif ",
+                    lieu: 'cycle superieure'
                 },
                 {
                     titre : 'Animal sauvage',
-                    Catégorie: 'Securité',
+                    Catégorie: 'Sécurité',
                     Date_de_publication: '15/4/2020',
                     publisher: 'TipTop',
                     Etat: 'Traité',
                     Avatar: '/sig.png',
-                    Description: "c'est un descriptif"
+                    Description: "c'est un descriptif",
+                    lieu: 'cycle preparatoire'
                 }
             ],
-            Signalements1 : [
-                {
-                    titre : 'Fuite de gaz',
-                    Catégorie: 'Plomberie',
-                    Date_de_publication: '10/12/2021',
-                    publisher: 'Aymen',
-                    Etat: 'Validé',
-                    Avatar: '/sig.png',
-                    Description: "c'est un descriptif"
-                },
-            ],
-            Signalements2 : [
-                {
-                    titre : 'Animal sauvage',
-                    Catégorie: 'Securité',
-                    Date_de_publication: '15/4/2020',
-                    publisher: 'TipTop',
-                    Etat: 'Traité',
-                    Avatar: '/sig.png',
-                    Description: "c'est un descriptif"
-                }
-            ]
         }
     },
     computed: {
     lieu: function () {
-      return this.cycle + ' ' + this.salle
-    }
-  },
-    methods: {
-        DeleteSignal (index) {
-      this.Signalements.splice(index, 1)
+      if (this.site  && this.etage && this.salle)
+      {return this.site + ', ' + this.etage + ', ' + this.salle}
+      else {return ''}
     },
-    async created() {
+  },
+  async created() {
     try {
       const res = await axios.get(`http://localhost:3000/MesSignalementsEnregistrés`);
       this.Signalements = res.data;
@@ -196,6 +208,26 @@ export default {
       alert("Missing data from database");
     }
   },
+    methods: {
+      onChange1(event) {
+            {this.site = event.target.value;
+            this.etage='';
+            this.salle=''}
+        },
+      onChange2(event) {
+            {this.etage = event.target.value;
+            this.salle=''}
+        },
+      onChange3(event) {
+            {this.salle = event.target.value;}
+        },
+        DeleteSignal (index) {
+      this.Signalements.splice(index, 1)
+    },
+    Modifier (index) {
+      console.log(this.Signalements[index].Catégorie)
+      this.defaultCatégorie = this.Signalements[index].Catégorie
+    },
     async enregistrer () {
          const data = {
                 titre: this.titre,
@@ -292,29 +324,58 @@ export default {
     flex-direction: row;
     justify-content: space-around;
 }
-.lieu {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+.text {
+  margin-left: 3cm;
+  font-size: 13px;
+}
+.signal {
+  width: 700px;
+  padding: 10px;
+   margin-top: 10px;
+   position: relative;
+   margin-left: auto;
+   margin-right: auto;
+}
+.envoie{
+    position: relative;
+    left: 4cm;
+    width: 15%;
+  }
+.enregistrer{
+    position: relative;
+    left: -4cm;
+  }
+.cycle{
+ position: relative;
+    left: -4.5cm;
+  }
+
+.form-control{
+  position: relative;
+    left: 0.5cm;
 }
 .text1 {
   position: relative;
   left: 10px;
-  border: 2px solid grey;
-  border-radius: 5px;
-}
-.salle {
-  position: relative;
-  left: -20%
+  border: 1px solid grey;
+  border-radius: 3px;
 }
 .text2 {
   position: relative;
   left: 10px;
-  border: 2px solid grey;
-  border-radius: 5px;
-  width: 70px;
+  border: 1px solid  grey;
+  border-radius: 3px;
+  
 }
-.cardM {
-    min-height: 550px;
+.text3 {
+  position: relative;
+  left: 10px;
+  border: 1px solid grey;
+  border-radius: 3px;
+}
+.lieu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 </style>
