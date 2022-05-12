@@ -34,7 +34,7 @@
                           <div class="form-group">
                         <label for="cycle">Cycle :</label>
                           <select class="text1 form-control" name="cycle" id="cycle" v-model="cycle">
-                            <option v-for="option in cycles_options" v-bind:value="option.value">{{option.text}}</option>
+                            <option v-for="option in cycles_options" v-bind:value="option.value" v-bind:key="option.text">{{option.text}}</option>
                           </select>
                         </div>
                         <div class="salle form-group">

@@ -223,34 +223,36 @@ export default {
           alert('Logged in !');
           localStorage.setItem('xaccesstoken',res.data.accessToken);
           setAuthHeader(res.data.accessToken);
-          router.push({ name: 'DashboardUser' });
+          router.push({ name: 'Dashboard User' });
       } catch(e) {
           alert('Adresse ou mot de passe incorrect');
           router.push({ name: 'Sign_up_in' });
       }
     },
-    async handleSubmit (){ //c'est tout ce que dont tu as besoin
-            const data = {
-                username: this.username,
-                email: this.email,
-                phoneTel: this.phoneTel,
-                birthDay: this.birthDay,
-                password: this.password,
-                confirmpassword: this.confirmpassword
-            };
-            axios.post('http://localhost:8080/api/auth/signup',data)
-            .then(
-                res => {
-                    console.log(res)
-                    alert('Vous vous etes inscrit , Veuillez verfiez votre email pour pouvoir vous authentifier ');
-                    this.$router.push('/');
-                }
-            ).catch (
-                err => {
-                    console.log(err)
-                    alert('Veillez remplir tout les champs correctement.');
-                }
-            )
+    async handleSubmit (){    //c'est tout ce que dont tu as besoin
+      const data = {
+        username: this.username,
+        email: this.email,
+        phoneTel: this.phoneTel,
+        birthDay: this.birthDay,
+        password: this.password,
+        confirmpassword: this.confirmpassword,
+      };
+      axios
+        .post("http://localhost:8080/api/auth/signup", data)
+        .then((res) => {
+          console.log(res);
+          /*alert(
+            "Vous vous etes inscrit!, Veuillez verfiez votre email pour pouvoir vous authentifier "
+          );*/
+          alert(res.data.message);
+
+          this.$router.push("/");
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("erreur");
+        });
     }
   },
 }

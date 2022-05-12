@@ -149,7 +149,7 @@ export default {
       this.email = res.data.email;
       this.phoneTel = res.data.phoneTel;
       this.birthDay = res.data.birthDay;
-
+      
     } catch {
       alert("error");
     }
@@ -171,8 +171,9 @@ export default {
         .put("http://localhost:8080/api/auth/updateUser", data)
         .then((res) => {
           console.log(res);
-          alert("Vous avez modifier votre profil");
-          router.push("/Profile");
+          //alert("Vous avez modifier votre profil");
+                    alert(res.data.message);
+               if (res.status==201) { router.push("/Profile");}
         })
         .catch((err) => {
           console.log(err);

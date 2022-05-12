@@ -33,8 +33,8 @@
                                     rows="2"
                                     ></v-textarea>
                                     <div class="bouttonsD">
-                                         <v-btn class="" @click="dialog = false" ><span>Annuler</span></v-btn>
-                                         <v-btn class=" blue-grey darken-2" @click="envoyer(index)"><span>Envoyer</span></v-btn>
+                                         <v-btn @click="dialog = false" ><span>Annuler</span></v-btn>
+                                         <v-btn class=" blue-grey darken-2" @click="envoyer()"><span>Envoyer</span></v-btn>
                                     </div>
                                 </v-card-text>
                             </v-card>

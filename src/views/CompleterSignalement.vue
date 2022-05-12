@@ -1,6 +1,6 @@
 <template>
-    <div class="SignalementsEnregistrés">
-        <h1 class="subheading grey--text">Mes Signalements Enregistrés</h1>
+    <div class="CompleterSignalement">
+        <h1 class="subheading grey--text">Signalements à Completer pour être validé</h1>
         <v-container>
             <v-layout row wrap>
                 <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.titre">
@@ -14,7 +14,7 @@
                     <div class="subheading tt">{{Signalement.title}}</div>
                     <div class="grey--text"><strong>Catégorie : </strong>{{Signalement.category}}</div>
                     <div class="grey--text"><strong>Enregistré le : </strong>{{Signalement.dateOf}}</div>
-                    <div class="descriptif grey--text"><strong>Description : </strong>{{Signalement.description}}</div>
+                    <div class="descriptif grey--text"><strong>Motif : </strong>{{Signalement.motif}}</div>
                     </v-card-text>
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
@@ -51,6 +51,12 @@
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
+                       <v-text-field 
+                        label="Date"
+                        v-model="dateOf"
+                        prepend-icon="mdi-calendar"
+                        type="text"
+                        ></v-text-field>
                         <div class="lieu">
                         <div class=" form-group">
                        <label for="site">Site</label>
@@ -78,8 +84,8 @@
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
-                        type="text"
                         disabled
+                        type="text"
                         ></v-text-field>
                         <v-file-input
                           v-model="picture"
@@ -87,19 +93,21 @@
                           label="Ajouter une image "
                           prepend-icon="add_a_photo"
                         ></v-file-input>
+                        <v-text-field 
+                        label="Motif à Completer"
+                        v-model="Motif"
+                        prepend-icon="warning"
+                        disabled
+                        type="text"
+                        ></v-text-field>
                   </div>
                   <div class="bouttonsD">
-                  <v-btn class=" blue-grey lighten-3 " @click="enregistrer()"><span>Enregistrer</span></v-btn>
-                                    <v-btn class="" @click="dialog = false" ><span>Annuler</span></v-btn>
-                  <v-btn class=" blue-grey darken-2" @click="envoyer()"><span>Envoyer</span></v-btn>
+                    <v-btn class="" @click="dialog = false"  ><span>Annuler</span></v-btn>
+                    <v-btn class="" @click="dialog = false , enregistrer()"><span>Confirmer</span></v-btn>
                   </div>
                 </v-card-text>
               </v-card>
               </v-dialog>
-                        <v-btn outlined color="red" class="deleteS">
-                             <v-icon small left > mdi-delete</v-icon>
-                             <span @click="DeleteSignal(index)">Supprimer</span>
-                        </v-btn>
                     </v-card-actions>
                     </v-card>       
                 </v-flex>
@@ -125,6 +133,7 @@ export default {
         category:'',
         picture: [],
         defaultCatégorie : '',
+        motif: '',
         catégories: [{nom:"Hygiène"}, 
                             {nom:"Sécurité"}, 
                             {nom:"Problèmes techniques"},
@@ -178,13 +187,12 @@ export default {
                     title : '',
                     category: '',
                     dateOf: '',
-                   
-                    
                     Avatar: '/sig.png',
                     description: "",
                     site: '',
                     etage:'',
                     salle:'',
+                    motif: '',
                 },
             ],
         }
@@ -219,17 +227,8 @@ export default {
       onChange3(event) {
             {this.salle = event.target.value;}
         },
-        DeleteSignal (index) {
-               const acc = localStorage.getItem("xaccesstoken");
-      setAuthHeader(acc);
-      axios.delete(
-        `http://localhost:8080/api/madrasa-tic/user/deleteSavedReportByUser/${this.Signalements[index].id}/`
-      );
-      this.Signalements.splice(index, 1)
-    },
     async Modifier (index) {
       try {
-        console.log('cv ana rachid')
         this.varIndex=index
         const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
@@ -250,34 +249,6 @@ export default {
         alert("Missing data from database");
       }
     },
-    async enregistrer () {
-      const acc = localStorage.getItem("xaccesstoken");
-        setAuthHeader(acc);
-         const data = {
-                title: this.title,
-                description: this.description,
-                 site : this.site,
-        etage : this.etage,
-        salle : this.salle,
-                category: this.defaultCatégorie,
-               // localisation: this.localisation,
-                picture: this.picture,
-                dateOf: this.dateOf
-            };
-          await axios.put(`http://localhost:8080/api/madrasa-tic/user/userEditReportAndSave/${this.Signalements[this.varIndex].id}`,data)
-        .then(
-                res => {
-                    console.log(res)
-                    alert(res.data.message);
-                    if (res.status==201) { router.push("/SignalDash");} 
-                }
-            ).catch (
-                err => {
-                    console.log(err)
-                    alert('Veillez remplir tout les champs correctement.');
-                }
-            )
-      },
       async envoyer () {
         const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
@@ -358,6 +329,8 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
+    text-align: center;
 }
 .text {
   margin-left: 3cm;

@@ -1,8 +1,32 @@
 <template>
-  <div class="team">
-    <h1 class="subheading grey--text">Dashboard</h1>
+  <div class="dashboard">
+    <h1 class="subheading grey--text">Dashboard en tant que Responsable et User</h1>
     <v-container >
       <v-layout row wrap>
+              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
+                <router-link to="SignalDashRes">
+                <v-responsive class="pt-4">
+                   <v-avatar size="100" class="red lighten-2">
+                     <img src="/fig2.png" alt="" >
+                   </v-avatar>
+                </v-responsive>
+                <v-card-text class="text">
+                  <div class="subheading">Gestion des Signalements</div>
+                </v-card-text>
+                </router-link>
+              </v-card>
+              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
+                <router-link to="Annonces">
+                <v-responsive class="pt-4">
+                   <v-avatar size="100" class="red lighten-2">
+                     <img src="/fig3.png" alt="" >
+                   </v-avatar>
+                </v-responsive>
+                <v-card-text class="text">
+                  <div class="subheading">Gestion des annonces</div>
+                </v-card-text>
+                </router-link>
+              </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
                 <router-link to="SignalDash">
                 <v-responsive class="pt-4">
@@ -12,18 +36,6 @@
                 </v-responsive>
                 <v-card-text class="text">
                   <div class="subheading">Signalements</div>
-                </v-card-text>
-                </router-link>
-              </v-card>
-              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="Annonces">
-                <v-responsive class="pt-4">
-                   <v-avatar size="100" class="red lighten-2">
-                     <img src="/dec.png" alt="" >
-                   </v-avatar>
-                </v-responsive>
-                <v-card-text class="text">
-                  <div class="subheading">Annonces</div>
                 </v-card-text>
                 </router-link>
               </v-card>
@@ -42,7 +54,7 @@ export default {
    
   },
   data : () => ({
-
+  
   }),
 }
 </script>

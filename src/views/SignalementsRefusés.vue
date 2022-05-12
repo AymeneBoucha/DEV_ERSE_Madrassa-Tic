@@ -1,27 +1,68 @@
 <template>
-    <div class="SignalementsEnregistrés">
-        <h1 class="subheading grey--text">Mes Signalements Enregistrés</h1>
+    <div class="LesSignalements">
+        <h1 class="subheading grey--text">Signalements Refusés par le Chef de Service</h1>
         <v-container>
+          <v-col cols="5" xs6 sm4 md2 class="filtre">
+                            <v-menu offset-x>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                small
+                                outlined
+                                color="green"
+                                class="mr-2"
+                                dark
+                                v-bind="attrs"
+                                v-on="on"
+                                >
+                                    <v-icon left small>check</v-icon>
+                                    <span class="caption text-lowercase">Filtrer par catégories</span>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item
+                                v-for="Service in Services"
+                                :key="Service.nom"
+                                @click="Filtrer(Service.nom)"
+                                >
+                                <v-list-item-title>{{ Service.nom }}</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                            </v-menu>
+                </v-col>
             <v-layout row wrap>
-                <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.titre">
+                <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.id">
                     <v-card class="text-center ma-3 card1">
                     <v-responsive class="pt-0 img">
                     <v-avatar size="100" class="red lighten-2">
                         <img src="/sig.png" alt="" >
                     </v-avatar>
                     </v-responsive>
-                    <v-card-text class="titre" >
+                    <v-card-text class="titre">
                     <div class="subheading tt">{{Signalement.title}}</div>
                     <div class="grey--text"><strong>Catégorie : </strong>{{Signalement.category}}</div>
-                    <div class="grey--text"><strong>Enregistré le : </strong>{{Signalement.dateOf}}</div>
-                    <div class="descriptif grey--text"><strong>Description : </strong>{{Signalement.description}}</div>
+                    <div class="grey--text"><strong>Publié le : </strong>{{Signalement.dateOf}}</div>
+                    <div class="grey--text"><strong>Motif : </strong>{{Signalement.motiff}}</div>
+                    </v-card-text>
+                    <v-card-text class="etat" >
+                            <v-btn small outlined color="green" @click="valider(index)" class="mt-3 bt" dark>
+                                <v-icon left small>check</v-icon>
+                                <span class="caption text-lowercase">Valider</span>
+                            </v-btn>
+                            <v-btn small outlined color="red" @click="rejeter(index)" class="mt-3 bt" dark>
+                                <v-icon left small>delete</v-icon>
+                                <span class="caption text-lowercase">Rejeter</span>
+                            </v-btn>
+                            <v-btn small outlined color="orange" @click="info(index)" class="mt-3 bt" dark>
+                                <v-icon left small>add</v-icon>
+                                <span class="caption text-lowercase">Demender info</span>
+                            </v-btn>
                     </v-card-text>
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
                         <template v-slot:activator="{ on }">
-                        <v-btn outlined color="blue" class="deleteM" v-on="on" >
-                             <v-icon small left > mdi-wrench</v-icon>
-                             <span @click="Modifier(index)">Modifier</span>
+                        <v-btn outlined color="blue" class="consulter" v-on="on" >
+                             <v-icon small left > mdi-eye</v-icon>
+                             <span @click="Modifier(index)">Consulter</span>
                         </v-btn>
                         </template>
                         <v-card class="text-center  cardM">
@@ -30,6 +71,7 @@
                         <v-select
                             v-model="defaultCatégorie"
                             item-text="nom"
+                            :disabled="disabled"
                             :items="catégories"
                             label="Catégorie"
                             prepend-icon="category"
@@ -40,6 +82,7 @@
                             v-model="title"
                             :rules="[v => !!v || 'champs obligatoire']"
                             label="Titre"
+                            :disabled="disabled"
                             required
                             prepend-icon="title"
                         ></v-text-field>
@@ -48,6 +91,7 @@
                             clear-icon="mdi-close-circle"
                             label="Description (optionnelle)"
                             v-model="description"
+                            :disabled="disabled"
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
@@ -78,29 +122,34 @@
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
-                        type="text"
                         disabled
+                        type="text"
                         ></v-text-field>
                         <v-file-input
                           v-model="picture"
                           accept="image/*"
+                          :disabled="disabled"
                           label="Ajouter une image "
                           prepend-icon="add_a_photo"
                         ></v-file-input>
+                        <v-text-field 
+                        label="Motif de Refus par le Chef de Service"
+                        v-model="MotifDeRefus"
+                        prepend-icon="warning"
+                        disabled
+                        type="text"
+                        ></v-text-field>
                   </div>
                   <div class="bouttonsD">
-                  <v-btn class=" blue-grey lighten-3 " @click="enregistrer()"><span>Enregistrer</span></v-btn>
-                                    <v-btn class="" @click="dialog = false" ><span>Annuler</span></v-btn>
-                  <v-btn class=" blue-grey darken-2" @click="envoyer()"><span>Envoyer</span></v-btn>
+                    <v-btn class="" @click="dialog = false, disabled = true, conf = false"  ><span>Annuler</span></v-btn>
+                    <v-btn class="" @click="conf = !conf, dialog = false, disabled = true, enregistrer()" v-show="conf"><span>Confirmer</span></v-btn>
+                    <v-btn class="" @click="disabled = !disabled, conf = !conf" v-show="!conf" ><span>Modifier</span></v-btn>
                   </div>
                 </v-card-text>
               </v-card>
               </v-dialog>
-                        <v-btn outlined color="red" class="deleteS">
-                             <v-icon small left > mdi-delete</v-icon>
-                             <span @click="DeleteSignal(index)">Supprimer</span>
-                        </v-btn>
                     </v-card-actions>
+                    
                     </v-card>       
                 </v-flex>
             </v-layout>
@@ -108,38 +157,34 @@
     </div>
 </template>
 <script>
-import axios from "axios";
-import router from "../router/index";
-import setAuthHeader from "@/utils/setAuthHeader";
+import axios from 'axios'
+import setAuthHeader from '@/utils/setAuthHeader'
+    const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
 export default {
-    name : 'SignalementsEnregistres',
+    name : 'LesSignalements',
     components : {
     },
     data() {
         return {
+          conf : false,
+          disabled: true,
+            btn: false,
             selectedItem: 0,
             dialog: false,
-            title: '',
-            varIndex: '',
-        description: "",
+            date: '',
+            menu: false,
+        menu2: false,
+        dateOf: '',
+         title: '',
+        decription: '',
+        varIndex: '',
         category:'',
-        picture: [],
-        defaultCatégorie : '',
-        catégories: [{nom:"Hygiène"}, 
-                            {nom:"Sécurité"}, 
-                            {nom:"Problèmes techniques"},
-                            {nom:"Santé"},
-                            {nom:"Electricité"},
-                            {nom:"Plomberie"},
-                            {nom:"Problèmes d'équipement"}
-                            ,{nom:"Objet perdu"}
-                          ],
+        image: [],
+        catégories: ["Hygiène", "Sécurité", "Problèmes techniques", "Santé","Electricité","Plomberie","Problèmes d'équipement","Objet perdu"],
         site: '',
         salle: '',
         etage: '',
-          defaultsite: '',
-        defaultsalle: '',
-        defaultetage: '',
         sites_options: [
           {text: "Site Préparatoire",value: 'Site Préparatoire'},
           {text: "Site Supérieur",value:'Site Supérieur' },
@@ -171,43 +216,67 @@ export default {
           {text: "Administration"},{text: "Couloir"},{text: "Sanitaires"},{text: "hall"}],
           '2ème étage' : [{text:"Salle TP 8"},{text: "Salle TP 9"},{text: "Salle TP 10"},{text: "Laboratoire de recherche"},
           {text: "Couloir"},{text: "Sanitaires"},{text: "hall"}],
-            },
+          },
             Signalements : [
                 {
-                  id:'',
+                    id:'',
                     title : '',
                     category: '',
                     dateOf: '',
-                   
-                    
-                    Avatar: '/sig.png',
-                    description: "",
-                    site: '',
+                    userId: '',
+                    state: '',
+                    image: '/sig.png',
+                    description: '',
+                     site: '',
                     etage:'',
                     salle:'',
+                    MotifdeRefus: ''
                 },
+              
             ],
+            Services: [
+        { nom: "Sécurité" },
+        { nom: "Plomberie" },
+        { nom: "Electricité" },
+        { nom: "Hygiène" },
+        { nom: "Santé" },
+        { nom: "Problèmes techniques" },
+        { nom: "Problèmes d'équipement" },
+        { nom: "Objet perdu" },
+      ],
         }
     },
-    computed: {
-    localisation: function () {
-      if (this.site  && this.etage && this.salle)
-      {return this.site + ', ' + this.etage + ', ' + this.salle}
-      else {return ''}
-    },
-  },
+    
+   
+    
   async created() {
     try {
-          const acc = localStorage.getItem("xaccesstoken");
-        setAuthHeader(acc);
-      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/user/getAllMySavedReportsByUser`);
+      const acc = localStorage.getItem("xaccesstoken");
+      setAuthHeader(acc);
+      const res = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/moderator/getAllReportsByModerator`
+      );
       this.Signalements = res.data;
-    } catch(e) {
+    } catch (e) {
       alert("Missing data from database");
     }
   },
+ 
+    computed: {
+    localisation: function () {
+      if (this.site  && this.etage && this.salle)
+      {return this.site + ' ' + this.etage + ' ' + this.salle}
+      else {return ''}
+    },
+   //dateOf: function () {
+     //    if (this.date  && this.time )
+    //{return this.date + ' ' + this.time }
+      //else {return ''}
+     
+    //},
+  },
     methods: {
-      onChange1(event) {
+       onChange1(event) {
             {this.site = event.target.value;
             this.etage='';
             this.salle=''}
@@ -219,22 +288,14 @@ export default {
       onChange3(event) {
             {this.salle = event.target.value;}
         },
-        DeleteSignal (index) {
-               const acc = localStorage.getItem("xaccesstoken");
-      setAuthHeader(acc);
-      axios.delete(
-        `http://localhost:8080/api/madrasa-tic/user/deleteSavedReportByUser/${this.Signalements[index].id}/`
-      );
-      this.Signalements.splice(index, 1)
-    },
-    async Modifier (index) {
+         async Modifier (index) {
       try {
-        console.log('cv ana rachid')
+        
         this.varIndex=index
         const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
         const res = await axios.get(
-          `http://localhost:8080/api/madrasa-tic/user/selectOneOfMyReportsByUser/${this.Signalements[this.varIndex].id}`
+          `http://localhost:8080/api/madrasa-tic/moderator/selectOneReportByModerator/${this.Signalements[this.varIndex].id}`
         );
         this.title = res.data.title;
         this.description = res.data.description;
@@ -250,26 +311,19 @@ export default {
         alert("Missing data from database");
       }
     },
-    async enregistrer () {
-      const acc = localStorage.getItem("xaccesstoken");
-        setAuthHeader(acc);
+       /* async Confirmer (id) {
          const data = {
                 title: this.title,
-                description: this.description,
-                 site : this.site,
-        etage : this.etage,
-        salle : this.salle,
-                category: this.defaultCatégorie,
-               // localisation: this.localisation,
+                description: this.decription,
+                category: this.category,
+                localisation: this.localisation,
                 picture: this.picture,
-                dateOf: this.dateOf
             };
-          await axios.put(`http://localhost:8080/api/madrasa-tic/user/userEditReportAndSave/${this.Signalements[this.varIndex].id}`,data)
+          axios.post('http://localhost:3000',data, id)
         .then(
                 res => {
                     console.log(res)
-                    alert(res.data.message);
-                    if (res.status==201) { router.push("/SignalDash");} 
+                    alert('Votre signalement est envoyé avec succès');
                 }
             ).catch (
                 err => {
@@ -277,27 +331,26 @@ export default {
                     alert('Veillez remplir tout les champs correctement.');
                 }
             )
-      },
-      async envoyer () {
-        const acc = localStorage.getItem("xaccesstoken");
+        },*/
+         async enregistrer () {
+       const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
-         const data =  {
+         const data = {
+           //report_id: this.report_id,
                 title: this.title,
                 description: this.description,
-                category: this.defaultCatégorie,
-              //  localisation: this.localisation,
-                  site : this.site,
-        etage : this.etage,
-        salle : this.salle,
+                category: this.category,
+                localisation: this.localisation,
+                site : this.site,
+                etage : this.etage,
+                salle : this.salle,
                 picture: this.picture,
-                dateOf: this.dateOf
             };
-         await  axios.put(`http://localhost:8080/api/madrasa-tic/user/userEditReportAndSubmit/${this.Signalements[this.varIndex].id}`,data)
+          axios.put(`http://localhost:8080/api/madrasa-tic/moderator/updateReportByModerator/${this.Signalements[this.varIndex].id}`,data)
         .then(
                 res => {
                     console.log(res)
-                    alert(res.data.message);
-                    if (res.status==201) { router.push("/SignalDash");} 
+                    alert('Votre signalement est modifié avec succès');
                 }
             ).catch (
                 err => {
@@ -305,11 +358,48 @@ export default {
                     alert('Veillez remplir tout les champs correctement.');
                 }
             )
-      },
+    },
+        async valider(index) {
+            try{
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/validateReportByModerator/${this.Signalements[index].id}`),
+              alert("Signalemet validé")
+            }catch(e){
+              alert("Erreur: Signalement pas validé")
+            }
+        },
+        async rejeter(index){
+            try{
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/rejectReportByModerator/${this.Signalements[index].id}`),
+              alert("Signalemet rejeté")
+            }catch(e){
+              alert("Erreur: Signalement pas rejeté")
+            }
+        },
+        async info(index){
+           // this.Signalements[id].state = 'Besoin Plus Infos';
+            try{
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/needMoreInfosReportByModerator/${this.Signalements[index].id}`),
+              alert("Signalemet a besion de plus d'informations")
+            }catch(e){
+              alert("Erreur: Operation non effectué")
+            }
+        },
+        Filtrer(categorie) {
+          /*const res = axios.get(`http://localhost:3000/LesSignalements`);
+          this.Signalements = res.data;*/
+          let i = 0
+          while (i < this.Signalements.length){
+            if (this.Signalements[i].category !== categorie){
+              this.Signalements.splice(i, 1)
+            }else {
+              i++
+            }
+          }
+        }
     }
 }
 </script>
-<style scoped>
+<style>
 .card1 {
     display: flex;
     flex-direction: row;
@@ -331,16 +421,14 @@ export default {
     line-height: 250%;
     text-align: left;
 }
-.descriptif{
-    width: 500px;
-    max-height: 50px;
+.etat {
+    display: flex;
+    flex-direction: column;
+    margin-right: -20px;
+    line-height: 300%;
 }
 .deleteS{
     margin-right: 40px;
-    margin-top: 30px;
-}
-.deleteM{
-    margin-right: 34px;
 }
 .lig{
     display: flex;
@@ -349,22 +437,18 @@ export default {
     align-items: center;
     height: 25px;
 }
-.bouttons{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+.filtre{
+  display: flex;
+  flex-direction: row;
+  margin-left: -14px;
 }
 .bouttonsD{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
-.text {
-  margin-left: 3cm;
-  font-size: 13px;
-}
 .signal {
-  width: 700px;
+  width: 70%;
   padding: 10px;
    margin-top: 10px;
    position: relative;
@@ -406,8 +490,21 @@ export default {
   left: 10px;
   border: 1px solid grey;
   border-radius: 3px;
+  
 }
 .lieu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.bt {
+  width: 130px;
+}
+.consulter{
+  margin-right: 50px;
+}
+.date
+{
   display: flex;
   flex-direction: row;
   justify-content: space-around;

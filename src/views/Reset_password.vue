@@ -1,6 +1,6 @@
 <template>
    <v-app>
-     <div class="topnav elevation-12"> <h1>MADRASA-TIC</h1></div>
+     <div class="topnav elevation-12"> <h1>MADRASSA-TIC</h1></div>
       <img src="@/assets/mot_de_passe.png"/>
         <div class="elevation-12 infos">
           <v-row >
@@ -73,8 +73,8 @@
                 token: this.$route.params.token
             } );
             console.log (response);
-            alert('password is changed !');
-            this.$router.push('/');
+          alert(response.data.message);
+            if (response.status==201) {this.$router.push('/');}
         }catch(e) {
           alert('Veuillez remplir les champs correctement');
           //router.push({ name: 'connexion' });

@@ -9,15 +9,15 @@
                 <v-card-text>
                   <div class="signal">
                         <v-select
-                            v-model="catégorie"
-                            :items="catégories"
+                            v-model="category"
+                            :items="categrories"
                             label="Catégorie"
                             prepend-icon="category"
                             required
                             :rules="[v => !!v || 'champs obligatoire']"
                         ></v-select>
                         <v-text-field
-                            v-model="titre"
+                            v-model="title"
                             :rules="[v => !!v || 'champs obligatoire']"
                             label="Titre"
                             required
@@ -27,10 +27,67 @@
                             clearable
                             clear-icon="mdi-close-circle"
                             label="Description (optionnelle)"
-                            v-model="descriptif"
+                            v-model="description"
                             rows="2"
                             prepend-icon="description"
                         ></v-textarea>
+                        <div class="date">
+                        <v-menu
+                                ref="menu"
+                                v-model="menu"
+                                :close-on-content-click="false"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="auto"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field
+                                        v-model="date"
+                                        label="date "
+                                        
+                                        prepend-icon="mdi-calendar"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    ></v-text-field>
+                                </template>
+                                <v-date-picker
+                                    v-model="date"
+                                    :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                                    min="1950-01-01"
+                                    @change="save"
+                                ></v-date-picker>
+                            </v-menu>
+                            <v-menu
+        ref="menu"
+        v-model="menu2"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        :return-value.sync="time"
+        transition="scale-transition"
+        offset-y
+        max-width="290px"
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+            v-model="time"
+            label="l'heure"
+            prepend-icon="mdi-clock-time-four-outline"
+            readonly
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-time-picker
+          v-if="menu2"
+          v-model="time"
+          full-width
+          @click:minute="$refs.menu.save(time)"
+          format="24hr"
+        ></v-time-picker>
+      </v-menu>
+      </div>
                          <div class="lieu">
                         <div class=" form-group">
                        <label for="site">Site</label>
@@ -56,13 +113,13 @@
                        </div>
                       <v-text-field 
                         label="lieu"
-                        v-model="lieu"
+                        v-model="localisation"
                         prepend-icon="place"
                         type="text"
                         disabled
                         ></v-text-field>
                         <v-file-input
-                          v-model="image"
+                          v-model="picture"
                           accept="image/*"
                           label="Ajouter une image "
                           prepend-icon="add_a_photo"
@@ -82,14 +139,21 @@
 
 <script>
 import axios from "axios";
+import router from "../router/index";
+import setAuthHeader from '@/utils/setAuthHeader'
 export default {
+  
   components : {},
     data: () => ({
-        titre: '',
-        descriptif: '',
-        catégorie:'',
-        image: [],
-        catégories: ["Hygiène", "Sécurité", "Problèmes techniques", "Santé","Electricité","Plomberie","Problèmes d'équipement","Objet perdu"],
+        title: '',
+        description: '',
+        category: '',
+        menu: false,
+        menu2: false,
+        date:'',
+        time: '',
+        picture: '',
+        categrories: ["Hygiène", "Sécurité", "Problèmes techniques", "Santé","Electricité","Plomberie","Problèmes d'équipement","Objet perdu"],
         site: '',
         salle: '',
         etage: '',
@@ -124,30 +188,42 @@ export default {
           {text: "Administration"},{text: "Couloir"},{text: "Sanitaires"},{text: "hall"}],
           '2ème étage' : [{text:"Salle TP 8"},{text: "Salle TP 9"},{text: "Salle TP 10"},{text: "Laboratoire de recherche"},
           {text: "Couloir"},{text: "Sanitaires"},{text: "hall"}],
-
           }
     }),
   computed: {
-    lieu: function () {
+    localisation: function () {
       if (this.site  && this.etage && this.salle)
       {return this.site + ', ' + this.etage + ', ' + this.salle}
+      else {return ''}
+    },
+     dateOf: function () {
+         if (this.date  && this.time )
+        {return this.date + ' ' + this.time }
       else {return ''}
     },
   },
 methods: {
       async sauvgarder () {
          const data = {
-                titre: this.titre,
-                descriptif: this.descriptif,
-                catégorie: this.catégorie,
-                lieu: this.lieu,
-                image: this.image,
+                title: this.title,
+                description: this.description,
+                category: this.category,
+                //localisation: this.localisation,
+                site: this.site,
+                etage: this.etage,
+                salle: this.salle,
+                picture: this.picture,
+                dateOf: this.dateOf
             };
-          axios.post('http://localhost:3000',data)
+              const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+          axios.post('http://localhost:8080/api/madrasa-tic/user/saveReport',data)
         .then(
                 res => {
                     console.log(res)
-                    alert('Votre signalement est enregistré avec succès');
+                    alert(res.data.message);
+                     if (res.status==201) { router.push("/SignalDash");}
+                   // alert('Votre signalement est enregistré avec succès');
                 }
             ).catch (
                 err => {
@@ -170,17 +246,24 @@ methods: {
         },
       async envoyer () {
          const data = {
-                titre: this.titre,
-                descriptif: this.descriptif,
-                catégorie: this.catégorie,
-                lieu: this.lieu,
-                image: this.image,
+                title: this.title,
+                description: this.description,
+                 category:this.category,
+                 site: this.site,
+                etage: this.etage,
+                salle: this.salle, 
+                picture: this.picture,
+                dateOf: this.dateOf
             };
-          axios.post('http://localhost:3000',data)
+            const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+          axios.post('http://localhost:8080/api/madrasa-tic/user/submitReport',data)
         .then(
                 res => {
                     console.log(res)
-                    alert('Votre signalement est envoyé avec succès');
+                    alert(res.data.message);
+                     if (res.status==201) { router.push("/SignalDash");}
+                   // alert('Votre signalement est envoyé avec succès');
                 }
             ).catch (
                 err => {
@@ -218,7 +301,6 @@ methods: {
  position: relative;
     left: -4.5cm;
   }
-
 .form-control{
   position: relative;
     left: 0.5cm;
@@ -243,6 +325,12 @@ methods: {
   border-radius: 3px;
 }
 .lieu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.date
+{
   display: flex;
   flex-direction: row;
   justify-content: space-around;

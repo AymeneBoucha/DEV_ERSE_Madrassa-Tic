@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Dashboard from '../views/Dashboard.vue'
-import DashboardRes from '../views/DashboardRes.vue'
+import DashboardAdmUser from '../views/DashboardAdm_User.vue'
+import DashboardResAdmUser from '../views/DashboardRes_Adm_User.vue'
+import DashboardResUser from '../views/DashboardRes_User.vue'
 import DashboardUser from '../views/DashboardUser.vue'
-import DashboardChef from '../views/DashboardChef.vue'
-import Profile from '../views/Profile.vue'      //profile
+import DashboardChefUser from '../views/DashboardChef_User.vue'
+import Profile from '../views/Profile.vue'      
 import Comptes from '../views/Comptes.vue'
 import Modifier_Profile from '../views/Modifier_Profile.vue'
 import Sign_up_in from '../views/Sign_up_in.vue'
@@ -21,9 +22,14 @@ import SigEnTraitement from '../views/SigEnTraitement.vue'
 import SignalDash from '../views/SignalDash.vue'
 import SignalDashRes from '../views/SignalDashRes.vue'
 import SignalementsEnregistres from '../views/SignalementsEnregistrés.vue'
-import Res_modifier_signalement from '../views/Res_modifier_signalement'
-import Res_sig_att from '../views/Res_sig_att'
-import Res_sig_val from '../views/Res_sig_val'
+import CompleterSignalement from '../views/CompleterSignalement.vue'
+import Res_modifier_signalement from '../views/Res_modifier_signalement.vue'
+import SignalementsEnAttente from '../views/SignalementsEnAttente.vue'
+import TraitementSignalements from '../views/TraitementSignalements.vue'
+import SignalementsACompleter from '../views/SignalementsACompleter.vue'
+import SignalementsSuspendus from '../views/SignalementsSuspendus.vue'
+import SignalementsRefusés from '../views/SignalementsRefusés.vue'
+
 
 Vue.use(VueRouter)
 
@@ -52,17 +58,25 @@ const routes = [
      }
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard,
+    path: '/DashboardAdmUser',
+    name: 'DashboardAdmUser',
+    component: DashboardAdmUser,
     meta: {
       hideNavbar: true,
      }
   },
   {
-    path: '/DashboardChef',
-    name: 'DashboardChef',
-    component: DashboardChef,
+    path: '/DashboardResUser',
+    name: 'DashboardResUser',
+    component: DashboardResUser,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/DashboardChefUser',
+    name: 'DashboardChefUSer',
+    component: DashboardChefUser,
     meta: {
       hideNavbar: true,
      }
@@ -76,9 +90,9 @@ const routes = [
      }
   },
   {
-    path: '/DashboardRes',
-    name: 'dashboard Responsable',
-    component: DashboardRes,
+    path: '/DashboardResAdmUser',
+    name: 'DashboardResAdmUser',
+    component: DashboardResAdmUser,
     meta: {
       hideNavbar: true,
      }
@@ -188,25 +202,57 @@ const routes = [
      }
   },
   {
-    path: '/Res_sig_att',
-    name: 'Res_sig_att',
-    component: Res_sig_att,
+    path: '/CompleterSignalement',
+    name: 'CompleterSignalement',
+    component: CompleterSignalement,
     meta: {
       hideNavbar: true,
      }
   },
   {
-    path: '/Res_sig_val',
-    name: 'Res_sig_val',
-    component: Res_sig_val,
+    path: '/SignalementsEnAttente',
+    name: 'SignalementsEnAttente',
+    component: SignalementsEnAttente,
     meta: {
       hideNavbar: true,
      }
   },
+  {
+    path: '/TraitementSignalements',
+    name: 'TraitementSignalements',
+    component: TraitementSignalements,
+    meta: {
+      hideNavbar: true,
+     }
+  },  
   {
     path: '/Res_modifier_signalement',
     name: 'Res_modifier_signalement',
     component: Res_modifier_signalement,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/SignalementsACompleter',
+    name: 'SignalementsACompleter',
+    component: SignalementsACompleter,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/SignalementsSuspendus',
+    name: 'SignalementsSuspendus',
+    component: SignalementsSuspendus,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/SignalementsRefusés',
+    name: 'SignalementsRefusés',
+    component: SignalementsRefusés,
     meta: {
       hideNavbar: true,
      }
