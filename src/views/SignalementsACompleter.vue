@@ -164,7 +164,7 @@ export default {
         varIndex: '',
         category:'',
         image: [],
-        catégories: ["Hygiène", "Sécurité", "Problèmes techniques", "Santé","Electricité","Plomberie","Problèmes d'équipement","Objet perdu"],
+        catégories: [],
         site: '',
         salle: '',
         etage: '',
@@ -230,7 +230,23 @@ export default {
         }
     },
     
-   
+   mounted: async function () {
+    try {
+      const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/getAllCategories`);
+      //this.categrories = res.data.;
+     // console.log(res.data[0].name)
+   //  console.log(res.data.length)
+        let j = 0;
+      while (j < res.data.length) {
+        this.categrories.push(res.data[j].name);
+        j++
+      }
+    } catch {
+      alert("Missing data from database");
+    }
+  },
     
   async created() {
     try {
@@ -240,6 +256,11 @@ export default {
         `http://localhost:8080/api/madrasa-tic/moderator/getAllReportsByModerator`
       );
       this.Signalements = res.data;
+       let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
     } catch (e) {
       alert("Missing data from database");
     }

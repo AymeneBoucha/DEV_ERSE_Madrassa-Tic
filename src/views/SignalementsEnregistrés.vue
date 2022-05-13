@@ -125,15 +125,7 @@ export default {
         category:'',
         picture: [],
         defaultCatégorie : '',
-        catégories: [{nom:"Hygiène"}, 
-                            {nom:"Sécurité"}, 
-                            {nom:"Problèmes techniques"},
-                            {nom:"Santé"},
-                            {nom:"Electricité"},
-                            {nom:"Plomberie"},
-                            {nom:"Problèmes d'équipement"}
-                            ,{nom:"Objet perdu"}
-                          ],
+        catégories: [ ],
         site: '',
         salle: '',
         etage: '',
@@ -189,6 +181,23 @@ export default {
             ],
         }
     },
+     mounted: async function () {
+    try {
+      const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/getAllCategories`);
+      //this.categrories = res.data.;
+     // console.log(res.data[0].name)
+   //  console.log(res.data.length)
+        let j = 0;
+      while (j < res.data.length) {
+        this.categrories.push(res.data[j].name);
+        j++
+      }
+    } catch {
+      alert("Missing data from database");
+    }
+  },
     computed: {
     localisation: function () {
       if (this.site  && this.etage && this.salle)
@@ -196,12 +205,24 @@ export default {
       else {return ''}
     },
   },
-  async created() {
+ async created() {
     try {
           const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
       const res = await axios.get(`http://localhost:8080/api/madrasa-tic/user/getAllMySavedReportsByUser`);
-      this.Signalements = res.data;
+
+      
+   // console.log(res.data[0].category.name)
+      this.Signalements = res.data
+      
+      let i = 0;
+      while (i < this.Signalements.length) {
+        this.Signalements[i].category = res.data[i].category.name;
+        i++
+      }
+      
+     // this.Signalements.category= res.data.category
+    //  console.log(this.Signalements.category)
     } catch(e) {
       alert("Missing data from database");
     }

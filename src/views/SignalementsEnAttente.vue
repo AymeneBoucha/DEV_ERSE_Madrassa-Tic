@@ -57,7 +57,7 @@
                             </template>
                 <v-card class="cardT">
                   <v-card-text>
-                    <span><strong>Est ce que vous confirmer la validation de cet signalement ?</strong></span>
+                    <h2 class="subheading grey--text pt-7 text-center">Est ce que vous confirmer la validation de cet signalement ?</h2>
                     <div class="bouttonsV">
                       <v-btn @click="dialog2 = false"
                         ><span>Annuler</span></v-btn
@@ -69,15 +69,81 @@
                   </v-card-text>
                 </v-card>
               </v-dialog>
-                            <v-btn small outlined color="red" @click="rejeter(index)" class="mt-3 bt" dark>
+                <v-dialog
+                v-model="dialog3"
+                 :retain-focus="false"
+                persistent
+                max-width="600px"
+              >
+                <template v-slot:activator="{ on }">
+                            <v-btn small outlined color="red" @click="rejeter(index)" class="mt-3 bt" dark v-on="on">
                                 <v-icon left small>delete</v-icon>
                                 <span class="caption text-lowercase">Rejeter</span>
                             </v-btn>
-                            <v-btn small outlined color="orange" @click="info(index)" class="mt-3 bt" dark>
+                </template>
+                <v-card class="cardT">
+                  <v-card-text>
+                    <h2 class="subheading grey--text pt-7 text-center">Veuillez préciser la raison de refus ?</h2>
+                      <v-card-text>
+                      <div class="signal">
+                            <v-textarea
+                            clearable
+                            clear-icon="mdi-close-circle"
+                            label="Motif"
+                            v-model="description"
+                            rows="3"
+                            ></v-textarea>
+                      </div>
+                      </v-card-text>
+                    <div class="bouttonsV">
+                      <v-btn @click="dialog3 = false"
+                        ><span>Annuler</span></v-btn
+                      >
+                      <v-btn class="blue-grey darken-2" @click="rejeterSig()"
+                        ><span>Confirmer</span></v-btn
+                      >
+                    </div>
+                  </v-card-text>
+                </v-card>
+                </v-dialog>
+              <v-dialog
+                v-model="dialog4"
+                 :retain-focus="false"
+                persistent
+                max-width="600px"
+              >
+                <template v-slot:activator="{ on }">
+                            <v-btn small outlined color="orange" @click="info(index)" class="mt-3 bt" dark v-on="on">
                                 <v-icon left small>add</v-icon>
                                 <span class="caption text-lowercase">Demender info</span>
                             </v-btn>
-                    </v-card-text>
+                </template>
+                <v-card class="cardT">
+                  <v-card-text>
+                    <h2 class="subheading grey--text pt-7 text-center">Veuillez préciser l'information manquante ?</h2>
+                      <v-card-text>
+                      <div class="signal">
+                            <v-textarea
+                            clearable
+                            clear-icon="mdi-close-circle"
+                            label="Information manquante"
+                            v-model="description"
+                            rows="3"
+                            ></v-textarea>
+                      </div>
+                      </v-card-text>
+                    <div class="bouttonsV">
+                      <v-btn @click="dialog4 = false"
+                        ><span>Annuler</span></v-btn
+                      >
+                      <v-btn class="blue-grey darken-2" @click="infoSig()"
+                        ><span>Confirmer</span></v-btn
+                      >
+                    </div>
+                  </v-card-text>
+                </v-card>
+                </v-dialog>
+                </v-card-text>
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
                         <template v-slot:activator="{ on }">
@@ -85,8 +151,8 @@
                              <v-icon small left > mdi-eye</v-icon>
                              <span @click="Modifier(index)">Consulter</span>
                         </v-btn>
-                        </template>
-                        <v-card class="text-center  cardM">
+                </template>
+                <v-card class="text-center  cardM">
                 <v-card-text>
                   <div class="signal">
                         <v-select
@@ -194,6 +260,8 @@ export default {
             selectedItem: 0,
             dialog: false,
             dialog2: false,
+            dialog3: false,
+            dialog4: false,
             date: '',
             menu: false,
         menu2: false,
@@ -203,7 +271,7 @@ export default {
         varIndex: '',
         category:'',
         image: [],
-        catégories: ["Hygiène", "Sécurité", "Problèmes techniques", "Santé","Electricité","Plomberie","Problèmes d'équipement","Objet perdu"],
+        catégories: [],
         site: '',
         salle: '',
         etage: '',
@@ -267,10 +335,24 @@ export default {
       ],
         }
     },
-    
-   
-    
-  async created() {
+    mounted: async function () {
+    try {
+      const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/getAllCategories`);
+      //this.categrories = res.data.;
+     // console.log(res.data[0].name)
+   //  console.log(res.data.length)
+        let j = 0;
+      while (j < res.data.length) {
+        this.categrories.push(res.data[j].name);
+        j++
+      }
+    } catch {
+      alert("Missing data from database");
+    }
+  },
+ async created() {
     try {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
@@ -278,6 +360,11 @@ export default {
         `http://localhost:8080/api/madrasa-tic/moderator/getAllReportsByModerator`
       );
       this.Signalements = res.data;
+                        let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
     } catch (e) {
       alert("Missing data from database");
     }
@@ -380,9 +467,6 @@ export default {
                 }
             )
     },
-        valider(index) {
-          this.varIndex = index
-        },
         async validerSig() {
             try{
               await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/validateReportByModerator/${this.Signalements[this.varIndex].id}`),
@@ -391,22 +475,30 @@ export default {
               alert("Erreur: Signalement pas validé")
             }
         },
-        async rejeter(index){
+        async rejeterSig() {
             try{
-              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/rejectReportByModerator/${this.Signalements[index].id}`),
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/rejectReportByModerator/${this.Signalements[this.varIndex].id}`),
               alert("Signalemet rejeté")
             }catch(e){
               alert("Erreur: Signalement pas rejeté")
             }
         },
-        async info(index){
-           // this.Signalements[id].state = 'Besoin Plus Infos';
+        async infoSig() {
             try{
-              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/needMoreInfosReportByModerator/${this.Signalements[index].id}`),
-              alert("Signalemet a besion de plus d'informations")
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/needMoreInfosReportByModerator/${this.Signalements[this.varIndex].id}`),
+              alert("Signalemet modifié")
             }catch(e){
-              alert("Erreur: Operation non effectué")
+              alert("Erreur: Signalement pas modifié")
             }
+        },
+        valider(index) {
+          this.varIndex = index
+        },
+        rejeter(index){
+          this.varIndex = index
+        },
+        info(index){
+          this.varIndex = index
         },
         Filtrer(categorie) {
           /*const res = axios.get(`http://localhost:3000/LesSignalements`);

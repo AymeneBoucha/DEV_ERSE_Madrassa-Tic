@@ -153,7 +153,7 @@ export default {
         date:'',
         time: '',
         picture: '',
-        categrories: ["Hygiène", "Sécurité", "Problèmes techniques", "Santé","Electricité","Plomberie","Problèmes d'équipement","Objet perdu"],
+        categrories: [],
         site: '',
         salle: '',
         etage: '',
@@ -190,6 +190,23 @@ export default {
           {text: "Couloir"},{text: "Sanitaires"},{text: "hall"}],
           }
     }),
+    mounted: async function () {
+    try {
+      const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/getAllCategories`);
+      //this.categrories = res.data.;
+     // console.log(res.data[0].name)
+   //  console.log(res.data.length)
+        let j = 0;
+      while (j < res.data.length) {
+        this.categrories.push(res.data[j].name);
+        j++
+      }
+    } catch {
+      alert("Missing data from database");
+    }
+  },
   computed: {
     localisation: function () {
       if (this.site  && this.etage && this.salle)

@@ -259,7 +259,7 @@ export default {
       ],
     };
   },
-  async created() {
+   async created() {
     const acc = localStorage.getItem("xaccesstoken");
     setAuthHeader(acc);
     try {
@@ -267,7 +267,12 @@ export default {
         `http://localhost:8080/api/madrasa-tic/user/getAllMyReportsByUser`
       );
       this.Signalements = res.data;
-      console.log(this.Signalements);
+                  let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
+     // console.log(this.Signalements);
     } catch (e) {
       alert("Missing data from database");
     }
@@ -329,6 +334,11 @@ export default {
         `http://localhost:8080/api/madrasa-tic/user/getAllMyReportsByUser`
       );
       this.Signalements = res.data;
+       let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
     },
     async SignEnAtt() {
       const acc = localStorage.getItem("xaccesstoken");
@@ -337,6 +347,11 @@ export default {
         `http://localhost:8080/api/madrasa-tic/user/getAllMyReportsByUser`
       );
       this.Signalements = res.data;
+       let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
       let i = 0;
       while (i < this.Signalements.length) {
         if (this.Signalements[i].state !== "En Attente") {
@@ -353,6 +368,11 @@ export default {
         `http://localhost:8080/api/madrasa-tic/user/getAllMyReportsByUser`
       );
       this.Signalements = res.data;
+       let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
       let i = 0;
       while (i < this.Signalements.length) {
         if (this.Signalements[i].state !== "Validé") {
@@ -369,6 +389,11 @@ export default {
         `http://localhost:8080/api/madrasa-tic/user/getAllMyReportsByUser`
       );
       this.Signalements = res.data;
+       let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
       let i = 0;
       while (i < this.Signalements.length) {
         if (this.Signalements[i].state !== "Traité") {
@@ -385,6 +410,11 @@ export default {
         `http://localhost:8080/api/madrasa-tic/user/getAllMyReportsByUser`
       );
       this.Signalements = res.data;
+       let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
       let i = 0;
       while (i < this.Signalements.length) {
         if (this.Signalements[i].state !== "Rejeté") {

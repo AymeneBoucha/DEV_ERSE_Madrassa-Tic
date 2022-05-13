@@ -51,11 +51,6 @@
               </v-list-item-content>
             </v-list-item>
             <v-divider vertical></v-divider>
-            <!--<v-list-item>
-          <v-list-item-content @click="SignRej()">
-              <v-list-item-title >Signalements Rejetés</v-list-item-title>
-            </v-list-item-content >
-          </v-list-item>-->
           </v-list-item-group>
         </v-list>
       </v-card>
@@ -249,7 +244,7 @@ export default {
       ],
     };
   },
-  async created() {
+async created() {
     try {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
@@ -257,6 +252,13 @@ export default {
         `http://localhost:8080/api/madrasa-tic/user/getAllReportsByUser`
       );
       this.Signalements = res.data;
+      let i = 0;
+      while (i < this.Signalements.length) {
+        this.Signalements[i].category = res.data[i].category.name;
+        i++
+      }
+      
+
     } catch (e) {
       alert("Missing data from database");
     }
@@ -315,12 +317,22 @@ export default {
       setAuthHeader(acc);
       const res = await axios.get(`http://localhost:8080/api/madrasa-tic/user/getAllReportsByUser`);
       this.Signalements = res.data;
+      let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
     },
    async SignVal() {
            const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
       const res = await axios.get(`http://localhost:8080/api/madrasa-tic/user/getAllReportsByUser`);
       this.Signalements = res.data;
+      let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
       let i = 0;
       while (i < this.Signalements.length) {
         if (this.Signalements[i].state !== "Validé") {
@@ -335,6 +347,11 @@ export default {
       setAuthHeader(acc);
       const res = await axios.get(`http://localhost:8080/api/madrasa-tic/user/getAllReportsByUser`);
       this.Signalements = res.data;
+      let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+        j++
+      }
       let i = 0;
       while (i < this.Signalements.length) {
         if (this.Signalements[i].state !== "Traité") {
