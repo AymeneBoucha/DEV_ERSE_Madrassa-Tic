@@ -40,18 +40,6 @@
                 </router-link>
               </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SigRefusé">
-                <v-responsive class="pt-4">
-                   <v-avatar size="100" class="white">
-                     <img src="/Refused.png" alt=""  >
-                   </v-avatar>
-                </v-responsive>
-                <v-card-text class="text">
-                  <div class="subheading">Signalements Refusés</div>
-                </v-card-text>
-                </router-link>
-              </v-card>
-              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
                 <router-link to="SigSuspendu">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="white">

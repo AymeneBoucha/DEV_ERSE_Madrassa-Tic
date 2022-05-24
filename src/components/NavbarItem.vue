@@ -61,17 +61,64 @@
     </nav>
 </template>
 <script>
+import axios from "axios";
+//import router from "../router/index";
+import setAuthHeader from '@/utils/setAuthHeader'
 export default {
+  
     data: () => ({
         drawer:true,
         which:1,
         selectedItem: 0,
+        userroles:[],
     }),
     methods: {
-        Redirect() {
+        
+          async Redirect() {
+    try {
+      const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+      const res = await axios.get(`http://localhost:8080/api/auth/Me`);
+      this.userroles = res.data.roles;
+          if (
+          this.userroles.includes("ROLE_USER") &&
+          this.userroles.includes("ROLE_MODERATOR") &&
+          this.userroles.includes("ROLE_ADMIN")
+        ) {
+          this.$router.push("/DashboardResAdmUser");
+        } else {
+          if (
+            this.userroles.includes("ROLE_USER") &&
+            this.userroles.includes("ROLE_MODERATOR")
+          ) {
+            this.$router.push("/DashboardResUser");
+          } else {
+            if (
+              this.userroles.includes("ROLE_USER") &&
+              this.userroles.includes("ROLE_ADMIN")
+            ) {
+              this.$router.push("/DashboardAdmUser");
+            } else {
+              if (
+                this.userroles.includes("ROLE_USER") &&
+                this.userroles.includes("ROLE_EMPLOYER")
+              ) {
+                this.$router.push("/DashboardChefUser");
+              } else {
+                if (this.userroles.includes("ROLE_USER")) {
+                  this.$router.push("/DashboardUser");
+                }
+              }
+            }
+          }
+        }
+    } catch {
+      alert("Missing data from database");
+    }
+  },
 
         }
-    }
+    
 }
 </script>
 <style scoped>

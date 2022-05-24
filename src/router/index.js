@@ -16,7 +16,6 @@ import LesSignalements from '../views/LesSignalements.vue'
 import addSignal from '../views/add-signalement.vue'
 import SigEnAttent from '../views/SigEnAttent.vue'
 import SigTraité from '../views/SigTraité.vue'
-import SigRefusé from '../views/SigRefusé.vue'
 import SigSuspendu from '../views/SigSuspendu.vue'
 import SigEnTraitement from '../views/SigEnTraitement.vue'
 import SignalDash from '../views/SignalDash.vue'
@@ -28,7 +27,17 @@ import SignalementsEnAttente from '../views/SignalementsEnAttente.vue'
 import TraitementSignalements from '../views/TraitementSignalements.vue'
 import SignalementsACompleter from '../views/SignalementsACompleter.vue'
 import SignalementsSuspendus from '../views/SignalementsSuspendus.vue'
-import SignalementsRefusés from '../views/SignalementsRefusés.vue'
+import SignalementsEnTraitement from '../views/SignalementsEnTraitement.vue'
+import RapportDash from '../views/RapportDash.vue'
+import GestionCategories from '@/views/GestionCategories'
+import SignalementsRefusés from '../views/SignalementsEnTraitement.vue'
+import RapportDashRes from '../views/RapportDashRes.vue'
+import LesRapportsRes from '../views/LesRapportsRes.vue'
+import RapportsValRes from '../views/RapportsValRes.vue'
+import RapportsACompRes from '../views/RapportsACompRes.vue'
+import RapportsEnvoyésChef from '../views/RapportsEnvoyésChef.vue'
+import RapportsValidésChef from '../views/RapportsValidésChef.vue'
+import RapportsAcompleterChef from '../views/RapportsAcompleterChef.vue'
 
 
 Vue.use(VueRouter)
@@ -154,17 +163,17 @@ const routes = [
      }
   },
   {
-    path: '/SigTraité',
-    name: 'SigTraité',
-    component: SigTraité,
+    path: '/SignalementsEnTraitement',
+    name: 'SignalementsEnTraitement',
+    component: SignalementsEnTraitement,
     meta: {
       hideNavbar: true,
      }
   },
   {
-    path: '/SigRefusé',
-    name: 'SigRefusé',
-    component: SigRefusé,
+    path: '/SigTraité',
+    name: 'SigTraité',
+    component: SigTraité,
     meta: {
       hideNavbar: true,
      }
@@ -253,6 +262,79 @@ const routes = [
     path: '/SignalementsRefusés',
     name: 'SignalementsRefusés',
     component: SignalementsRefusés,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/GestionCategories',
+    name: 'GestionCategories',
+    component: GestionCategories,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/RapportDashRes',
+    name: 'RapportDashRes',
+    component: RapportDashRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/RapportDash',
+    name: 'RapportDash',
+    component: RapportDash,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/LesRapportsRes',
+    name: 'LesRapportsRes',
+    component: LesRapportsRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/RapportsValRes',
+    name: 'RapportsValRes',
+    component: RapportsValRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/RapportsACompRes',
+    name: 'RapportsACompRes',
+    component: RapportsACompRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+
+  {
+    path: '/RapportsEnvoyésChef',
+    name: 'RapportsEnvoyésChef',
+    component: RapportsEnvoyésChef,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/RapportsValidésChef',
+    name: 'RapportsValidésChef',
+    component: RapportsValidésChef,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/RapportsAcompleterChef',
+    name: 'RapportsAcompleterChef',
+    component: RapportsAcompleterChef,
     meta: {
       hideNavbar: true,
      }

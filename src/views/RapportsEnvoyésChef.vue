@@ -1,72 +1,149 @@
 <template>
-  <div class="SignalementsEnregistrés">
-    <h1 class="subheading grey--text">Mes Signalements Enregistrés</h1>
+  <div class="Signalementtraiter">
+    <h1 class="subheading grey--text">Rapports Envoyés</h1>
     <v-container>
       <v-layout row wrap>
-        <v-flex
-          v-for="(Signalement, index) in Signalements"
-          :key="Signalement.titre"
-        >
-          <v-card class="text-center ma-3 card1">
-            <div class="img">
-           <v-img
-        :aspect-ratio="16/9"
-        :width="width"
-        src="sig.png"
-      ></v-img>
-      </div>
+        <v-flex v-for="(Rapport, index) in Rapports" :key="Rapport.title">
+          <v-card class="text-center ma-2 card" color="#F0FFF0">
+            <v-responsive class="pt-3">
+              <v-avatar size="170" class="red lighten-2">
+                <img src="/p.png" alt="" />
+              </v-avatar>
+            </v-responsive>
             <v-card-text class="titre">
-              <div class="subheading tt">{{ Signalement.title }}</div>
-              <div class="grey--text">
-                <strong>Catégorie : </strong>{{ Signalement.category }}
-              </div>
-              <div class="grey--text">
-                <strong>Enregistré le : </strong>{{ Signalement.dateOf }}
-              </div>
-              <div class="descriptif grey--text">
-                <strong>Description : </strong>{{ Signalement.description }}
+              <div class="subheading sig">{{ Rapport.title }}</div>
+              <div class="grey-text">
+                <strong>Durée de traitement: </strong>{{ Rapport.dateOf }}
               </div>
             </v-card-text>
-            <v-card-actions class="bouttons">
+            <v-card-actions>
               <v-dialog
-                v-model="dialog"
+                v-model="dialog3"
                 :retain-focus="false"
                 persistent
                 max-width="800px"
                 class="dialog"
               >
                 <template v-slot:activator="{ on }">
-                  <v-btn outlined color="blue" class="deleteM" @click="Modifier(index)" v-on="on">
-                    <v-icon small left> mdi-wrench</v-icon>
-                    <span>Modifier</span>
+                  <v-btn
+                    @click="Consulter(index)"
+                    outlined
+                    color="blue"
+                    class="cont"
+                    v-on="on"
+                  >
+                    <v-icon small left>mdi-eye</v-icon>
+                    <span class="text-lowercase">Details</span>
                   </v-btn>
                 </template>
                 <v-card class="text-center cardM">
                   <v-card-text>
-                    <div class="signal">
-                      <v-select
-                        v-model="defaultCatégorie"
-                        item-text="nom"
-                        :items="catégories"
-                        label="Catégorie"
-                        prepend-icon="category"
-                        required
-                        :rules="[(v) => !!v || 'champs obligatoire']"
-                      ></v-select>
+                    <div>
+                      <h2 class="subheading">Rapport</h2>
                       <v-text-field
-                        v-model="title"
+                        v-model="titleR"
                         :rules="[(v) => !!v || 'champs obligatoire']"
                         label="Titre"
                         required
+                        disabled
                         prepend-icon="title"
                       ></v-text-field>
                       <v-textarea
                         clearable
                         clear-icon="mdi-close-circle"
-                        label="Description (optionnelle)"
-                        v-model="description"
+                        label="Description "
+                        v-model="descriptionR"
+                        disabled
                         prepend-icon="description"
                         rows="2"
+                      ></v-textarea>
+                      <div class="date">
+                
+
+                        <v-menu
+                          ref="menu"
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="dateOfR"
+                              label="Fin de traitement"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-on="on"
+                              disabled
+                            ></v-text-field>
+                          </template>
+                          <!--v-date-picker
+                                    v-model="datefin"
+                                    :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                                    min="1950-01-01"
+                                ></v-date-picker-->
+                        </v-menu>
+                      </div>
+                      <v-textarea
+                        clearable
+                        clear-icon="mdi-close-circle"
+                        label="Matériel"
+                        v-model="materialR"
+                        disabled
+                        prepend-icon="description"
+                        rows="2"
+                      ></v-textarea>
+                      <v-file-input
+                        v-model="imageR"
+                        accept="image/*"
+                        disabled
+                        label="Ajouter une image "
+                        prepend-icon="add_a_photo"
+                      ></v-file-input>
+                    </div>
+                    <div class="bouttonsD">
+                      <v-btn @click="dialog3 = false"
+                        ><span>Annuler</span></v-btn
+                      >
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
+            </v-card-actions>
+
+            <v-card-text class="mr-0">
+              <v-dialog v-model="dialog" persistent max-width="800px">
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    @click="ConsulterSig(index)"
+                    outlined
+                    color="blue"
+                    class="cont"
+                    v-on="on"
+                  >
+                    <v-icon small left>mdi-alert</v-icon>
+                    <span class="text-lowercase">Signalement Attaché</span>
+                  </v-btn>
+                </template>
+                <v-card class="text-center cardM">
+                  <v-card-text>
+                    <div>
+                      <v-text-field
+                        v-model="titleS"
+                        :rules="[(v) => !!v || 'champs obligatoire']"
+                        label="Titre"
+                        required
+                        disabled
+                        prepend-icon="title"
+                      ></v-text-field>
+                      <v-textarea
+                        clearable
+                        disabled
+                        clear-icon="mdi-close-circle"
+                        label="Description (optionnelle)"
+                        v-model="descriptionS"
+                        prepend-icon="description"
                       ></v-textarea>
                       <div class="lieu">
                         <div class="form-group">
@@ -120,7 +197,7 @@
                             v-model="salle"
                             @change="onChange3($event)"
                           >
-                            <option value="" disabled selected>
+                            <option disabled value="" selected>
                               Selectionnez la salle
                             </option>
                             <option
@@ -141,63 +218,97 @@
                         disabled
                       ></v-text-field>
                       <v-file-input
-                        v-model="picture"
+                        v-model="imageS"
                         accept="image/*"
                         label="Ajouter une image "
                         prepend-icon="add_a_photo"
+                        disabled
                       ></v-file-input>
                     </div>
                     <div class="bouttonsD">
-                      <v-btn class="blue-grey lighten-3" @click="enregistrer()"
-                        ><span>Enregistrer</span></v-btn
-                      >
                       <v-btn class="" @click="dialog = false"
-                        ><span>Annuler</span></v-btn
-                      >
-                      <v-btn class="blue-grey darken-2" @click="envoyer()"
-                        ><span>Envoyer</span></v-btn
+                        ><span class="text-lowercase">Annuler</span></v-btn
                       >
                     </div>
                   </v-card-text>
                 </v-card>
               </v-dialog>
-              <v-btn outlined color="red" class="deleteS">
-                <v-icon small left> mdi-delete</v-icon>
-                <span @click="DeleteSignal(index)">Supprimer</span>
-              </v-btn>
-            </v-card-actions>
+            </v-card-text>
           </v-card>
         </v-flex>
       </v-layout>
     </v-container>
   </div>
 </template>
+
 <script>
+// @ is an alias to /src
 import axios from "axios";
-import router from "../router/index";
 import setAuthHeader from "@/utils/setAuthHeader";
+
+    const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+
 export default {
-  name: "SignalementsEnregistres",
+  name: "RapportsEnvoyésChef",
   components: {},
   data() {
     return {
+      Signalements: [
+        {
+          title: "",
+          category: "",
+          dateOf: "",
+          state: "",
+          Avatar: "/sig.png",
+          auteur: "",
+        },
+      ],
+      Rapports: [
+        {
+          title: "",
+          description: "",
+          category: "",
+          auteur: "",
+          image: [],
+          dateOf: "",
+          motif: "",
+        },
+      ],
       selectedItem: 0,
       dialog: false,
-      width: '290',
-      title: "",
-      varIndex: "",
-      description: "",
- 
-      category: "",
-      picture: [],
-      defaultCatégorie: "",
-      catégories: [],
+      dialog3: false,
+      des: "",
+
+      titleS: "",
+      descriptionS: "",
+      categoryS: "",
+      dateOfS: "",
+
+      auteurS: "",
+      imageS: [],
       site: "",
       salle: "",
       etage: "",
-      defaultsite: "",
-      defaultsalle: "",
-      defaultetage: "",
+//lieuS:"",
+      varIndex: "",
+
+      catégories: [],
+
+      // categorie_rapport: '',
+      datefin: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .substr(0, 10),
+      datedebut: "",
+
+      titleR: "",
+      descriptionR: "",
+      categoryR: "",
+      auteurR: "",
+      imageR: [],
+      materialR:"",
+      motifR: "",
+
       sites_options: [
         { text: "Site Préparatoire", value: "Site Préparatoire" },
         { text: "Site Supérieur", value: "Site Supérieur" },
@@ -301,302 +412,146 @@ export default {
           { text: "hall" },
         ],
       },
-      Signalements: [
-        {
-          id: "",
-          title: "",
-          category: "",
-          dateOf: "",
-  
-
-          Avatar: "/sig.png",
-          description: "",
-          site: "",
-          etage: "",
-          salle: "",
-        },
-      ],
     };
   },
-  mounted: async function () {
-    try {
-      const acc = localStorage.getItem("xaccesstoken");
-      setAuthHeader(acc);
-      const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/getAllCategories`
-      );
-      //this.categrories = res.data.;
-      // console.log(res.data[0].name)
-      //  console.log(res.data.length)
-      let j = 0;
-      while (j < res.data.length) {
-        this.catégories.push(res.data[j].name);
-        j++;
-      }
-      // console.log(this.catégories)
-    } catch {
-      alert("Missing data from database");
-    }
-  },
+/*
   computed: {
-    localisation: function () {
-      if (this.site && this.etage && this.salle) {
-        return this.site + ", " + this.etage + ", " + this.salle;
-      } else {
-        return "";
-      }
+    categorie_rapport: function (index) {
+      return this.Signalements[index].Catégorie;
+    },
+    datedebut: function (index) {
+      return this.signalements[index].Date_de_Traitement;
     },
   },
+  */
+
   async created() {
     try {
-      const acc = localStorage.getItem("xaccesstoken");
-      setAuthHeader(acc);
-      const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/user/getAllMySavedReportsByUser`
-      );
-
-      // console.log(res.data[0].category.name)
-      this.Signalements = res.data;
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/employer/getAllMyPendingRaportsByEmployer`);
+      this.Rapports = res.data;
 
       let i = 0;
-      while (i < this.Signalements.length) {
-        this.Signalements[i].category = res.data[i].category.name;
-        i++;
+      while (i < this.Rapports.length) {
+        this.Rapports[i].category = res.data[i].report.category.name;
+         this.Rapports[i].auteur = res.data[i].user.email;
+        i++
       }
-
-      // this.Signalements.category= res.data.category
-      //  console.log(this.Signalements.category)
     } catch (e) {
       alert("Missing data from database");
     }
   },
-  methods: {
-    onChange1(event) {
-      {
-        this.site = event.target.value;
-        this.etage = "";
-        this.salle = "";
-      }
+
+
+
+
+
+  computed: {
+    localisation: function () {
+      if (this.site  && this.etage && this.salle)
+      {return this.site + ' ' + this.etage + ' ' + this.salle}
+      else {return ''}
     },
-    onChange2(event) {
-      {
-        this.etage = event.target.value;
-        this.salle = "";
-      }
-    },
-    onChange3(event) {
-      {
-        this.salle = event.target.value;
-      }
-    },
-    DeleteSignal(index) {
-      const acc = localStorage.getItem("xaccesstoken");
-      setAuthHeader(acc);
-      axios.delete(
-        `http://localhost:8080/api/madrasa-tic/user/deleteSavedReportByUser/${this.Signalements[index].id}/`
-      );
-      this.Signalements.splice(index, 1);
-    },
-    async Modifier(index) {
+   //dateOf: function () {
+     //    if (this.date  && this.time )
+    //{return this.date + ' ' + this.time }
+      //else {return ''}
+     
+    //},
+  },
+
+
+
+  
+  
+  methods:{
+        onChange1(event) {
+            {this.site = event.target.value;
+            this.etage='';
+            this.salle=''}
+        },
+      onChange2(event) {
+            {this.etage = event.target.value;
+            this.salle=''}
+        },
+      onChange3(event) {
+            {this.salle = event.target.value;}
+        },
+       async Consulter (index) {
       try {
-        console.log("cv ana rachid");
-        this.varIndex = index;
-        const acc = localStorage.getItem("xaccesstoken");
-        setAuthHeader(acc);
+        this.varIndex=index
         const res = await axios.get(
-          `http://localhost:8080/api/madrasa-tic/user/selectOneOfMyReportsByUser/${
-            this.Signalements[this.varIndex].id
-          }`
+          `http://localhost:8080/api/madrasa-tic/employer/selectOneOfMyRaportsByEmployer/${this.Rapports[this.varIndex].id}`
         );
-        this.title = res.data.title;
-        this.description = res.data.description;
-        this.category = res.data.category;
-        this.localisation = res.data.localisation;
-        this.site = res.data.site;
-        this.etage = res.data.etage;
-        this.salle = res.data.salle;
-        this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
-        this.defaultCatégorie = res.data.category;
+        this.titleR = res.data.title;
+                this.materialR = res.data.material;
+
+        this.descriptionR = res.data.description;
+        this.dateOfR = res.data.dateOf;
+        this.picture = res.data.picture;
+     //   this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
       }
     },
-    async enregistrer() {
-      const acc = localStorage.getItem("xaccesstoken");
-      setAuthHeader(acc);
-      const data = {
-        title: this.title,
-        description: this.description,
-        site: this.site,
-        etage: this.etage,
-        salle: this.salle,
-        category: this.defaultCatégorie,
-        // localisation: this.localisation,
-        picture: this.picture,
-        dateOf: this.dateOf,
-      };
-      await axios
-        .put(
-          `http://localhost:8080/api/madrasa-tic/user/userEditReportAndSave/${
-            this.Signalements[this.varIndex].id
-          }`,
-          data
-        )
-        .then((res) => {
-          console.log(res);
-          alert(res.data.message);
-          if (res.status == 201) {
-            router.push("/SignalDash");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("Veillez remplir tout les champs correctement.");
-        });
+    async ConsulterSig (index) {
+       try {
+        
+        this.varIndex=index
+        const res = await axios.get(
+          `http://localhost:8080/api/madrasa-tic/employer/selectOneOfMyReportByEmployer/${this.Rapports[this.varIndex].reportId}`
+        );
+        this.titleS = res.data.title;
+        this.descriptionS = res.data.description;
+      //  this.categoryS = res.data.category;
+      //  this.lieuS = this.localisation;
+        
+        this.site = res.data.site;
+        this.etage = res.data.etage;
+        this.salle = res.data.salle;
+        this.dateOfS = res.data.dateOf;
+        //this.pictureS = res.data.picture;
+       // this.defaultCatégorieS  = res.data.category;
+      } catch {
+        alert("Missing data from database");
+      }
     },
-    async envoyer() {
-      const acc = localStorage.getItem("xaccesstoken");
-      setAuthHeader(acc);
-      const data = {
-        title: this.title,
-        description: this.description,
-        category: this.defaultCatégorie,
-        //  localisation: this.localisation,
-        site: this.site,
-        etage: this.etage,
-        salle: this.salle,
-        picture: this.picture,
-        dateOf: this.dateOf,
-      };
-      await axios
-        .put(
-          `http://localhost:8080/api/madrasa-tic/user/userEditReportAndSubmit/${
-            this.Signalements[this.varIndex].id
-          }`,
-          data
-        )
-        .then((res) => {
-          console.log(res);
-          alert(res.data.message);
-          if (res.status == 201) {
-            router.push("/SignalDash");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("Veillez remplir tout les champs correctement.");
-        });
-    },
-  },
+  }
 };
+
 </script>
 <style scoped>
-.card1 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  width: 950px;
-  min-width: 950px;
-  height: 164px;
-}
-.img {
-  margin-left: 35px;
-}
-.tt {
-  font-weight: 550;
-  font-size: 18px;
-}
-.titre {
-  position: absolute;
-  margin-left: 600px;
-  line-height: 250%;
-  text-align: left;
-}
-.descriptif {
-  width: 500px;
-  max-height: 50px;
-}
-.deleteS {
-  margin-right: 40px;
-  margin-top: 30px;
-}
-.deleteM {
-  margin-right: 34px;
-}
-.lig {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  height: 25px;
-}
-.bouttons {
+.card {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  margin-left: 750px;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+  margin-left: 10px;
+  height: 410px;
 }
-.bouttonsD {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+.img {
+  align-items: center;
+  margin-bottom: 10px;
 }
-.text {
-  margin-left: 3cm;
-  font-size: 13px;
+.sig {
+  font-weight: 550;
+  font-size: 18px;
+  text-align: center;
 }
-.signal {
-  width: 700px;
-  padding: 10px;
-  margin-top: 10px;
+.titre {
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
+  line-height: 200%;
+  text-align: center;
+  margin-bottom: 30px;
 }
-.envoie {
-  position: relative;
-  left: 4cm;
-  width: 15%;
+.etat {
+  margin-left: 150px;
+  line-height: 200%;
 }
-.enregistrer {
-  position: relative;
-  left: -4cm;
-}
-.cycle {
-  position: relative;
-  left: -4.5cm;
-}
-.form-control {
-  position: relative;
-  left: 0.5cm;
-}
-.text1 {
-  position: relative;
-  left: 10px;
-  border: 1px solid grey;
-  border-radius: 3px;
-}
-.text2 {
-  position: relative;
-  left: 10px;
-  border: 1px solid grey;
-  border-radius: 3px;
-}
-.text3 {
-  position: relative;
-  left: 10px;
-  border: 1px solid grey;
-  border-radius: 3px;
-}
-.lieu {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-}
-.img{
-  position: absolute;
-  left: -34px;
+.cont {
+  align-content: center;
+  align-items: center;
+  margin-bottom: -20px;
+  bottom: 12px;
 }
 </style>

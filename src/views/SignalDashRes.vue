@@ -40,14 +40,14 @@
                 </router-link>
               </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SignalementsRefusés">
+                <router-link to="SignalementsEnTraitement">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="white lighten-2">
                      <img src="/refusal.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements Refusés par le Chef de Service</div>
+                  <div class="subheading">Signalements En Cours De Traitement</div>
                 </v-card-text>
                 </router-link>
               </v-card>

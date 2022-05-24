@@ -1,6 +1,6 @@
 <template>
     <div class="LesSignalements">
-        <h1 class="subheading grey--text">Signalements Suspendus par le Chef de Service</h1>
+        <h1 class="subheading grey--text">Signalements En Cours De Traitement</h1>
         <v-container>
           <v-col cols="5" xs6 sm4 md2 class="filtre">
                             <v-menu offset-x>
@@ -32,36 +32,37 @@
             <v-layout row wrap>
                 <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.id">
                     <v-card class="text-center ma-3 card1">
-                    <div class="img">
+                     <div class="img">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
         src="sig.png"
       ></v-img>
       </div>
-                    <v-card-text class="titre2">
+                    <v-card-text class="titre">
                     <div class="subheading tt">{{Signalement.title}}</div>
-                    <div class="grey--text"><strong>Catégorie : </strong>{{Signalement.category}}</div>
-                    <div class="grey--text"><strong>Publié le : </strong>{{Signalement.dateOf}}</div>
-                    <div class="grey--text" rows="1"><strong>Obstacle pendant le traitement : </strong>{{Signalement.probleme}}</div>
+                    <div class="grey--text"><strong>Catégorie: </strong>{{Signalement.category}}</div>
+                    <div class="grey--text"><strong>Publié le: </strong>{{Signalement.dateOf}}</div>
                     </v-card-text>
+                    <v-card-text class="etat" >
+                </v-card-text>
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
                         <template v-slot:activator="{ on }">
-                        <v-btn outlined color="blue" @click="Modifier(index)" class="consulter" v-on="on" >
+                        <v-btn outlined color="blue" @click="Modifier(index)" class="consulter3" v-on="on" >
                              <v-icon small left > mdi-eye</v-icon>
                              <span>Consulter</span>
                         </v-btn>
-                        </template>
-                        <v-card class="text-center  cardM">
+                </template>
+                <v-card class="text-center  cardM">
                 <v-card-text>
                   <div class="signal">
                         <v-select
                             v-model="defaultCatégorie"
                             item-text="nom"
+                            :disabled="disabled"
                             :items="catégories"
                             label="Catégorie"
-                            disabled
                             prepend-icon="category"
                             required
                             :rules="[v => !!v || 'champs obligatoire']"
@@ -70,7 +71,7 @@
                             v-model="title"
                             :rules="[v => !!v || 'champs obligatoire']"
                             label="Titre"
-                            disabled
+                            :disabled="disabled"
                             required
                             prepend-icon="title"
                         ></v-text-field>
@@ -79,7 +80,7 @@
                             clear-icon="mdi-close-circle"
                             label="Description (optionnelle)"
                             v-model="description"
-                            disabled
+                            :disabled="disabled"
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
@@ -120,150 +121,19 @@
                         disabled
                         type="text"
                         ></v-text-field>
-                        <v-text-field
-                          v-model="probleme"
-                          disabled
-                          label="Obstacle pendant le traitement "
-                          prepend-icon="warning"
-                          
-                        ></v-text-field>
+                        <v-file-input
+                          v-model="picture"
+                          accept="image/*"
+                          :disabled="disabled"
+                          label="Ajouter une image "
+                          prepend-icon="add_a_photo"
+                        ></v-file-input>
                   </div>
                   <div class="bouttonsD">
-                    <v-btn class="" @click="dialog = false"><span>Annuler</span></v-btn>
+                    <v-btn @click="dialog = false"  ><span>Sortir</span></v-btn>
                   </div>
                 </v-card-text>
               </v-card>
-              </v-dialog>
-              <v-dialog
-                v-model="dialog1"
-                :retain-focus="false"
-                persistent
-                max-width="800px"
-                class="dialog"
-              >
-                <template v-slot:activator="{ on }">
-                      <v-btn outlined color="blue" class="trait" @click="Consulter(index)"  v-on="on">
-                          <v-icon small left>task_alt</v-icon>
-                          <span>Details</span>
-                      </v-btn>
-                      </template>
-                <v-card class="text-center cardM">
-                  <v-card-text>
-                    <div class="signal">
-                      <v-select
-                        v-model="defaultCatégorie"
-                        item-text="nom"
-                        :items="catégories"
-                        label="Catégorie"
-                        disabled
-                        prepend-icon="category"
-                        required
-                        :rules="[(v) => !!v || 'champs obligatoire']"
-                      ></v-select>
-                      <v-text-field
-                        v-model="title"
-                        :rules="[(v) => !!v || 'champs obligatoire']"
-                        label="Titre"
-                        disabled
-                        required
-                        prepend-icon="title"
-                      ></v-text-field>
-                      <v-textarea
-                        clearable
-                        clear-icon="mdi-close-circle"
-                        label="Description (optionnelle)"
-                        v-model="description"
-                        disabled
-                        prepend-icon="description"
-                        rows="2"
-                      ></v-textarea>
-                      <v-text-field
-                        label="Date"
-                        v-model="dateOf"
-                        prepend-icon="mdi-calendar"
-                        disabled
-                        type="text"
-                      ></v-text-field>
-                      <div class="lieu">
-                        <div class="form-group">
-                          <label for="site">Site</label>
-                          <select
-                            class="text1 form-control"
-                            name="site"
-                            id="site"
-                            v-model="site"
-                            @change="onChange1($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez le site
-                            </option>
-                            <option
-                              v-for="option in sites_options"
-                              v-bind:value="option.value"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="etage">Etage</label>
-                          <select
-                            class="text2 form-control"
-                            name="etage"
-                            id="etage"
-                            v-model="etage"
-                            @change="onChange2($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez l'etage
-                            </option>
-                            <option
-                              v-for="option in etages_options[site]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="salle">Salle</label>
-                          <select
-                            class="text3 form-control"
-                            name="salle"
-                            id="salle"
-                            v-model="salle"
-                            @change="onChange3($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez la salle
-                            </option>
-                            <option
-                              v-for="option in salles_options[etage]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-                      <v-text-field
-                        label="lieu"
-                        v-model="localisation"
-                        prepend-icon="place"
-                        disabled
-                        type="text"
-                      ></v-text-field>
-                    </div>
-                    <div class="bouttonsD">
-                      <v-btn class="" @click="dialog1 = false"
-                        ><span>Annuler</span></v-btn
-                      >
-                    </div>
-                  </v-card-text>
-                </v-card>
               </v-dialog>
                     </v-card-actions>
                     
@@ -284,10 +154,16 @@ export default {
     },
     data() {
         return {
+          conf : false,
+          disabled: true,
+            btn: false,
+            width: '290',
             selectedItem: 0,
             dialog: false,
+            dialog2: false,
+            dialog3: false,
+            dialog4: false,
             date: '',
-            width: '290',
             menu: false,
         menu2: false,
         dateOf: '',
@@ -295,10 +171,11 @@ export default {
         decription: '',
         varIndex: '',
         category:'',
+        auteur:'',
         image: [],
         catégories: [],
         site: '',
-        auteur:'',
+        motif:'',
         salle: '',
         etage: '',
         sites_options: [
@@ -336,19 +213,18 @@ export default {
             Signalements : [
                 {
                     id:'',
-                    title : 'fuite',
+                    title : '',
                     category: '',
                     dateOf: '',
                     userId: '',
+                    auteur:'',
                     state: '',
                     image: '/sig.png',
                     description: '',
                      site: '',
-                     auteur:'',
                     etage:'',
-                    probleme:'',
                     salle:'',
-                    obstacle: ''
+                    motif:''
                 },
               
             ],
@@ -381,18 +257,19 @@ export default {
       alert("Missing data from database");
     }
   },
-  async created() {
+ async created() {
     try {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
       const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/moderator/getAllObstacleReportsByByModerator`
+        `http://localhost:8080/api/madrasa-tic/moderator/getAllRefusedReportsByByModerator`
       );
       this.Signalements = res.data;
-      let j = 0;
+                        let j = 0;
       while (j < this.Signalements.length) {
         this.Signalements[j].category = res.data[j].category.name;
-                 this.Signalements[j].auteur = res.data[j].user.email;
+           this.Signalements[j].auteur = res.data[j].user.email;
+        
         j++
       }
     } catch (e) {
@@ -426,7 +303,7 @@ export default {
       onChange3(event) {
             {this.salle = event.target.value;}
         },
-        async Modifier (index) {
+         async Modifier (index) {
       try {
         
         this.varIndex=index
@@ -440,7 +317,6 @@ export default {
         this.category = res.data.category;
         this.localisation = res.data.localisation;
         this.site = res.data.site;
-         this.probleme = res.data.probleme;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
         this.dateOf = res.data.dateOf;
@@ -450,30 +326,105 @@ export default {
         alert("Missing data from database");
       }
     },
-    async Consulter(index) {
-      try {
-        this.varIndex = index;
-        const acc = localStorage.getItem("xaccesstoken");
+       /* async Confirmer (id) {
+         const data = {
+                title: this.title,
+                description: this.decription,
+                category: this.category,
+                localisation: this.localisation,
+                picture: this.picture,
+            };
+          axios.post('http://localhost:3000',data, id)
+        .then(
+                res => {
+                    console.log(res)
+                    alert('Votre signalement est envoyé avec succès');
+                }
+            ).catch (
+                err => {
+                    console.log(err)
+                    alert('Veillez remplir tout les champs correctement.');
+                }
+            )
+        },*/
+         async enregistrer () {
+       const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
-        const res = await axios.get(
-          `http://localhost:8080/api/madrasa-tic/employer/selectOneOfMyReportByEmployer/${
-            this.Signalements[this.varIndex].id
-          }`
-        );
-        this.title = res.data.title;
-        this.description = res.data.description;
-        this.category = res.data.category;
-        this.localisation = res.data.localisation;
-        this.site = res.data.site;
-        this.etage = res.data.etage;
-        this.salle = res.data.salle;
-        this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
-        this.defaultCatégorie = res.data.category;
-      } catch {
-        alert("Missing data from database");
-      }
-    } ,
+         const data = {
+           //report_id: this.report_id,
+                title: this.title,
+                description: this.description,
+                category: this.category,
+                localisation: this.localisation,
+                site : this.site,
+                etage : this.etage,
+                salle : this.salle,
+                picture: this.picture,
+            };
+          axios.put(`http://localhost:8080/api/madrasa-tic/moderator/updateReportByModerator/${this.Signalements[this.varIndex].id}`,data)
+        .then(
+                res => {
+                    console.log(res)
+                    alert('Votre signalement est modifié avec succès');
+                }
+            ).catch (
+                err => {
+                    console.log(err)
+                    alert('Veillez remplir tout les champs correctement.');
+                }
+            )
+    },
+        async validerSig() {
+            const acc = localStorage.getItem("xaccesstoken");
+        setAuthHeader(acc);
+            try{
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/validateReportByModerator/${this.Signalements[this.varIndex].id}`),
+              alert("Signalemet validé")
+            }catch(e){
+              alert("Erreur: Signalement pas validé")
+            }
+        },
+        async rejeterSig() {
+            const acc = localStorage.getItem("xaccesstoken");
+        setAuthHeader(acc);
+            try{
+              const data = {
+          
+                motif: this.motif,
+       
+            };
+             this.Signalements[this.varIndex].motif= this.motif
+              console.log(this.motif)
+              console.log(data)
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/rejectReportByModerator/${this.Signalements[this.varIndex].id}`,data),
+              alert("Signalemet rejeté")
+            }catch(e){
+              alert("Erreur: Signalement pas rejeté")
+            }
+        },
+        async infoSig() {
+            const acc = localStorage.getItem("xaccesstoken");
+        setAuthHeader(acc);
+            try{
+              const data = {
+                motif: this.motif,
+            };
+              
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/needMoreInfosReportByModerator/${this.Signalements[this.varIndex].id}`,data),
+              alert("Signalemet modifié")
+            }catch(e){
+              alert("Erreur: Signalement pas modifié")
+            }
+        },
+        valider(index) {
+          this.varIndex = index
+        },
+        rejeter(index){
+          this.varIndex = index
+        },
+        info(index){
+          this.varIndex = index
+        },
         Filtrer(categorie) {
           /*const res = axios.get(`http://localhost:3000/LesSignalements`);
           this.Signalements = res.data;*/
@@ -506,7 +457,8 @@ export default {
     font-weight: 550;
     font-size: 18px;
 }
-.titre2 {
+.titre {
+    margin-left: 25px;
     line-height: 250%;
     text-align: left;
 }
@@ -535,7 +487,10 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    position: relative;
+  margin-top: 20px;
 }
+
 .signal {
   width: 70%;
   padding: 10px;
@@ -589,14 +544,21 @@ export default {
 .bt {
   width: 130px;
 }
-.consulter{
-  margin-right: 50px;
+.consulter3{
+  margin-right: 80px;
 }
 .date
 {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+.bouttonsV{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  position: relative;
+  margin-top: 20px;
 }
 .img{
   left: -34px;

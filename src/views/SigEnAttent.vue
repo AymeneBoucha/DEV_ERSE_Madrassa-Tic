@@ -1,53 +1,245 @@
 <template>
   <div class="Signalementtraiter">
     <h1 class="subheading grey--text">Signalements en Attente de Traitement</h1>
-    <v-container >
+    <v-container>
       <v-layout row wrap>
-          <v-flex v-for="(Signalement, index) in Signalements" :key="Signalement.titre">
-              <v-card class="text-center ma-3 card">
-                  <v-responsive class="pt-0 img">
-                      <v-avatar size="100" class="red lighten-2">
-                          <img src="prise.jpg" alt="">
-                      </v-avatar>
-                  </v-responsive>
-                  <v-card-text class="titre">
-                      <div class="subheading sig">{{Signalement.titre}}</div>
-                      <div class="grey-text"><strong>Catégorie: </strong>{{Signalement.Catégorie}}</div>
-                      <div class="grey-text"><strong>Affecter le: </strong>{{Signalement.Date_de_affecter}}</div>
-                      <div class="grey-text"><strong>Description: </strong>{{Signalement.Description}}</div>
-                      <div class="grey-text"><strong>Lieu: </strong>{{Signalement.lieu}}</div>
+        <v-flex
+          v-for="(Signalement, index) in Signalements"
+          :key="Signalement.titre"
+        >
+          <v-card class="text-center ma-3 card">
+            <div class="img">
+           <v-img
+        :aspect-ratio="16/9"
+        :width="width"
+        src="sig.png"
+      ></v-img>
+      </div>
+            <v-card-text class="titre4">
+              <div class="subheading sig">{{ Signalement.title }}</div>
+              <div class="grey-text">
+                <strong>Catégorie: </strong>{{ Signalement.category }}
+              </div>
+              <div class="grey-text">
+                <strong>Affecter le: </strong>{{ Signalement.dateOf }}
+              </div>
+              <div class="grey-text">
+                <strong>Description: </strong>{{ Signalement.description }}
+              </div>
+              <div class="grey-text">
+                <strong>Lieu: </strong>{{ Signalement.site,}}, {{ Signalement.etage}}, {{ Signalement.salle}}  
+              </div>
+            </v-card-text>
+            <div class="boot4">
+            <v-card-actions class="bout">
+              <v-dialog
+                v-model="dialog1"
+                :retain-focus="false"
+                persistent
+                max-width="800px"
+                class="dialog"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-btn outlined color="primary" class="cn" @click="Modifier(index)"  v-on="on">
+                    <v-icon small left>mdi-eye</v-icon>
+                    <span >Consulter</span>
+                  </v-btn>
+                </template>
+                <v-card class="text-center cardM">
+                  <v-card-text>
+                    <div class="signal">
+                      <v-select
+                        v-model="defaultCatégorie"
+                        item-text="nom"
+                        :items="catégories"
+                        label="Catégorie"
+                        disabled
+                        prepend-icon="category"
+                        required
+                        :rules="[(v) => !!v || 'champs obligatoire']"
+                      ></v-select>
+                      <v-text-field
+                        v-model="title"
+                        :rules="[(v) => !!v || 'champs obligatoire']"
+                        label="Titre"
+                        disabled
+                        required
+                        prepend-icon="title"
+                      ></v-text-field>
+                      <v-textarea
+                        clearable
+                        clear-icon="mdi-close-circle"
+                        label="Description (optionnelle)"
+                        v-model="description"
+                        disabled
+                        prepend-icon="description"
+                        rows="2"
+                      ></v-textarea>
+                      <v-text-field
+                        label="Date"
+                        v-model="dateOf"
+                        prepend-icon="mdi-calendar"
+                        disabled
+                        type="text"
+                      ></v-text-field>
+                      <div class="lieu">
+                        <div class="form-group">
+                          <label for="site">Site</label>
+                          <select
+                            class="text1 form-control"
+                            name="site"
+                            id="site"
+                            v-model="site"
+                            @change="onChange1($event)"
+                          >
+                            <option value="" disabled selected>
+                              Selectionnez le site
+                            </option>
+                            <option
+                              v-for="option in sites_options"
+                              v-bind:value="option.value"
+                              v-bind:key="option.text"
+                            >
+                              {{ option.text }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="etage">Etage</label>
+                          <select
+                            class="text2 form-control"
+                            name="etage"
+                            id="etage"
+                            v-model="etage"
+                            @change="onChange2($event)"
+                          >
+                            <option value="" disabled selected>
+                              Selectionnez l'etage
+                            </option>
+                            <option
+                              v-for="option in etages_options[site]"
+                              v-bind:value="option.text"
+                              v-bind:key="option.text"
+                            >
+                              {{ option.text }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="salle">Salle</label>
+                          <select
+                            class="text3 form-control"
+                            name="salle"
+                            id="salle"
+                            v-model="salle"
+                            @change="onChange3($event)"
+                          >
+                            <option value="" disabled selected>
+                              Selectionnez la salle
+                            </option>
+                            <option
+                              v-for="option in salles_options[etage]"
+                              v-bind:value="option.text"
+                              v-bind:key="option.text"
+                            >
+                              {{ option.text }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <v-text-field
+                        label="lieu"
+                        v-model="localisation"
+                        prepend-icon="place"
+                        disabled
+                        type="text"
+                      ></v-text-field>
+                    </div>
+                    <div class="bouttonsD">
+                      <v-btn class="" @click="dialog1 = false"
+                        ><span>Annuler</span></v-btn
+                      >
+                    </div>
                   </v-card-text>
-                   <v-card-actions class="bout">
-                      <v-btn outlined color="green" class="tr">
-                          <v-icon small left >mdi-checkbox-marked-circle</v-icon>
-                          <span @click="Traiter(index)">Confirmer le traitement</span>
-                      </v-btn>
-                      <v-dialog v-model="dialog" persistent max-width="600px" class="dialog">
-                          <template v-slot:activator="{ on }">
-                      <v-btn outlined color="red" class="rf"  v-on="on">
-                          <v-icon small left >mdi-cancel</v-icon>
-                          <span @click="Refuser(index)">Refuser le traitement</span>
-                      </v-btn>
-                      </template>
-                            <v-card class="cardT">
-                                <v-card-text>
-                                <v-textarea 
-                                    clear-icon="mdi-close-circle"
-                                    label="Motif"
-                                    v-model="motif"
-                                    prepend-icon="description"
-                                    rows="2"
-                                    ></v-textarea>
-                                    <div class="bouttonsD">
-                                         <v-btn class="" @click="dialog = false" ><span>Annuler</span></v-btn>
-                                         <v-btn class=" blue-grey darken-2" @click="envoyer()"><span>Envoyer</span></v-btn>
-                                    </div>
-                                </v-card-text>
-                            </v-card>
-                      </v-dialog>
-                  </v-card-actions>
-              </v-card>
-          </v-flex>
+                </v-card>
+              </v-dialog>
+              <v-dialog
+                v-model="dialog3"
+                :retain-focus="false"
+                persistent
+                max-width="400px"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    outlined
+                    color="green"
+                    class="tr"
+                    @click="Confirmer(index)"
+                    v-on="on"
+                  >
+                    <v-icon small left>mdi-checkbox-marked-circle</v-icon>
+                    <span>Confirmer le traitement</span>
+                  </v-btn>
+                </template>
+                <v-card class="cardT">
+                  <v-card-text>
+                    <h2 class="subheading grey--text pt-7 text-center">
+                      Est ce que vous confirmer la traitement de cet signalement
+                      ?
+                    </h2>
+                    <div class="bouttonsV">
+                      <v-btn @click="dialog3 = false"
+                        ><span>Annuler</span></v-btn
+                      >
+                      <v-btn class="blue-grey darken-2" @click="ConfirmerTr()"
+                        ><span>Confirmer</span></v-btn
+                      >
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
+              <v-dialog
+                v-model="dialog2"
+                persistent
+                max-width="600px"
+                class="dialog"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    outlined
+                    color="red"
+                    class="rf"
+                    @click="Refuser(index)"
+                    v-on="on"
+                  >
+                    <v-icon small left>mdi-cancel</v-icon>
+                    <span>Refuser le traitement</span>
+                  </v-btn>
+                </template>
+                <v-card class="cardT">
+                  <v-card-text>
+                    <v-textarea
+                      clear-icon="mdi-close-circle"
+                      label="Motif"
+                      v-model="motif"
+                      prepend-icon="description"
+                      rows="2"
+                    ></v-textarea>
+                    <div class="bouttonsD">
+                      <v-btn class="" @click="dialog2 = false"
+                        ><span>Annuler</span></v-btn
+                      >
+                      <v-btn class="blue-grey darken-2" @click="envoyer()"
+                        ><span>Envoyer</span></v-btn
+                      >
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
+            </v-card-actions>
+            </div>
+          </v-card>
+        </v-flex>
       </v-layout>
     </v-container>
   </div>
@@ -55,87 +247,301 @@
 
 <script>
 // @ is an alias to /src
-import axios from 'axios'
+import axios from "axios";
+import setAuthHeader from "@/utils/setAuthHeader";
 
 export default {
-  name: 'SignalementTraiter',
-  components: {
-   
+  name: "SignalementTraiter",
+  components: {},
+  data() {
+    return {
+      dialog1: false,
+      dialog2: false,
+      width: '315',
+      dialog3: false,
+      selectedItem: 0,
+      dialog: false,
+      date: "",
+      menu: false,
+      menu2: false,
+      dateOf: "",
+      title: "",
+      decription: "",
+      varIndex: "",
+      category: "",
+      auteur: "",
+      lieu:"",
+      image: [],
+      catégories: [],
+      site: "",
+      salle: "",
+      etage: "",
+      motif: "",
+      probleme: "",
+      sites_options: [
+        { text: "Site Préparatoire", value: "Site Préparatoire" },
+        { text: "Site Supérieur", value: "Site Supérieur" },
+      ],
+      etages_options: {
+        "Site Préparatoire": [
+          { text: "Rez-de-chaussée", value: "Rez-de-chaussée " },
+          { text: "1er Etage", value: "1er Etage" },
+        ],
+        "Site Supérieur": [
+          { text: "rez-de-chaussée", value: "rez-de-chaussée" },
+          { text: "1er étage", value: "1er étage" },
+          { text: "2ème étage", value: "2ème étage" },
+        ],
+      },
+      salles_options: {
+        "Rez-de-chaussée": [
+          { text: "Amphi A" },
+          { text: "Amphi B" },
+          { text: "Salle TD 1" },
+          { text: "Salle TD 2" },
+          { text: "Salle TD 3" },
+          { text: "Salle TD 4" },
+          { text: "Salle TD 5" },
+          { text: "Salle TD 6" },
+          { text: "Couloir" },
+          { text: "hall" },
+          { text: "Bureau" },
+          { text: "Sanitaires" },
+        ],
+        "rez-de-chaussée": [
+          { text: "Amphi C" },
+          { text: "Amphi D" },
+          { text: "Amphi E" },
+          { text: "Cabinet de Médecin" },
+          { text: "Parking" },
+          { text: "Local Alphabit" },
+          { text: "Local Ingeniums" },
+          { text: "Local GDG" },
+          { text: "Loge des agents" },
+          { text: "Sanitaires" },
+          { text: "Salle de soutenance" },
+          { text: "Salle de réunion " },
+          { text: "Moussala Homme" },
+          { text: "Moussala Femme" },
+          { text: "Foyer" },
+          { text: "Bibliothèque" },
+          { text: "hall" },
+          { text: "Couloir" },
+          { text: "Bureau" },
+          { text: "Salle TD 1" },
+          { text: "Salle TD 2" },
+          { text: "Salle TD 3" },
+          { text: "Salle TD 4" },
+          { text: "Salle TD 5" },
+          { text: "Salle TD 6" },
+          { text: "Salle A1" },
+          { text: "Salle A2" },
+          { text: "Salle A3" },
+          { text: "Salle A4" },
+          { text: "Cour" },
+        ],
+        "1er Etage": [
+          { text: "Salle TD 7" },
+          { text: "Salle TD 8" },
+          { text: "Salle TD B1" },
+          { text: "Salle TD B2" },
+          { text: "Salle TP 1" },
+          { text: "Salle TP 2" },
+          { text: "Salle TP 3" },
+          { text: "Salle TP 4" },
+          { text: "Salle de réunion" },
+          { text: "Bureau" },
+          { text: "Couloir" },
+          { text: "hall" },
+          { text: "Sanitaires" },
+        ],
+        "1er étage": [
+          { text: "Salle TP 1" },
+          { text: "Salle TP 2" },
+          { text: "Salle TP 3" },
+          { text: "Salle TP 4" },
+          { text: "Salle TP 5" },
+          { text: "Salle TP 6" },
+          { text: "Salle TP 7" },
+          { text: "Salle de lecture" },
+          { text: "Cabinet de Médecin" },
+          { text: "Magasin" },
+          { text: "Administration" },
+          { text: "Couloir" },
+          { text: "Sanitaires" },
+          { text: "hall" },
+        ],
+        "2ème étage": [
+          { text: "Salle TP 8" },
+          { text: "Salle TP 9" },
+          { text: "Salle TP 10" },
+          { text: "Laboratoire de recherche" },
+          { text: "Couloir" },
+          { text: "Sanitaires" },
+          { text: "hall" },
+        ],
+      },
+      Signalements: [
+        {
+          id: "",
+          title: "",
+          category: "",
+          dateOf: "",
+          userId: "",
+          auteur: "",
+          state: "",
+          image: "/sig.png",
+          description: "",
+          site: "",
+          etage: "",
+          salle: "",
+          lieu:"ernsrnj",
+          motif: "",
+          probleme: "",
+        },
+      ],
+    };
   },
-  data (){
-      return{
-          dialog: false,
-          motif: '',
-          Signalements:[
-              {
-                  titre:"Prises endomager",
-                  Catégorie:"Electricité",
-                  Date_de_affecter:"04/04/2022",
-                  Etat:"Traiter",
-                  Avatar:"/prise.jpg",
-                  Description:"wch responsable rak mlih",
-                  lieu:"Site B, Etage 1, Salle TD 5"
-              },
-               {
-                  titre:"Fuite de Gaz",
-                  Catégorie:"Plomberie",
-                  Date_de_affecter:"05/04/2022",
-                  Etat:"Traiter",
-                  Avatar:"/p.png",
-                  Description:"rani l9it probleme",
-                  lieu:"Site A, Etage 1, Salle A2"
-              },
-               {
-                  titre:"Poubelle",
-                  Catégorie:"Hygiéne",
-                  Date_de_affecter:"05/04/2022",
-                  Etat:"Traiter",
-                  Avatar:"/p.png"
-
-              },
-          ],
+  mounted: async function () {
+    try {
+      const acc = localStorage.getItem("xaccesstoken");
+      setAuthHeader(acc);
+      const res = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/getAllCategories`
+      );
+      //this.categrories = res.data.;
+      // console.log(res.data[0].name)
+      //  console.log(res.data.length)
+      let j = 0;
+      while (j < res.data.length) {
+        this.catégories.push(res.data[j].name);
+        j++;
       }
-  
+    } catch {
+      alert("Missing data from database");
+    }
   },
   async created() {
-        try {
-        const res = await axios.get(`http://localhost:3000/SignalementsEnAttenteDeTraitement`);
-        this.Signalements = res.data;
-        } catch(e) {
-        alert("Missing data from database");
-        }
+    try {
+      const acc = localStorage.getItem("xaccesstoken");
+      setAuthHeader(acc);
+      const res = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/employer/getAllMyToDoReportsByEmployer`
+      );
+      this.Signalements = res.data;
+             let j = 0;
+      while (j < this.Signalements.length) {
+        this.Signalements[j].category = res.data[j].category.name;
+           //this.Signalements[j].auteur = res.data[j].user.email;
+        
+        j++
+      }
+    } catch (e) {
+      alert("Missing data from database");
+    }
+  },
+
+    computed: {
+    localisation: function () {
+      if (this.site  && this.etage && this.salle)
+      {return this.site + ' ' + this.etage + ' ' + this.salle}
+      else {return ''}
     },
+   //dateOf: function () {
+     //    if (this.date  && this.time )
+    //{return this.date + ' ' + this.time }
+      //else {return ''}
+     
+    //},
+  },
   methods: {
-        async Traiter(index)  {
-            try {
-                this.Signalements[index].Etat = 'En cours de traitement'
-                //await axios.put(`http://localhost:3000/Signalements/${index}`, this.Signalements)
-                this.Signalements.splice(index, 1)
-                this.$router.push('SigEnTraitement')
-            }catch(e) {
-                alert("Il y a un probéme")
-            }
-        },
-        async Refuser(index)  {
-            try {
-                this.Signalements[index].Etat = 'Refused'
-                //await axios.put(`http://localhost:3000/Signalements/${index}`, this.Signalements)
-            }catch(e) {
-                alert("Il y a un probéme")
-            }
-        },
-        async envoyer() {
-            try {
-                //this.Signalements[index].Etat = 'Suspendu'
-                //await axios.put(`http://localhost:3000/Signalements/${index}`, this.Signalements)
-                //this.Signalements.splice(index, 1)
-                this.$router.push('SigRefusé')
-            }catch(e) {
-                alert("Il y a un probéme")
-            }
-        },
-    },    
-}
+    async ConfirmerTr() {
+      const acc = localStorage.getItem("xaccesstoken");
+      setAuthHeader(acc);
+      try {
+        await axios.post(
+          `http://localhost:8080/api/madrasa-tic/employer/acceptReportByEmployer/${
+            this.Signalements[this.varIndex].id
+          }`
+        ),
+        this.dialog3=false,
+          alert("Signalemet validé");
+      } catch (e) {
+        alert("Erreur: Signalement pas validé");
+      }
+    },
+    Confirmer(index) {
+      this.varIndex = index;
+    },
+    onChange1(event) {
+      {
+        this.site = event.target.value;
+        this.etage = "";
+        this.salle = "";
+      }
+    },
+    onChange2(event) {
+      {
+        this.etage = event.target.value;
+        this.salle = "";
+      }
+    },
+    onChange3(event) {
+      {
+        this.salle = event.target.value;
+      }
+    },
+    async Modifier(index) {
+      try {
+        this.varIndex = index;
+        const acc = localStorage.getItem("xaccesstoken");
+        setAuthHeader(acc);
+        const res = await axios.get(
+          `http://localhost:8080/api/madrasa-tic/employer/selectOneOfMyReportByEmployer/${
+            this.Signalements[this.varIndex].id
+          }`
+        );
+        this.title = res.data.title;
+        this.description = res.data.description;
+        this.category = res.data.category;
+        this.localisation = res.data.localisation;
+        this.site = res.data.site;
+        this.etage = res.data.etage;
+        this.salle = res.data.salle;
+        this.dateOf = res.data.dateOf;
+        //this.picture = res.data.picture;
+        this.defaultCatégorie = res.data.category;
+      } catch {
+        alert("Missing data from database");
+      }
+    } /*
+    async Traiter(index) {
+      try {
+        this.Signalements[index].state = "Accepté";
+        await axios.put(`http://localhost:8080/api/madrasa-tic/employer/acceptReportByEmployer/${index}`, this.Signalements)
+        this.Signalements.splice(index, 1);
+        //this.$router.push('SigEnTraitement')
+      } catch (e) {
+        alert("Il y a un probéme");
+      }
+    },*/,
+    async Refuser(index) {
+       this.varIndex = index;
+    },
+    async envoyer() {
+      try {
+        const data = {
+          motif: this.motif,
+        };
+        await axios.post(
+          `http://localhost:8080/api/madrasa-tic/employer/refuseReportByEmployer/${this.Signalements[this.varIndex].id}`,data);
+        this.$router.push("SigRefusé");
+      } catch (e) {
+        alert("Il y a un probéme");
+      }
+    },
+  },
+};
 </script>
 <style scoped>
 .card {
@@ -143,44 +549,54 @@ export default {
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-    width: 950px;
-    min-width: 950px;
-    height: 200px;
+  width: 950px;
+  min-width: 950px;
+  height: 180px;
 }
-.img{
-    margin-left: 35px;
+.img {
+  margin-left: 35px;
 }
-.sig{
-    font-weight: 550;
-    font-size: 18px;
+.sig {
+  font-weight: 550;
+  font-size: 18px;
 }
-.titre{
-    margin-left: 25px;
-    line-height: 250%;
-    text-align: left;
+.titre4 {
+  margin-left: -10px;
+  line-height: 250%;
+  text-align: left;
 }
-.etat{
-    margin-left: 150px;
-    line-height: 300%;
+.etat {
+  margin-left: 150px;
+  line-height: 300%;
 }
-.bout{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    text-align: center;
+.bout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin-left: 50px;
 }
-.tr{
-    margin-right: 100px;
+.boot4{
+  position: relative;
+  margin-right: -80px;
 }
-.rf{
-    position: relative;
-    margin-top: 25px;
-    margin-right: 110px;
+.cn {
+  margin-right: 100px;
 }
-.obs{
-    text-transform: none;
-    align-items: center;
-    margin-bottom: 30px;
+.tr {
+  position: relative;
+  margin-top: 15px;
+  margin-right: 100px;
 }
+.rf {
+  position: relative;
+  margin-top: 15px;
+  margin-right: 90px;
+}
+.obs {
+  text-transform: none;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
 </style>

@@ -10,7 +10,7 @@
                   <div class="signal">
                         <v-select
                             v-model="category"
-                            :items="categrories"
+                            :items="catégories"
                             label="Catégorie"
                             prepend-icon="category"
                             required
@@ -153,7 +153,7 @@ export default {
         date:'',
         time: '',
         picture: '',
-        categrories: [],
+        catégories: [],
         site: '',
         salle: '',
         etage: '',
@@ -200,9 +200,10 @@ export default {
    //  console.log(res.data.length)
         let j = 0;
       while (j < res.data.length) {
-        this.categrories.push(res.data[j].name);
+        this.catégories.push(res.data[j].name);
         j++
       }
+      console.log(this.catégories)
     } catch {
       alert("Missing data from database");
     }

@@ -32,17 +32,23 @@
             <v-layout row wrap>
                 <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.id">
                     <v-card class="text-center ma-3 card1">
-                    <v-responsive class="pt-0 img">
-                    <v-avatar size="100" class="red lighten-2">
-                        <img src="/sig.png" alt="" >
-                    </v-avatar>
-                    </v-responsive>
+                    <div class="img">
+           <v-img
+        :aspect-ratio="16/9"
+        :width="width"
+        src="sig.png"
+      ></v-img>
+      </div>
                     <v-card-text class="titre">
                     <div class="subheading tt">{{Signalement.title}}</div>
                     <div class="grey--text"><strong>Catégorie : </strong>{{Signalement.category}}</div>
                     <div class="grey--text"><strong>Publié le : </strong>{{Signalement.dateOf}}</div>
+                     <div class="grey--text">
+                <strong>l'auteur : </strong>{{ Signalement.auteur }}
+              </div>
                     </v-card-text>
-                    <v-card-text class="etat" >
+                    <v-card-actions class="etat">
+                    <v-card-text >
                       <v-dialog
                 v-model="dialog2"
                  :retain-focus="false"
@@ -90,7 +96,7 @@
                             clearable
                             clear-icon="mdi-close-circle"
                             label="Motif"
-                            v-model="description"
+                            v-model="motif"
                             rows="3"
                             ></v-textarea>
                       </div>
@@ -127,7 +133,7 @@
                             clearable
                             clear-icon="mdi-close-circle"
                             label="Information manquante"
-                            v-model="description"
+                            v-model="motif"
                             rows="3"
                             ></v-textarea>
                       </div>
@@ -144,12 +150,13 @@
                 </v-card>
                 </v-dialog>
                 </v-card-text>
+                </v-card-actions>
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
                         <template v-slot:activator="{ on }">
-                        <v-btn outlined color="blue" class="consulter" v-on="on" >
+                        <v-btn outlined color="blue" @click="Modifier(index)" class="consulter" v-on="on" >
                              <v-icon small left > mdi-eye</v-icon>
-                             <span @click="Modifier(index)">Consulter</span>
+                             <span>Consulter</span>
                         </v-btn>
                 </template>
                 <v-card class="text-center  cardM">
@@ -256,6 +263,7 @@ export default {
         return {
           conf : false,
           disabled: true,
+          width: '290',
             btn: false,
             selectedItem: 0,
             dialog: false,
@@ -270,9 +278,11 @@ export default {
         decription: '',
         varIndex: '',
         category:'',
+        auteur:'',
         image: [],
         catégories: [],
         site: '',
+        motif:'',
         salle: '',
         etage: '',
         sites_options: [
@@ -314,12 +324,14 @@ export default {
                     category: '',
                     dateOf: '',
                     userId: '',
+                    auteur:'',
                     state: '',
                     image: '/sig.png',
                     description: '',
                      site: '',
                     etage:'',
                     salle:'',
+                    motif:''
                 },
               
             ],
@@ -345,7 +357,7 @@ export default {
    //  console.log(res.data.length)
         let j = 0;
       while (j < res.data.length) {
-        this.categrories.push(res.data[j].name);
+        this.catégories.push(res.data[j].name);
         j++
       }
     } catch {
@@ -357,12 +369,14 @@ export default {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
       const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/moderator/getAllReportsByModerator`
+        `http://localhost:8080/api/madrasa-tic/moderator/getAllPendingReportsByModerator`
       );
       this.Signalements = res.data;
                         let j = 0;
       while (j < this.Signalements.length) {
         this.Signalements[j].category = res.data[j].category.name;
+           this.Signalements[j].auteur = res.data[j].user.email;
+        
         j++
       }
     } catch (e) {
@@ -419,27 +433,6 @@ export default {
         alert("Missing data from database");
       }
     },
-       /* async Confirmer (id) {
-         const data = {
-                title: this.title,
-                description: this.decription,
-                category: this.category,
-                localisation: this.localisation,
-                picture: this.picture,
-            };
-          axios.post('http://localhost:3000',data, id)
-        .then(
-                res => {
-                    console.log(res)
-                    alert('Votre signalement est envoyé avec succès');
-                }
-            ).catch (
-                err => {
-                    console.log(err)
-                    alert('Veillez remplir tout les champs correctement.');
-                }
-            )
-        },*/
          async enregistrer () {
        const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
@@ -468,6 +461,8 @@ export default {
             )
     },
         async validerSig() {
+            const acc = localStorage.getItem("xaccesstoken");
+        setAuthHeader(acc);
             try{
               await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/validateReportByModerator/${this.Signalements[this.varIndex].id}`),
               alert("Signalemet validé")
@@ -476,16 +471,32 @@ export default {
             }
         },
         async rejeterSig() {
+            const acc = localStorage.getItem("xaccesstoken");
+        setAuthHeader(acc);
             try{
-              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/rejectReportByModerator/${this.Signalements[this.varIndex].id}`),
+              const data = {
+          
+                motif: this.motif,
+       
+            };
+             this.Signalements[this.varIndex].motif= this.motif
+              console.log(this.motif)
+              console.log(data)
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/rejectReportByModerator/${this.Signalements[this.varIndex].id}`,data),
               alert("Signalemet rejeté")
             }catch(e){
               alert("Erreur: Signalement pas rejeté")
             }
         },
         async infoSig() {
+            const acc = localStorage.getItem("xaccesstoken");
+        setAuthHeader(acc);
             try{
-              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/needMoreInfosReportByModerator/${this.Signalements[this.varIndex].id}`),
+              const data = {
+                motif: this.motif,
+            };
+              
+              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/needMoreInfosReportByModerator/${this.Signalements[this.varIndex].id}`,data),
               alert("Signalemet modifié")
             }catch(e){
               alert("Erreur: Signalement pas modifié")
@@ -533,14 +544,16 @@ export default {
     font-size: 18px;
 }
 .titre {
-    margin-left: 25px;
+    margin-left: 300px;
     line-height: 250%;
     text-align: left;
+    width: 300px;
 }
 .etat {
+  
     display: flex;
     flex-direction: column;
-    margin-right: -20px;
+    margin-right: 300px;
     line-height: 300%;
 }
 .deleteS{
@@ -558,12 +571,17 @@ export default {
   flex-direction: row;
   margin-left: -14px;
 }
+.bouttons{
+  margin-right: -50px;
+}
 .bouttonsD{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     position: relative;
   margin-top: 20px;
+
+
 }
 
 .signal {
@@ -634,5 +652,8 @@ export default {
   justify-content: space-around;
   position: relative;
   margin-top: 20px;
+}
+.img{
+  left: -33px;
 }
 </style>

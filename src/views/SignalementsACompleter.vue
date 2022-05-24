@@ -32,21 +32,23 @@
             <v-layout row wrap>
                 <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.id">
                     <v-card class="text-center ma-3 card1">
-                    <v-responsive class="pt-0 img">
-                    <v-avatar size="100" class="red lighten-2">
-                        <img src="/sig.png" alt="" >
-                    </v-avatar>
-                    </v-responsive>
-                    <v-card-text class="titre">
+                         <div class="img">
+           <v-img
+        :aspect-ratio="16/9"
+        :width="width"
+        src="sig.png"
+      ></v-img>
+      </div>
+                    <v-card-text class="titre1">
                     <div class="subheading tt">{{Signalement.title}}</div>
                     <div class="grey--text"><strong>Catégorie : </strong>{{Signalement.category}}</div>
                     <div class="grey--text"><strong>Publié le : </strong>{{Signalement.dateOf}}</div>
-                    <div class="grey--text"><strong>Motif : </strong>{{Signalement.Motif}}</div>
+                    <div class="grey--text"><strong>Motif : </strong>{{Signalement.motif}}</div>
                     </v-card-text>
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
                         <template v-slot:activator="{ on }">
-                        <v-btn outlined color="blue" class="consulter" v-on="on" >
+                        <v-btn outlined color="blue" class="consulter1" v-on="on" >
                              <v-icon small left > mdi-eye</v-icon>
                              <span @click="Modifier(index)">Consulter</span>
                         </v-btn>
@@ -153,6 +155,7 @@ export default {
           conf : false,
           disabled: true,
             btn: false,
+            width: '290',
             selectedItem: 0,
             dialog: false,
             date: '',
@@ -240,7 +243,7 @@ export default {
    //  console.log(res.data.length)
         let j = 0;
       while (j < res.data.length) {
-        this.categrories.push(res.data[j].name);
+        this.catégories.push(res.data[j].name);
         j++
       }
     } catch {
@@ -253,7 +256,7 @@ export default {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
       const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/moderator/getAllReportsByModerator`
+        `http://localhost:8080/api/madrasa-tic/moderator/getAllNeedMoreInfosReportsByByModerator`
       );
       this.Signalements = res.data;
        let j = 0;
@@ -309,6 +312,7 @@ export default {
         this.etage = res.data.etage;
         this.salle = res.data.salle;
         this.dateOf = res.data.dateOf;
+        this.motif= res.data.motif;
         //this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
@@ -347,8 +351,8 @@ export default {
     font-weight: 550;
     font-size: 18px;
 }
-.titre {
-    margin-left: 25px;
+.titre1 {
+    margin-left: -10px;
     line-height: 250%;
     text-align: left;
 }
@@ -431,13 +435,16 @@ export default {
 .bt {
   width: 130px;
 }
-.consulter{
-  margin-right: 50px;
+.consulter1{
+  margin-right: 80px;
 }
 .date
 {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+.img{
+  left: -33px;
 }
 </style>

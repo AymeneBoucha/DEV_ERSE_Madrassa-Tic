@@ -1,44 +1,45 @@
 <template>
   <div class="team">
-    <h1 class="subheading grey--text">Dashboard en tant que Chef de Service et User</h1>
+    <h1 class="subheading grey--text">Rapports</h1>
     <v-container >
-      <v-layout  row wrap>
-              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="TraitementSignalements">
+      <v-layout row wrap>
+        <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
+                <router-link to="RapportsEnvoyésChef">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="white lighten-2">
-                     <img src="/treatement.png" alt="" >
+                     <img src="/fileUp.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div >Traitement des Signalements</div>
+                  <div class="subheading">Rapports Envoyés</div>
                 </v-card-text>
                 </router-link>
-              </v-card>
-              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="RapportDash">
+        </v-card>
+        <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
+                <router-link to="RapportsValidésChef">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="white lighten-2">
-                     <img src="/brouillon.png" alt="" >
+                     <img src="/fileYes.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Rapports</div>
+                  <div class="subheading">Rapports Validés</div>
                 </v-card-text>
                 </router-link>
-              </v-card>
-              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SignalDash">
+        </v-card>
+        <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
+                <router-link to="RapportsAcompleterChef">
                 <v-responsive class="pt-4">
-                   <v-avatar size="100" class="red lighten-2">
-                     <img src="/sig.png" alt="" >
+                   <v-avatar size="100" class="white lighten-2">
+                     <img src="/filePlus.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements</div>
+                  <div class="subheading">Rapports À compléter</div>
                 </v-card-text>
                 </router-link>
-              </v-card>
+        </v-card>
+
       </v-layout>
     </v-container>
   </div>
@@ -49,22 +50,22 @@
 
 
 export default {
-  name: 'teamItem',
+  name: 'RapportDash',
   components: {
    
   },
   data : () => ({
-
+  
   }),
 }
 </script>
 <style>
 .const {
-  width: 500px;
+  width: 300px;
   height: 200px;
+  margin-left: 10px;
 }
 .text{
   font-size: 18px;
 }
-
 </style>

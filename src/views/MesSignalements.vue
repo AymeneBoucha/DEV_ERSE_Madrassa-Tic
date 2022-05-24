@@ -65,13 +65,15 @@
         </v-list>
       </v-card>
       <v-layout row wrap>
-        <v-flex v-for="Signalement in Signalements" :key="Signalement.title">
+        <v-flex v-for="(Signalement, index) in Signalements" :key="Signalement.title">
           <v-card class="text-center ma-3 card1">
-            <v-responsive class="pt-0 img">
-              <v-avatar size="100" class="red lighten-2">
-                <img src="/sig.png" alt="" />
-              </v-avatar>
-            </v-responsive>
+             <div class="img">
+           <v-img
+        :aspect-ratio="16/9"
+        :width="width"
+        src="sig.png"
+      ></v-img>
+      </div>
             <v-card-text class="titre">
               <div class="subheading tt">{{ Signalement.title }}</div>
               <div class="grey--text">
@@ -88,9 +90,9 @@
             <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
                         <template v-slot:activator="{ on }">
-                        <v-btn outlined color="blue" class="consulter" v-on="on" >
+                        <v-btn outlined color="blue" class="consulter" @click="Modifier(index)" v-on="on" >
                              <v-icon small left > mdi-eye</v-icon>
-                             <span @click="Modifier(index)">Consulter</span>
+                             <span >Consulter</span>
                         </v-btn>
                         </template>
                         <v-card class="text-center  cardM">
@@ -186,6 +188,7 @@ export default {
     return {
       selectedItem: 0,
             dialog: false,
+            width: '290',
             date: '',
             menu: false,
         menu2: false,
@@ -195,10 +198,11 @@ export default {
         varIndex: '',
         category:'',
         image: [],
-        catégories: ["Hygiène", "Sécurité", "Problèmes techniques", "Santé","Electricité","Plomberie","Problèmes d'équipement","Objet perdu"],
+        catégories: [],
         site: '',
         salle: '',
         etage: '',
+        motif:'',
         sites_options: [
           {text: "Site Préparatoire",value: 'Site Préparatoire'},
           {text: "Site Supérieur",value:'Site Supérieur' },
@@ -238,12 +242,13 @@ export default {
                     category: '',
                     dateOf: '',
                     userId: '',
-                    state: '',
+                    state: 'pending',
                     image: '/sig.png',
                     description: '',
                      site: '',
                     etage:'',
                     salle:'',
+                    motif:'',
                     obstacle: ''
         },
       ],
@@ -258,6 +263,23 @@ export default {
         { nom: "Objet perdu" },
       ],
     };
+  },
+     mounted: async function () {
+    try {
+      const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/getAllCategories`);
+      //this.categrories = res.data.;
+     // console.log(res.data[0].name)
+   //  console.log(res.data.length)
+        let j = 0;
+      while (j < res.data.length) {
+        this.catégories.push(res.data[j].name);
+        j++
+      }
+    } catch {
+      alert("Missing data from database");
+    }
   },
    async created() {
     const acc = localStorage.getItem("xaccesstoken");
@@ -307,10 +329,11 @@ export default {
       try {
         
         this.varIndex=index
+        console.log(this.varIndex)
         const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
         const res = await axios.get(
-          `http://localhost:8080/api/madrasa-tic/moderator/selectOneReportByModerator/${this.Signalements[this.varIndex].id}`
+          `http://localhost:8080/api/madrasa-tic/user/selectOneOfMyReportsByUser/${this.Signalements[this.varIndex].id}`
         );
         this.title = res.data.title;
         this.description = res.data.description;
@@ -323,7 +346,7 @@ export default {
         //this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
-        alert("Missing data from database");
+        alert("Missing data from ymak");
       }
     },
     async TousSign() {
@@ -467,7 +490,7 @@ export default {
   text-align: left;
 }
 .etatM {
-  margin-right: 80px;
+  margin-left: 150px;
   line-height: 300%;
 }
 .deleteS {
@@ -484,5 +507,9 @@ export default {
   display: flex;
   flex-direction: row;
   margin-left: -14px;
+}
+.img{
+  position: relative;
+  left: -34px;
 }
 </style>
