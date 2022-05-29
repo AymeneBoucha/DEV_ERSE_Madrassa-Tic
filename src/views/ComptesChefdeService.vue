@@ -1,11 +1,11 @@
 <template>
   <div class="accounts">
-    <h1 class="subheading grey--text">Comptes Utilisateurs</h1>
+    <h1 class="subheading grey--text">Comptes des Chefs de Service</h1>
     <v-container>
-      <v-card-actions class="ComptesU">
-          <v-btn outlined color="primary" class="btn" to="ComptesChefdeService">
+        <v-card-actions class="ComptesC">
+          <v-btn outlined color="primary" class="btn" to="Comptes">
             <v-icon>mdi-share</v-icon>
-            <span>Comptes des chefs de service</span>
+            <span>Comptes des utilisateurs</span>
           </v-btn>
         </v-card-actions>
       <v-layout row wrap>
@@ -37,7 +37,7 @@
                 <template v-slot:activator="{ on }">
                   <v-card-actions>
                     <v-btn
-                      class="Mod"
+                      class="ModC"
                       @click="showInfos(index)"
                       outlined
                       color="orange"
@@ -97,6 +97,16 @@
                           prepend-icon="mdi-wrench"
                           @input="setSelected"
                         ></v-select>
+                        <v-select
+                          v-model="defaultSelectedC"
+                          :items="catégories"
+                          :menu-props="{ maxHeight: '200' }"
+                          label="Modifier les catégories"
+                          multiple
+                          persistent-hint
+                          prepend-icon="mdi-wrench"
+                          @input="setSelected1"
+                        ></v-select>
                         <v-card-actions>
                           <v-btn outlined color="primary">
                             <v-icon small left
@@ -130,7 +140,7 @@
                 max-width="400px"
               >
                 <template v-slot:activator="{ on }">
-                  <v-btn outlined color="red" class="Del" v-on="on">
+                  <v-btn outlined color="red" class="DelC" v-on="on">
                     <v-icon small left> mdi-delete</v-icon>
                     <span @click="Delete(index)">Supprimer</span>
                   </v-btn>
@@ -186,21 +196,43 @@ export default {
       NewAccount: "",
       roles: ["user", "admin", "moderator", "employer", "announcer"],
       defaultSelected: ["user"],
+      defaultSelectedC: [""],
+      catégories: [],
       rolesToAdd: [],
+      catégoriesToAdd: [],
     };
   },
   async created() {
     try {
       const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/admin`
+        `http://localhost:8080/api/madrasa-tic/admin/viewAllEmployesByAdmin`
       );
       this.accounts = res.data;
-       for(let i=0; i<this.accounts.length; i++){
+      for(let i=0; i<this.accounts.length; i++){
         this.accounts[i].avatar = "img1.png"
       }
       console.log(this.accounts);
     } catch (e) {
       alert("There are some errors");
+    }
+  },
+  mounted: async function () {
+    try {
+      const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/getAllCategories`);
+      //this.categrories = res.data.;
+     // console.log(res.data[0].name)
+   //  console.log(res.data.length)
+        let j = 0;
+      while (j < res.data.length) {
+        this.catégories.push(res.data[j].name);
+        j++
+      }
+
+      console.log(this.catégories)
+    } catch {
+      alert("Missing data from database");
     }
   },
   methods: {
@@ -240,6 +272,10 @@ export default {
 
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
+      await axios.post(`http://localhost:8080/api/madrasa-tic/admin/addCategoriesToEmployerByAdmin/${
+        this.accounts[this.varIndex].id}`, {
+          catégories: this.catégoriesToAdd,
+        });
       await axios
         .put(
           `http://localhost:8080/api/madrasa-tic/admin/${
@@ -274,6 +310,7 @@ export default {
         this.phoneTel = res.data.phoneTel;
         this.birthDay = res.data.birthDay;
         this.defaultSelected = res.data.roles;
+        this.defaultSelectedC = res.data.catégories;
         //this.defaultSelected = res.data.roles;
       } catch {
         alert("Missing data from database");
@@ -323,7 +360,11 @@ export default {
     },
     setSelected(value) {
       this.rolesToAdd = value;
-      console.log(value);
+      console.log(value); 
+    },
+    setSelected1(value) {
+      this.catégoriesToAdd = value;
+      console.log(value); 
     },
   },
   
@@ -334,14 +375,14 @@ export default {
   position: relative;
   margin-top: 20px;
 }
-.Mod {
+.ModC {
   margin-left: -10px;
 }
-.Del {
+.DelC {
   margin-left: -1px;
   font-size: 13px;
 }
-.ComptesU{
+.ComptesC{
   position: relative;
   margin-left: -8px;
 }

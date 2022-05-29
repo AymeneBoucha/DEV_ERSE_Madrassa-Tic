@@ -3,41 +3,44 @@
     <h1 class="subheading grey--text">Dashboard en tant que Chef de Service et User</h1>
     <v-container >
       <v-layout  row wrap>
-              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="TraitementSignalements">
-                <v-responsive class="pt-4">
+              <v-card class="text-center ma-3 const" color="hsl(209, 100%, 100%)" to="SigEnAttent">
+                <div class="CardNew">
+                <v-responsive class="pt-4 responsive">
                    <v-avatar size="100" class="white lighten-2">
-                     <img src="/treatement.png" alt="" >
+                     <img src="/shock.png" alt="" >
                    </v-avatar>
                 </v-responsive>
-                <v-card-text class="text">
-                  <div >Traitement des Signalements</div>
+                <hr class="hr6" />
+                <v-card-text class="textNew">
+                  <div class="subheading grey--text">Traitement des Signalements</div>
                 </v-card-text>
-                </router-link>
+              </div>
               </v-card>
-              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="RapportDash">
-                <v-responsive class="pt-4">
+              <v-card class="text-center ma-3 const" color="hsl(209, 100%, 100%)" to="RapportsEnvoyesChef">
+                <div class="CardNew">
+                <v-responsive class="pt-4 responsive">
                    <v-avatar size="100" class="white lighten-2">
-                     <img src="/brouillon.png" alt="" >
+                     <img src="/report.png" alt="" >
                    </v-avatar>
                 </v-responsive>
-                <v-card-text class="text">
-                  <div class="subheading">Rapports</div>
+                <hr class="hr4" />
+                <v-card-text class="textNew">
+                  <div class="subheading grey--text">Rapports</div>
                 </v-card-text>
-                </router-link>
+                </div>
               </v-card>
-              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SignalDash">
-                <v-responsive class="pt-4">
-                   <v-avatar size="100" class="red lighten-2">
-                     <img src="/sig.png" alt="" >
+              <v-card class="text-center ma-3 const" color="hsl(209, 100%, 100%)" to="MesAnnoncesAnnouncer">
+                <div class="CardNew">
+                <v-responsive class="pt-4 responsive">
+                   <v-avatar size="100" class="white lighten-2">
+                     <img src="/promote.png" alt="" >
                    </v-avatar>
                 </v-responsive>
-                <v-card-text class="text">
-                  <div class="subheading">Signalements</div>
+                <hr class="hr5" />
+                <v-card-text class="textNew">
+                  <div class="subheading grey--text">Annonces</div>
                 </v-card-text>
-                </router-link>
+                </div>
               </v-card>
       </v-layout>
     </v-container>

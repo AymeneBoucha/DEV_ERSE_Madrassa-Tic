@@ -2,6 +2,16 @@
   <div class="LesSignalements">
     <h1 class="subheading grey--text">Les Signalements</h1>
     <v-container>
+      <v-card-actions class="btnsL">
+        <v-btn outlined color="primary" class="btn" to="/addSignal">
+          <v-icon>mdi-plus-box-multiple</v-icon>
+          <span>Ajouter Un Signalement</span>
+        </v-btn>
+        <v-btn outlined color="green" class="btn" to="/MesSignalements">
+          <v-icon>mdi-home-alert</v-icon>
+          <span>Mes Signalements</span>
+        </v-btn>
+        </v-card-actions>
       <v-col cols="5" xs6 sm4 md2 class="filtre">
         <v-menu offset-x>
           <template v-slot:activator="{ on, attrs }">
@@ -27,8 +37,14 @@
               <v-list-item-title>{{ Service.nom }}</v-list-item-title>
             </v-list-item>
           </v-list>
+          
         </v-menu>
+        <v-btn small outlined color="blue" @click="trierSignalement()" class="mr-2" dark v-bind="attrs" v-on="on">
+              <v-icon left small>check</v-icon>
+              <span class="caption text-lowercase">Trier par date</span>
+            </v-btn>
       </v-col>
+       
       <v-card class="cardS" min-width="950" width="950" tile>
         <v-list dense>
           <v-list-item-group class="lig" v-model="selectedItem" color="primary">
@@ -321,7 +337,7 @@ async created() {
         const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
         const res = await axios.get(
-          `http://localhost:8080/api/madrasa-tic/user/selectOneOfMyReportsByUser/${this.Signalements[this.varIndex].id}`
+          `http://localhost:8080/api/madrasa-tic/user/selectOneReportByUser/${this.Signalements[this.varIndex].id}`
         );
         this.title = res.data.title;
         this.description = res.data.description;
@@ -382,13 +398,15 @@ async created() {
       }
       let i = 0;
       while (i < this.Signalements.length) {
-        if (this.Signalements[i].state !== "Traité") {
+        if (this.Signalements[i].state !== "fini") {
           this.Signalements.splice(i, 1);
         } else {
           i++;
         }
       }
     },
+    trierSignalement(){
+    this.Signalements.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)},
    async Filtrer(categorie) {
            const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
@@ -424,12 +442,13 @@ async created() {
   font-size: 18px;
 }
 .titre {
+  position: absolute;
   margin-left: 25px;
   line-height: 250%;
   text-align: left;
 }
 .etatL {
-  margin-left: 150px;
+  margin-left: 280px;
   line-height: 300%;
 }
 .deleteS {
@@ -450,5 +469,12 @@ async created() {
 .img{
   position: relative;
   left: -34px;
+}
+.btn{
+  text-transform: none;
+}
+.btnsL{
+  position: absolute;
+  margin-left: 535px;
 }
 </style>

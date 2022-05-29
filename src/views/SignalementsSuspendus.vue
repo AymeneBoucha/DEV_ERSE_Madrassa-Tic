@@ -2,6 +2,20 @@
     <div class="LesSignalements">
         <h1 class="subheading grey--text">Signalements Suspendus par le Chef de Service</h1>
         <v-container>
+          <v-card-actions class="btnsSU">
+        <v-btn outlined color="red" class="btn" to="SignalementsEnAttente">
+          <v-icon>mdi-alert-octagram</v-icon>
+          <span>Signalements En Attente</span>
+        </v-btn>
+        <v-btn outlined color="primary" class="btn" to="SignalementsEnTraitement">
+          <v-icon>mdi-tire</v-icon>
+          <span>Signalements En Traitement</span>
+        </v-btn>
+        <v-btn outlined color="orange" class="btn" to="SignalementsACompleterRes">
+          <v-icon>mdi-alert-plus</v-icon>
+          <span>Signalements à Completer</span>
+        </v-btn>
+      </v-card-actions>
           <v-col cols="5" xs6 sm4 md2 class="filtre">
                             <v-menu offset-x>
                             <template v-slot:activator="{ on, attrs }">
@@ -129,141 +143,10 @@
                         ></v-text-field>
                   </div>
                   <div class="bouttonsD">
-                    <v-btn class="" @click="dialog = false"><span>Annuler</span></v-btn>
+                    <v-btn class="" @click="dialog = false"><span>Sortir</span></v-btn>
                   </div>
                 </v-card-text>
               </v-card>
-              </v-dialog>
-              <v-dialog
-                v-model="dialog1"
-                :retain-focus="false"
-                persistent
-                max-width="800px"
-                class="dialog"
-              >
-                <template v-slot:activator="{ on }">
-                      <v-btn outlined color="blue" class="trait" @click="Consulter(index)"  v-on="on">
-                          <v-icon small left>task_alt</v-icon>
-                          <span>Details</span>
-                      </v-btn>
-                      </template>
-                <v-card class="text-center cardM">
-                  <v-card-text>
-                    <div class="signal">
-                      <v-select
-                        v-model="defaultCatégorie"
-                        item-text="nom"
-                        :items="catégories"
-                        label="Catégorie"
-                        disabled
-                        prepend-icon="category"
-                        required
-                        :rules="[(v) => !!v || 'champs obligatoire']"
-                      ></v-select>
-                      <v-text-field
-                        v-model="title"
-                        :rules="[(v) => !!v || 'champs obligatoire']"
-                        label="Titre"
-                        disabled
-                        required
-                        prepend-icon="title"
-                      ></v-text-field>
-                      <v-textarea
-                        clearable
-                        clear-icon="mdi-close-circle"
-                        label="Description (optionnelle)"
-                        v-model="description"
-                        disabled
-                        prepend-icon="description"
-                        rows="2"
-                      ></v-textarea>
-                      <v-text-field
-                        label="Date"
-                        v-model="dateOf"
-                        prepend-icon="mdi-calendar"
-                        disabled
-                        type="text"
-                      ></v-text-field>
-                      <div class="lieu">
-                        <div class="form-group">
-                          <label for="site">Site</label>
-                          <select
-                            class="text1 form-control"
-                            name="site"
-                            id="site"
-                            v-model="site"
-                            @change="onChange1($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez le site
-                            </option>
-                            <option
-                              v-for="option in sites_options"
-                              v-bind:value="option.value"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="etage">Etage</label>
-                          <select
-                            class="text2 form-control"
-                            name="etage"
-                            id="etage"
-                            v-model="etage"
-                            @change="onChange2($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez l'etage
-                            </option>
-                            <option
-                              v-for="option in etages_options[site]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="salle">Salle</label>
-                          <select
-                            class="text3 form-control"
-                            name="salle"
-                            id="salle"
-                            v-model="salle"
-                            @change="onChange3($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez la salle
-                            </option>
-                            <option
-                              v-for="option in salles_options[etage]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-                      <v-text-field
-                        label="lieu"
-                        v-model="localisation"
-                        prepend-icon="place"
-                        disabled
-                        type="text"
-                      ></v-text-field>
-                    </div>
-                    <div class="bouttonsD">
-                      <v-btn class="" @click="dialog1 = false"
-                        ><span>Annuler</span></v-btn
-                      >
-                    </div>
-                  </v-card-text>
-                </v-card>
               </v-dialog>
                     </v-card-actions>
                     
@@ -600,5 +483,9 @@ export default {
 }
 .img{
   left: -34px;
+}
+.btnsSU{
+  position: absolute;
+  margin-left: 208px;
 }
 </style>

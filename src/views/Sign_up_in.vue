@@ -227,7 +227,7 @@
 
 <script>
 import axios from "axios";
-import router from "../router/index";
+//import router from "../router/index";
 import setAuthHeader from "@/utils/setAuthHeader";
 
 // export default {
@@ -305,12 +305,6 @@ export default {
           ) {
             this.$router.push("/DashboardResUser");
           } else {
-            if (
-              this.userroles.includes("ROLE_USER") &&
-              this.userroles.includes("ROLE_ADMIN")
-            ) {
-              this.$router.push("/DashboardAdmUser");
-            } else {
               if (
                 this.userroles.includes("ROLE_USER") &&
                 this.userroles.includes("ROLE_EMPLOYER")
@@ -318,16 +312,14 @@ export default {
                 this.$router.push("/DashboardChefUser");
               } else {
                 if (this.userroles.includes("ROLE_USER")) {
-                  this.$router.push("/DashboardUser");
+                  this.$router.push("/MesSignalements");
                 }
               }
-            }
           }
         }
-      } catch (e) {
-        alert("Adresse ou mot de passe incorrect");
-        router.push({ name: "Sign_up_in" });
-      }
+    } catch {
+      alert("Missing data from database");
+    }
     },
     async handleSubmit() {
       //c'est tout ce que dont tu as besoin

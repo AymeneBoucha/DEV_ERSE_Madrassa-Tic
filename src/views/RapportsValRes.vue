@@ -2,6 +2,16 @@
   <div class="Signalementtraiter">
     <h1 class="subheading grey--text">Les Rapports Validés</h1>
     <v-container>
+      <v-card-actions class="btnsRV">
+         <v-btn outlined color="red" class="btn" to="LesRapportsRes">
+          <v-icon>mdi-alert-circle-check-outline</v-icon>
+          <span>Rapports En Attente</span>
+        </v-btn>
+        <v-btn outlined color="primary" class="btn" to="RapportsACompRes">
+          <v-icon>mdi-flag-plus</v-icon>
+          <span>Rapports à Completer</span>
+        </v-btn>
+      </v-card-actions>
       <v-col cols="5" xs6 sm4 md2 class="filtre">
         <v-menu offset-x>
           <template v-slot:activator="{ on, attrs }">
@@ -28,6 +38,10 @@
             </v-list-item>
           </v-list>
         </v-menu>
+        <v-btn small outlined color="blue" @click="trierSignalement()" class="mr-2 " dark v-bind="attrs" v-on="on">
+              <v-icon left small>check</v-icon>
+              <span class="caption text-lowercase">Trier par date</span>
+            </v-btn>
       </v-col>
       <v-layout row wrap>
         <v-flex v-for="(Rapport, index) in Rapports" :key="Rapport.title">
@@ -37,7 +51,7 @@
                 <img src="/p.png" alt="" />
               </v-avatar>
             </v-responsive>
-            <v-card-text class="titre">
+            <v-card-text class="titreRV">
               <div class="subheading sig">{{ Rapport.title }}</div>
               <div class="grey-text">
                 <strong>Catégorie: </strong>{{ Rapport.category }}
@@ -279,6 +293,28 @@ export default {
           motif: "",
           Avatar: "/p.png",
         },
+        {
+          title: "",
+          description: "",
+          category: "",
+          state: "",
+          dateOf: "",
+          auteur: "",
+          image: [],
+          motif: "",
+          Avatar: "/p.png",
+        },
+        {
+          title: "",
+          description: "",
+          category: "",
+          state: "",
+          dateOf: "",
+          auteur: "",
+          image: [],
+          motif: "",
+          Avatar: "/p.png",
+        },
       ],
       Services: [
         { nom: "Sécurité" },
@@ -420,6 +456,9 @@ this.materialR=res.data.material;
         }
       }
     },
+    trierSignalement(){
+    this.Rapports.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
+    },
   },
 };
 </script>
@@ -434,7 +473,7 @@ div.flex {
   align-items: center;
   width: 300px;
   margin-left: 10px;
-  height: 440px;
+  height: 480px;
 }
 .cardT {
   height: 150px;
@@ -452,7 +491,7 @@ div.flex {
   font-size: 18px;
   text-align: center;
 }
-.titre {
+.titreRV {
   margin-bottom: 20px;
   line-height: 250%;
   text-align: center;
@@ -493,5 +532,9 @@ div.flex {
 }
 .cardT {
   height: 170px;
+}
+.btnsRV{
+  position: absolute;
+  margin-left: 585px;
 }
 </style>

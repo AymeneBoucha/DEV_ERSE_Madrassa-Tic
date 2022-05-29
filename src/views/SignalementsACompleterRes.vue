@@ -1,7 +1,21 @@
 <template>
     <div class="LesSignalements">
-        <h1 class="subheading grey--text">Signalements Refusés par le Chef de Service</h1>
+        <h1 class="subheading grey--text">Signalements à Completer par l'Utilisateur</h1>
         <v-container>
+          <v-card-actions class="btnsAC">
+        <v-btn outlined color="red" class="btn" to="/SignalementsEnAttente">
+          <v-icon>mdi-alert-octagram</v-icon>
+          <span>Signalements En Attente</span>
+        </v-btn>
+        <v-btn outlined color="primary" class="btn" to="SignalementsEnTraitement">
+          <v-icon>mdi-tire</v-icon>
+          <span>Signalements En Traitement</span>
+        </v-btn>
+        <v-btn outlined color="orange" class="btn" to="SignalementsSuspendus">
+          <v-icon>mdi-timer-off</v-icon>
+          <span>Signalements Suspendus</span>
+        </v-btn>
+      </v-card-actions>
           <v-col cols="5" xs6 sm4 md2 class="filtre">
                             <v-menu offset-x>
                             <template v-slot:activator="{ on, attrs }">
@@ -32,35 +46,23 @@
             <v-layout row wrap>
                 <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.id">
                     <v-card class="text-center ma-3 card1">
-                    <v-responsive class="pt-0 img">
-                    <v-avatar size="100" class="red lighten-2">
-                        <img src="/sig.png" alt="" >
-                    </v-avatar>
-                    </v-responsive>
-                    <v-card-text class="titre">
+                         <div class="img">
+           <v-img
+        :aspect-ratio="16/9"
+        :width="width"
+        src="sig.png"
+      ></v-img>
+      </div>
+                    <v-card-text class="titre1">
                     <div class="subheading tt">{{Signalement.title}}</div>
                     <div class="grey--text"><strong>Catégorie : </strong>{{Signalement.category}}</div>
                     <div class="grey--text"><strong>Publié le : </strong>{{Signalement.dateOf}}</div>
-                    <div class="grey--text"><strong>Motif : </strong>{{Signalement.motiff}}</div>
-                    </v-card-text>
-                    <v-card-text class="etat" >
-                            <v-btn small outlined color="green" @click="valider(index)" class="mt-3 bt" dark>
-                                <v-icon left small>check</v-icon>
-                                <span class="caption text-lowercase">Valider</span>
-                            </v-btn>
-                            <v-btn small outlined color="red" @click="rejeter(index)" class="mt-3 bt" dark>
-                                <v-icon left small>delete</v-icon>
-                                <span class="caption text-lowercase">Rejeter</span>
-                            </v-btn>
-                            <v-btn small outlined color="orange" @click="info(index)" class="mt-3 bt" dark>
-                                <v-icon left small>add</v-icon>
-                                <span class="caption text-lowercase">Demender info</span>
-                            </v-btn>
+                    <div class="grey--text"><strong>Motif : </strong>{{Signalement.motif}}</div>
                     </v-card-text>
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
                         <template v-slot:activator="{ on }">
-                        <v-btn outlined color="blue" class="consulter" v-on="on" >
+                        <v-btn outlined color="blue" class="consulter1" v-on="on" >
                              <v-icon small left > mdi-eye</v-icon>
                              <span @click="Modifier(index)">Consulter</span>
                         </v-btn>
@@ -71,9 +73,9 @@
                         <v-select
                             v-model="defaultCatégorie"
                             item-text="nom"
-                            :disabled="disabled"
                             :items="catégories"
                             label="Catégorie"
+                            disabled
                             prepend-icon="category"
                             required
                             :rules="[v => !!v || 'champs obligatoire']"
@@ -82,7 +84,7 @@
                             v-model="title"
                             :rules="[v => !!v || 'champs obligatoire']"
                             label="Titre"
-                            :disabled="disabled"
+                            disabled
                             required
                             prepend-icon="title"
                         ></v-text-field>
@@ -91,10 +93,17 @@
                             clear-icon="mdi-close-circle"
                             label="Description (optionnelle)"
                             v-model="description"
-                            :disabled="disabled"
+                            disabled
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
+                       <v-text-field 
+                        label="Date"
+                        v-model="dateOf"
+                        prepend-icon="mdi-calendar"
+                        disabled
+                        type="text"
+                        ></v-text-field>
                         <div class="lieu">
                         <div class=" form-group">
                        <label for="site">Site</label>
@@ -125,25 +134,15 @@
                         disabled
                         type="text"
                         ></v-text-field>
-                        <v-file-input
-                          v-model="picture"
-                          accept="image/*"
-                          :disabled="disabled"
-                          label="Ajouter une image "
-                          prepend-icon="add_a_photo"
-                        ></v-file-input>
-                        <v-text-field 
-                        label="Motif de Refus par le Chef de Service"
-                        v-model="MotifDeRefus"
-                        prepend-icon="warning"
-                        disabled
-                        type="text"
+                        <v-text-field
+                          v-model="motif"
+                          disabled
+                          label="Motif "
+                          prepend-icon="warning"
                         ></v-text-field>
                   </div>
                   <div class="bouttonsD">
-                    <v-btn class="" @click="dialog = false, disabled = true, conf = false"  ><span>Annuler</span></v-btn>
-                    <v-btn class="" @click="conf = !conf, dialog = false, disabled = true, enregistrer()" v-show="conf"><span>Confirmer</span></v-btn>
-                    <v-btn class="" @click="disabled = !disabled, conf = !conf" v-show="!conf" ><span>Modifier</span></v-btn>
+                    <v-btn class="" @click="dialog = false"><span>Sortir</span></v-btn>
                   </div>
                 </v-card-text>
               </v-card>
@@ -170,6 +169,7 @@ export default {
           conf : false,
           disabled: true,
             btn: false,
+            width: '290',
             selectedItem: 0,
             dialog: false,
             date: '',
@@ -230,7 +230,7 @@ export default {
                      site: '',
                     etage:'',
                     salle:'',
-                    MotifdeRefus: ''
+                    motif: ''
                 },
               
             ],
@@ -257,7 +257,7 @@ export default {
    //  console.log(res.data.length)
         let j = 0;
       while (j < res.data.length) {
-        this.categrories.push(res.data[j].name);
+        this.catégories.push(res.data[j].name);
         j++
       }
     } catch {
@@ -270,10 +270,10 @@ export default {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
       const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/moderator/getAllReportsByModerator`
+        `http://localhost:8080/api/madrasa-tic/moderator/getAllNeedMoreInfosReportsByByModerator`
       );
       this.Signalements = res.data;
-      let j = 0;
+       let j = 0;
       while (j < this.Signalements.length) {
         this.Signalements[j].category = res.data[j].category.name;
         j++
@@ -309,7 +309,7 @@ export default {
       onChange3(event) {
             {this.salle = event.target.value;}
         },
-         async Modifier (index) {
+        async Modifier (index) {
       try {
         
         this.varIndex=index
@@ -326,85 +326,13 @@ export default {
         this.etage = res.data.etage;
         this.salle = res.data.salle;
         this.dateOf = res.data.dateOf;
+        this.motif= res.data.motif;
         //this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
       }
     },
-       /* async Confirmer (id) {
-         const data = {
-                title: this.title,
-                description: this.decription,
-                category: this.category,
-                localisation: this.localisation,
-                picture: this.picture,
-            };
-          axios.post('http://localhost:3000',data, id)
-        .then(
-                res => {
-                    console.log(res)
-                    alert('Votre signalement est envoyé avec succès');
-                }
-            ).catch (
-                err => {
-                    console.log(err)
-                    alert('Veillez remplir tout les champs correctement.');
-                }
-            )
-        },*/
-         async enregistrer () {
-       const acc = localStorage.getItem("xaccesstoken");
-        setAuthHeader(acc);
-         const data = {
-           //report_id: this.report_id,
-                title: this.title,
-                description: this.description,
-                category: this.category,
-                localisation: this.localisation,
-                site : this.site,
-                etage : this.etage,
-                salle : this.salle,
-                picture: this.picture,
-            };
-          axios.put(`http://localhost:8080/api/madrasa-tic/moderator/updateReportByModerator/${this.Signalements[this.varIndex].id}`,data)
-        .then(
-                res => {
-                    console.log(res)
-                    alert('Votre signalement est modifié avec succès');
-                }
-            ).catch (
-                err => {
-                    console.log(err)
-                    alert('Veillez remplir tout les champs correctement.');
-                }
-            )
-    },
-        async valider(index) {
-            try{
-              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/validateReportByModerator/${this.Signalements[index].id}`),
-              alert("Signalemet validé")
-            }catch(e){
-              alert("Erreur: Signalement pas validé")
-            }
-        },
-        async rejeter(index){
-            try{
-              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/rejectReportByModerator/${this.Signalements[index].id}`),
-              alert("Signalemet rejeté")
-            }catch(e){
-              alert("Erreur: Signalement pas rejeté")
-            }
-        },
-        async info(index){
-           // this.Signalements[id].state = 'Besoin Plus Infos';
-            try{
-              await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/needMoreInfosReportByModerator/${this.Signalements[index].id}`),
-              alert("Signalemet a besion de plus d'informations")
-            }catch(e){
-              alert("Erreur: Operation non effectué")
-            }
-        },
         Filtrer(categorie) {
           /*const res = axios.get(`http://localhost:3000/LesSignalements`);
           this.Signalements = res.data;*/
@@ -437,8 +365,8 @@ export default {
     font-weight: 550;
     font-size: 18px;
 }
-.titre {
-    margin-left: 25px;
+.titre1 {
+    margin-left: -10px;
     line-height: 250%;
     text-align: left;
 }
@@ -521,13 +449,20 @@ export default {
 .bt {
   width: 130px;
 }
-.consulter{
-  margin-right: 50px;
+.consulter1{
+  margin-right: 80px;
 }
 .date
 {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+.img{
+  left: -33px;
+}
+.btnsAC{
+  position: absolute;
+  margin-left: 218px
 }
 </style>

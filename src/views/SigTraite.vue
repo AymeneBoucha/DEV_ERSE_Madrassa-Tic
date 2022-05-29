@@ -2,17 +2,35 @@
   <div class="Signalementtraiter">
     <h1 class="subheading grey--text">Signalements Traités</h1>
     <v-container >
+      <v-btn small outlined color="blue" @click="trierSignalement()" class="mr-2 TR" dark v-bind="attrs" v-on="on">
+              <v-icon left small>check</v-icon>
+              <span class="caption text-lowercase">Trier par date</span>
+            </v-btn>
+      <v-card-actions class="btnsChTr">
+        <v-btn outlined color="red" class="btn" to="/SigEnAttent">
+          <v-icon>mdi-alert-octagram</v-icon>
+          <span>En Attente de Traitement</span>
+        </v-btn>
+        <v-btn outlined color="primary" class="btn" to="SigEnTraitement">
+          <v-icon>mdi-sync</v-icon>
+          <span>En Cours de Traitement</span>
+        </v-btn>
+        <v-btn outlined color="orange" class="btn" to="SigSuspendu">
+          <v-icon>mdi-alert</v-icon>
+          <span>Signalements Suspendus</span>
+        </v-btn>
+      </v-card-actions>
       <v-layout row wrap>
           <v-flex v-for="Signalement in Signalements" :key="Signalement.titre">
               <v-card class="text-center ma-3 card" color="#F0FFF0">
-                   <div class="img">
+                   <div class="imgChTr">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
         src="p.png"
       ></v-img>
       </div>
-                  <v-card-text class="titre">
+                  <v-card-text class="titreChTr">
                       <div class="subheading sig">{{Signalement.title}}</div>
                       <div class="grey-text"><strong>Catégorie: </strong>{{Signalement.category}}</div>
                       <div class="grey-text"><strong>date: </strong>{{Signalement.dateOf}}</div>
@@ -179,7 +197,7 @@ export default {
       dialog2: false,
       dialog3: false,
       selectedItem: 0,
-      width: '300',
+      width: '297',
       dialog: false,
       date: "",
       menu: false,
@@ -318,6 +336,40 @@ export default {
           motif: "",
           probleme: "",
         },
+          {
+          id: "",
+          title: "",
+          category: "",
+          dateOf: "",
+          userId: "",
+          auteur: "",
+          state: "",
+          image: "/sig.png",
+          description: "",
+          site: "",
+          etage: "",
+          salle: "",
+          lieu:"",
+          motif: "",
+          probleme: "",
+        },
+          {
+          id: "",
+          title: "",
+          category: "",
+          dateOf: "",
+          userId: "",
+          auteur: "",
+          state: "",
+          image: "/sig.png",
+          description: "",
+          site: "",
+          etage: "",
+          salle: "",
+          lieu:"",
+          motif: "",
+          probleme: "",
+        },
       ],
     };
   },
@@ -360,7 +412,10 @@ export default {
       } catch {
         alert("Missing data from database");
       }
-    } 
+    } ,
+    trierSignalement(){
+    this.Signalements.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
+    },
     }
 }
 </script>
@@ -382,10 +437,12 @@ export default {
     font-size: 18px;
     text-align: center;
 }
-.titre{
+.titreChTr{
+  position: absolute;
+  margin-top: 180px;
     line-height: 250%;
     text-align: center;
- 
+  
 }
 .etat{
     margin-left: 150px;
@@ -396,7 +453,17 @@ export default {
     align-items: center;
     text-transform: none;
 }
-.img{
+.imgChTr{
+  margin-top: 2px;
   left: -17.5px;
+}
+.TR{
+  position: absolute;
+  margin-top: 13px;
+  margin-left: -580px;
+}
+.btnsChTr{
+  position: relative;
+  left: 33.5%;
 }
 </style>

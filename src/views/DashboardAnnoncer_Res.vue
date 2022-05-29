@@ -1,53 +1,53 @@
 <template>
-  <div class="team">
-    <h1 class="subheading grey--text">Gestion des Signalements</h1>
+  <div class="dashboard">
+    <h1 class="subheading grey--text">Dashboard Gestion des Annonces</h1>
     <v-container >
       <v-layout row wrap>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SignalementsEnAttente">
+                <router-link to="AnnonceAfficheRes">
                 <v-responsive class="pt-4">
-                   <v-avatar size="100" class="white lighten-2">
-                     <img src="/waiting.png" alt="" >
+                   <v-avatar size="100" class="red lighten-2">
+                     <img src="/fig2.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements En Attente de Validation</div>
+                  <div class="subheading">Annonces En Cours</div>
                 </v-card-text>
                 </router-link>
               </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SignalementsACompleter">
+                <router-link to="AnnonceValideRes">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="white lighten-2">
-                     <img src="/incomplete.png" alt="" >
+                     <img src="/rapport.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements à Completer par l'Utilisateur</div>
+                  <div class="subheading">Annonces Validées</div>
                 </v-card-text>
                 </router-link>
               </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SignalementsSuspendus">
+                <router-link to="AnnonceAnnuleRes">
                 <v-responsive class="pt-4">
-                   <v-avatar size="100" class="white lighten-2">
-                     <img src="/warning.png" alt="" >
+                   <v-avatar size="100" class="red lighten-2">
+                     <img src="/annn.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements Suspendus par le Chef de Service</div>
+                  <div class="subheading">Annonces Annulées</div>
                 </v-card-text>
                 </router-link>
               </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SignalementsEnTraitement">
+                <router-link to="AnnonceExpireRes">
                 <v-responsive class="pt-4">
-                   <v-avatar size="100" class="white lighten-2">
-                     <img src="/refusal.png" alt="" >
+                   <v-avatar size="100" class="red lighten-2">
+                     <img src="/annn.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements En Cours De Traitement</div>
+                  <div class="subheading">Annonces Expirées</div>
                 </v-card-text>
                 </router-link>
               </v-card>
@@ -61,6 +61,7 @@
 
 
 export default {
+  name: 'DashboardAnnoncer_Res',
   components: {
    
   },

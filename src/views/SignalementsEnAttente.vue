@@ -2,6 +2,20 @@
     <div class="LesSignalements">
         <h1 class="subheading grey--text">Signalements En Attente de Validation</h1>
         <v-container>
+          <v-card-actions class="btnsEnAt">
+        <v-btn outlined color="primary" class="btn" to="/SignalementsEnTraitement">
+          <v-icon>mdi-tire</v-icon>
+          <span>Signalements En Traitement</span>
+        </v-btn>
+        <v-btn outlined color="red" class="btn" to="SignalementsACompleterRes">
+          <v-icon>mdi-alert-plus</v-icon>
+          <span>Signalements à Completer</span>
+        </v-btn>
+        <v-btn outlined color="orange" class="btn" to="SignalementsSuspendus">
+          <v-icon>mdi-timer-off</v-icon>
+          <span>Signalements Suspendus</span>
+        </v-btn>
+      </v-card-actions>
           <v-col cols="5" xs6 sm4 md2 class="filtre">
                             <v-menu offset-x>
                             <template v-slot:activator="{ on, attrs }">
@@ -32,7 +46,7 @@
             <v-layout row wrap>
                 <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.id">
                     <v-card class="text-center ma-3 card1">
-                    <div class="img">
+                    <div class="imgEnAt">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
@@ -47,8 +61,7 @@
                 <strong>l'auteur : </strong>{{ Signalement.auteur }}
               </div>
                     </v-card-text>
-                    <v-card-actions class="etat">
-                    <v-card-text >
+                    <v-card-actions class="etatEnAt">
                       <v-dialog
                 v-model="dialog2"
                  :retain-focus="false"
@@ -149,7 +162,6 @@
                   </v-card-text>
                 </v-card>
                 </v-dialog>
-                </v-card-text>
                 </v-card-actions>
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
@@ -466,6 +478,8 @@ export default {
             try{
               await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/validateReportByModerator/${this.Signalements[this.varIndex].id}`),
               alert("Signalemet validé")
+              this.dialog2 = false;
+              this.Signalements.splice(this.varIndex, 1);
             }catch(e){
               alert("Erreur: Signalement pas validé")
             }
@@ -484,6 +498,7 @@ export default {
               console.log(data)
               await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/rejectReportByModerator/${this.Signalements[this.varIndex].id}`,data),
               alert("Signalemet rejeté")
+              this.dialog3 = false;
             }catch(e){
               alert("Erreur: Signalement pas rejeté")
             }
@@ -497,7 +512,9 @@ export default {
             };
               
               await axios.post(`http://localhost:8080/api/madrasa-tic/moderator/needMoreInfosReportByModerator/${this.Signalements[this.varIndex].id}`,data),
-              alert("Signalemet modifié")
+              alert("Signalement envoyé pour etre completé")
+              this.dialog4 = false;
+              this.Signalements.splice(this.varIndex, 1);
             }catch(e){
               alert("Erreur: Signalement pas modifié")
             }
@@ -549,11 +566,11 @@ export default {
     text-align: left;
     width: 300px;
 }
-.etat {
+.etatEnAt {
   
     display: flex;
     flex-direction: column;
-    margin-right: 300px;
+    margin-left: 200px;
     line-height: 300%;
 }
 .deleteS{
@@ -653,7 +670,11 @@ export default {
   position: relative;
   margin-top: 20px;
 }
-.img{
-  left: -33px;
+.imgEnAt{
+  margin-right: 150px;
+}
+.btnsEnAt{
+  position: absolute;
+  margin-left: 205px;
 }
 </style>

@@ -1,7 +1,13 @@
 <template>
   <div class="SignalementsEnregistrés">
     <h1 class="subheading grey--text">Mes Signalements Enregistrés</h1>
-    <v-container>
+    <v-card-actions class="btnsE">
+          <v-btn outlined color="green" class="btn" to="/MesSignalements">
+          <v-icon>mdi-home-alert</v-icon>
+          <span>Mes Signalements</span>
+        </v-btn>
+        </v-card-actions>
+    <v-container class="flex">
       <v-layout row wrap>
         <v-flex
           v-for="(Signalement, index) in Signalements"
@@ -307,8 +313,6 @@ export default {
           title: "",
           category: "",
           dateOf: "",
-  
-
           Avatar: "/sig.png",
           description: "",
           site: "",
@@ -492,6 +496,9 @@ export default {
 };
 </script>
 <style scoped>
+.flex{
+  margin-top: 18px;
+}
 .card1 {
   display: flex;
   flex-direction: row;
@@ -510,7 +517,6 @@ export default {
 }
 .titre {
   position: absolute;
-  margin-left: 600px;
   line-height: 250%;
   text-align: left;
 }
@@ -598,5 +604,9 @@ export default {
 .img{
   position: absolute;
   left: -34px;
+}
+.btnsE{
+  position: absolute;
+  margin-left: 797px;
 }
 </style>

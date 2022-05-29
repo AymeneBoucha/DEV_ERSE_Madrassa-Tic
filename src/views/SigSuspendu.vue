@@ -2,23 +2,37 @@
   <div class="Signalementtraiter">
     <h1 class="subheading grey--text">Signalements Suspendus</h1>
     <v-container >
+      <v-card-actions class="btnsChSu">
+        <v-btn outlined color="red" class="btn" to="/SigEnAttent">
+          <v-icon>mdi-alert-octagram</v-icon>
+          <span>En Attente de Traitement</span>
+        </v-btn>
+        <v-btn outlined color="primary" class="btn" to="SigEnTraitement">
+          <v-icon>mdi-sync</v-icon>
+          <span>En Cours de Traitement</span>
+        </v-btn>
+        <v-btn outlined color="green" class="btn" to="SigTraité">
+          <v-icon>mdi-check-outline</v-icon>
+          <span>Signalements Traités</span>
+        </v-btn>
+      </v-card-actions>
       <v-layout row wrap>
           <v-flex v-for="(Signalement, index) in Signalements" :key="Signalement.titre">
               <v-card class="text-center ma-3 card" color="#F0FFF0">
-                  <div class="img">
+                  <div class="imgChSu">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
         src="p.png"
       ></v-img>
       </div>
-                  <v-card-text class="titre">
+                  <v-card-text class="titreChSu">
                       <div class="subheading sig">{{Signalement.title}}</div>
                       <div class="grey-text"><strong>Catégorie: </strong>{{Signalement.category}}</div>
                       <div class="grey-text"><strong>Obstacle: </strong>{{Signalement.probleme}}</div>
                   </v-card-text>
                   <v-card-actions class="b">
-                      <v-btn outlined color="blue" class="cont" >
+                      <v-btn outlined color="green" class="cont" >
                           <v-icon small left>mdi-play-circle</v-icon>
                           <span @click="Continuer(index)">Continuer le traitement</span>
                       </v-btn>
@@ -179,7 +193,7 @@ export default {
       dialog2: false,
       dialog3: false,
       selectedItem: 0,
-      width: '300',
+      width: '297',
       dialog: false,
       date: "",
       menu: false,
@@ -318,6 +332,40 @@ export default {
           motif: "",
           probleme: "",
         },
+         {
+          id: "",
+          title: "",
+          category: "",
+          dateOf: "",
+          userId: "",
+          auteur: "",
+          state: "",
+          image: "/sig.png",
+          description: "",
+          site: "",
+          etage: "",
+          salle: "",
+          lieu:"",
+          motif: "",
+          probleme: "",
+        },
+         {
+          id: "",
+          title: "",
+          category: "",
+          dateOf: "",
+          userId: "",
+          auteur: "",
+          state: "",
+          image: "/sig.png",
+          description: "",
+          site: "",
+          etage: "",
+          salle: "",
+          lieu:"",
+          motif: "",
+          probleme: "",
+        },
       ],
     };
   },
@@ -336,6 +384,13 @@ export default {
         alert("Missing data from database");
         }
     },
+        computed: {
+    localisation: function () {
+      if (this.site  && this.etage && this.salle)
+      {return this.site + ' ' + this.etage + ' ' + this.salle}
+      else {return ''}
+    },
+  },
   methods: {
         async Terminer(index)  {
       try {
@@ -405,10 +460,11 @@ export default {
     font-size: 18px;
     text-align: center;
 }
-.titre{
+.titreChSu{
+  position: absolute;
     line-height: 250%;
     text-align: center;
-    margin-bottom: 20px;
+    margin-top: 200px;
 }
 .b{
   display: flex;
@@ -425,10 +481,15 @@ export default {
     margin-bottom: 20px;
     text-transform: none;
 }
-.img{
+.imgChSu{
+  margin-top: 2px;
   left: -17.5px;
 }
 .trait1{
   text-transform: none;
+}
+.btnsChSu{
+  position: relative;
+  margin-left: 36%;
 }
 </style>

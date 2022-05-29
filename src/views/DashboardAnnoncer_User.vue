@@ -1,53 +1,65 @@
 <template>
-  <div class="team">
-    <h1 class="subheading grey--text">Gestion de Signalements</h1>
+  <div class="dashboard">
+    <h1 class="subheading grey--text">Dashboard en tant que Annonceur et User</h1>
     <v-container >
       <v-layout row wrap>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SigEnAttent">
+                <router-link to="MesAnnoncesAnnouncer">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="red lighten-2">
-                     <img src="/check.png" alt="" >
+                     <img src="/announce.jpg" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements en Attente de Traitement</div>
+                  <div class="subheading">Mes Annonces</div>
                 </v-card-text>
                 </router-link>
               </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SigEnTraitement">
+                <router-link to="AjouterAnnonce">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="white lighten-2">
-                     <img src="/process.png" alt="" >
+                     <img src="/ajou.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements en Cours de Traitement</div>
+                  <div class="subheading">Ajouter une Annonce</div>
                 </v-card-text>
                 </router-link>
               </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SigTraité">
+                <router-link to="AnnonceAnnuleAnnoncer">
                 <v-responsive class="pt-4">
                    <v-avatar size="100" class="red lighten-2">
-                     <img src="/valid.jpg" alt="" >
+                     <img src="/annn.png" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements Traités</div>
+                  <div class="subheading">Annonces Annulées</div>
                 </v-card-text>
                 </router-link>
               </v-card>
               <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
-                <router-link to="SigSuspendu">
+                <router-link to="AnnonceRejeteAnnoncer">
                 <v-responsive class="pt-4">
-                   <v-avatar size="100" class="white">
-                     <img src="/alert.png" alt=""  >
+                   <v-avatar size="100" class="red lighten-2">
+                     <img src="/reje.jpg" alt="" >
                    </v-avatar>
                 </v-responsive>
                 <v-card-text class="text">
-                  <div class="subheading">Signalements Suspendus</div>
+                  <div class="subheading">Annonces Rejetées</div>
+                </v-card-text>
+                </router-link>
+              </v-card>
+              <v-card class="text-center ma-3 const" color="rgb(212, 212, 212)">
+                <router-link to="AnnonceExpireAnnoncer">
+                <v-responsive class="pt-4">
+                   <v-avatar size="100" class="red lighten-2">
+                     <img src="/reje.jpg" alt="" >
+                   </v-avatar>
+                </v-responsive>
+                <v-card-text class="text">
+                  <div class="subheading">Annonces Expirées</div>
                 </v-card-text>
                 </router-link>
               </v-card>
@@ -61,7 +73,7 @@
 
 
 export default {
-  name: 'teamItem',
+  name: 'DashboardAnnoncer_User',
   components: {
    
   },
@@ -70,6 +82,7 @@ export default {
   }),
 }
 </script>
+
 <style>
 .const {
   width: 300px;
@@ -79,5 +92,4 @@ export default {
 .text{
   font-size: 18px;
 }
-
 </style>

@@ -2,6 +2,16 @@
   <div class="Signalementtraiter">
     <h1 class="subheading grey--text">Les Rapports En Attente</h1>
     <v-container>
+      <v-card-actions class="btnsLRR">
+         <v-btn outlined color="primary" class="btn" to="RapportsValRes">
+          <v-icon>mdi-check-decagram</v-icon>
+          <span>Rapports Validés</span>
+        </v-btn>
+        <v-btn outlined color="red" class="btn" to="RapportsACompRes">
+          <v-icon>mdi-flag-plus</v-icon>
+          <span>Rapports à Completer</span>
+        </v-btn>
+      </v-card-actions>
       <v-col cols="5" xs6 sm4 md2 class="filtre">
         <v-menu offset-x>
           <template v-slot:activator="{ on, attrs }">
@@ -16,6 +26,10 @@
             >
               <v-icon left small>check</v-icon>
               <span class="caption text-lowercase">Filtrer par catégories</span>
+            </v-btn>
+            <v-btn small outlined color="blue" @click="trierSignalement()" class="mr-2 " dark v-bind="attrs" v-on="on">
+              <v-icon left small>check</v-icon>
+              <span class="caption text-lowercase">Trier par date</span>
             </v-btn>
           </template>
           <v-list>
@@ -37,7 +51,7 @@
                 <img src="/p.png" alt="" />
               </v-avatar>
             </v-responsive>
-            <v-card-text class="titre">
+            <v-card-text class="titreLR">
               <div class="subheading sig">{{ Rapport.title }}</div>
               <div class="grey-text">
                 <strong>Catégorie: </strong>{{ Rapport.category }}
@@ -46,7 +60,8 @@
                 <strong>date du Rapport: </strong>{{ Rapport.dateOf }}
               </div>
             </v-card-text>
-            <v-card-actions class="bout">
+            <div class="btnsLR">
+            <v-card-actions class="boutLR">
               <v-dialog
                 v-model="dialog3"
                 :retain-focus="false"
@@ -215,6 +230,7 @@
                 </v-card>
               </v-dialog>
             </v-card-actions>
+            </div>
             <v-card-actions>
               <v-dialog
                 v-model="dialog"
@@ -224,7 +240,7 @@
                 class="dialog"
               >
                 <template v-slot:activator="{ on }">
-                  <v-btn class="Sa" @click="Consulter(index)" v-on="on">
+                  <v-btn class="SaLR" @click="Consulter(index)" v-on="on">
                     <span>Signalement Attaché</span>
                   </v-btn>
                 </template>
@@ -349,6 +365,28 @@ export default {
           motif: "",
           Avatar: "/p.png",
         },
+         {
+          title: "",
+          description: "",
+          category: "",
+          state: "",
+          dateOf: "",
+          auteur: "",
+          image: [],
+          motif: "",
+          Avatar: "/p.png",
+        },
+         {
+          title: "",
+          description: "",
+          category: "",
+          state: "",
+          dateOf: "",
+          auteur: "",
+          image: [],
+          motif: "",
+          Avatar: "/p.png",
+        },
       ],
       Services: [
         { nom: "Sécurité" },
@@ -449,6 +487,7 @@ this.materialR=res.data.material;
         ),
           alert("Rapport validé");
           this.dialog2 = false;
+          this.Rapports.splice(this.varIndex, 1);
       } catch (e) {
         alert("Erreur: Rapport pas validé");
       }
@@ -465,6 +504,7 @@ this.materialR=res.data.material;
         ),
           alert("Rapport a été renvoyé pour complement");
           this.dialog1 = false;
+           this.Rapports.splice(this.varIndex, 1);
       } catch (e) {
         alert("Erreur");
       }
@@ -489,6 +529,9 @@ this.materialR=res.data.material;
         }
       }
     },
+    trierSignalement(){
+    this.Rapports.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
+    },
   },
 };
 </script>
@@ -503,7 +546,7 @@ div.flex {
   align-items: center;
   width: 300px;
   margin-left: 10px;
-  height: 450px;
+  height: 480px;
 }
 .cardT {
   height: 150px;
@@ -521,8 +564,8 @@ div.flex {
   font-size: 18px;
   text-align: center;
 }
-.titre {
-  margin-bottom: 20px;
+.titreLR {
+  margin-bottom: 90px;
   line-height: 250%;
   text-align: center;
   align-items: center;
@@ -531,11 +574,10 @@ div.flex {
   margin-left: 150px;
   line-height: 300%;
 }
-.bout {
+.boutLR {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  margin-bottom: 50px;
 }
 .Dt {
   text-transform: none;
@@ -550,10 +592,10 @@ div.flex {
   margin-left: 9px;
   text-transform: none;
 }
-.Sa {
+.SaLR {
   position: relative;
   text-transform: none;
-  margin-top: -70px;
+  margin-top: -20px;
 }
 .bouttonsD {
   display: flex;
@@ -562,5 +604,13 @@ div.flex {
 }
 .cardT {
   height: 170px;
+}
+.btnsLR{
+  position: absolute;
+  margin-top: 380px;
+}
+.btnsLRR{
+  position: absolute;
+  margin-left: 600px;
 }
 </style>

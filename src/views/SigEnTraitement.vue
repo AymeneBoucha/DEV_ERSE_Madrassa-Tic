@@ -2,17 +2,31 @@
   <div class="Signalementtraiter">
     <h1 class="subheading grey--text">Signalements en Cours de Traitement</h1>
     <v-container >
+      <v-card-actions class="btnsChEnTr">
+        <v-btn outlined color="red" class="btn" to="/SigEnTraitement">
+          <v-icon>mdi-alert-octagram</v-icon>
+          <span>En Attente de Traitement</span>
+        </v-btn>
+        <v-btn outlined color="green" class="btn" to="SigTraite">
+          <v-icon>mdi-check-outline</v-icon>
+          <span>Signalements Traités</span>
+        </v-btn>
+        <v-btn outlined color="orange" class="btn" to="SigSuspendu">
+          <v-icon>mdi-alert</v-icon>
+          <span>Signalements Suspendus</span>
+        </v-btn>
+      </v-card-actions>
       <v-layout row wrap>
           <v-flex v-for="(Signalement, index) in Signalements" :key="Signalement.titre">
               <v-card class="text-center ma-3 card" color="#F0FFF0">
-                  <div class="img">
+                  <div class="imgCH">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
         src="p.png"
       ></v-img>
       </div>
-                  <v-card-text class="titre">
+                  <v-card-text class="titreET">
                       <div class="subheading sig">{{Signalement.title}}</div>
                       <div class="grey-text"><strong>Catégorie: </strong>{{Signalement.category}}</div>
                       <div class="grey-text"><strong>Debut de traitement le: </strong>{{Signalement.dateOf}}</div>
@@ -240,7 +254,7 @@
                   </div>
                   <div class="bouttonsD">
                     <v-btn  @click="dialog2 = false"  ><span>Annuler</span></v-btn>
-                   <v-btn class=" blue-grey darken-2" ><span  @click="envoyerRapport(), dialog2 = false, Terminer() ">Envoyer</span></v-btn>
+                   <v-btn class=" blue-grey darken-2" ><span  @click="envoyerRapport(), Terminer(), dialog2 = false ">Envoyer</span></v-btn>
                    </div>
                    </v-card-text>
               </v-card>
@@ -268,7 +282,7 @@ export default {
       dialog1: false,
       dialog2: false,
       dialog3: false,
-      width: '300',
+      width: '297',
       selectedItem: 0,
       dialog: false,
       date: "",
@@ -414,6 +428,40 @@ export default {
           motif: "",
           probleme: "",
         },
+         {
+          id: "",
+          title: "",
+          category: "",
+          dateOf: "",
+          userId: "",
+          auteur: "",
+          state: "",
+          image: "/sig.png",
+          description: "",
+          site: "",
+          etage: "",
+          salle: "",
+          lieu:"",
+          motif: "",
+          probleme: "",
+        },
+         {
+          id: "",
+          title: "",
+          category: "",
+          dateOf: "",
+          userId: "",
+          auteur: "",
+          state: "",
+          image: "/sig.png",
+          description: "",
+          site: "",
+          etage: "",
+          salle: "",
+          lieu:"",
+          motif: "",
+          probleme: "",
+        },
       ],
     };
   },  mounted: async function () {
@@ -480,6 +528,7 @@ export default {
                 res => {
                     console.log(res)
                     alert('Votre Rapport est envoyé avec succès');
+                    this.Signalements.splice(this.varIndex, 1);
                 }
             ).catch (
                 err => {
@@ -497,7 +546,7 @@ export default {
             this.Signalements[this.varIndex].id
           }`
         ),
-          alert("Signalemet validé");
+          alert(" Traitement terminé");
       } catch (e) {
         alert("Erreur: Signalement pas validé");
       }
@@ -603,7 +652,16 @@ export default {
   margin-bottom: 8px;
   text-transform: none;
 }
-.img{
+.imgCH{
+  margin-top: 2px;
   left: -17.5px;
+}
+.titreET{
+  position: absolute;
+  margin-top: 200px;
+}
+.btnsChEnTr{
+  position: relative;
+  margin-left: 35%;
 }
 </style>

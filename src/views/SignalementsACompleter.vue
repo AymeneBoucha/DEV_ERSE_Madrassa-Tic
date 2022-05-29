@@ -1,7 +1,13 @@
 <template>
     <div class="LesSignalements">
-        <h1 class="subheading grey--text">Signalements à Completer par l'Utilisateur</h1>
+        <h1 class="subheading grey--text">Signalements à Completer</h1>
         <v-container>
+          <v-card-actions class="btnsC">
+          <v-btn outlined color="green" class="btn" to="/MesSignalements">
+          <v-icon>mdi-home-alert</v-icon>
+          <span>Mes Signalements</span>
+        </v-btn>
+        </v-card-actions>
           <v-col cols="5" xs6 sm4 md2 class="filtre">
                             <v-menu offset-x>
                             <template v-slot:activator="{ on, attrs }">
@@ -48,9 +54,9 @@
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
                         <template v-slot:activator="{ on }">
-                        <v-btn outlined color="blue" class="consulter1" v-on="on" >
-                             <v-icon small left > mdi-eye</v-icon>
-                             <span @click="Modifier(index)">Consulter</span>
+                        <v-btn outlined color="blue" class="consulter1" @click="Modifier(index)"  v-on="on" >
+                             <v-icon small left > mdi-wrench</v-icon>
+                             <span >Completer</span>
                         </v-btn>
                         </template>
                         <v-card class="text-center  cardM">
@@ -61,7 +67,6 @@
                             item-text="nom"
                             :items="catégories"
                             label="Catégorie"
-                            disabled
                             prepend-icon="category"
                             required
                             :rules="[v => !!v || 'champs obligatoire']"
@@ -70,7 +75,6 @@
                             v-model="title"
                             :rules="[v => !!v || 'champs obligatoire']"
                             label="Titre"
-                            disabled
                             required
                             prepend-icon="title"
                         ></v-text-field>
@@ -79,15 +83,14 @@
                             clear-icon="mdi-close-circle"
                             label="Description (optionnelle)"
                             v-model="description"
-                            disabled
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
                        <v-text-field 
                         label="Date"
                         v-model="dateOf"
-                        prepend-icon="mdi-calendar"
                         disabled
+                        prepend-icon="mdi-calendar"
                         type="text"
                         ></v-text-field>
                         <div class="lieu">
@@ -116,8 +119,8 @@
                       <v-text-field 
                         label="lieu"
                         v-model="localisation"
-                        prepend-icon="place"
                         disabled
+                        prepend-icon="place"
                         type="text"
                         ></v-text-field>
                         <v-text-field
@@ -128,8 +131,13 @@
                         ></v-text-field>
                   </div>
                   <div class="bouttonsD">
-                    <v-btn class="" @click="dialog = false"><span>Annuler</span></v-btn>
-                  </div>
+                      <v-btn class="" @click="dialog = false"
+                        ><span>Annuler</span></v-btn
+                      >
+                      <v-btn class="blue-grey darken-2" @click="envoyer()"
+                        ><span>Envoyer</span></v-btn
+                      >
+                    </div>
                 </v-card-text>
               </v-card>
               </v-dialog>
@@ -319,6 +327,39 @@ export default {
         alert("Missing data from database");
       }
     },
+    async envoyer() {
+      const acc = localStorage.getItem("xaccesstoken");
+      setAuthHeader(acc);
+      const data = {
+        title: this.title,
+        description: this.description,
+        category: this.defaultCatégorie,
+        //  localisation: this.localisation,
+        site: this.site,
+        etage: this.etage,
+        salle: this.salle,
+        picture: this.picture,
+        dateOf: this.dateOf,
+      };
+      await axios
+        .put(
+          `http://localhost:8080/api/madrasa-tic/user/userEditReportAndSubmit/${
+            this.Signalements[this.varIndex].id
+          }`,
+          data
+        )
+        .then((res) => {
+          console.log(res);
+          alert(res.data.message);
+          if (res.status == 201) {
+            this.$router.push("/MesSignalements");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("Veillez remplir tout les champs correctement.");
+        });
+    },
         Filtrer(categorie) {
           /*const res = axios.get(`http://localhost:3000/LesSignalements`);
           this.Signalements = res.data;*/
@@ -446,5 +487,12 @@ export default {
 }
 .img{
   left: -33px;
+}
+.btn{
+  text-transform: none;
+}
+.btnsC{
+  position: absolute;
+  margin-left: 762px;
 }
 </style>

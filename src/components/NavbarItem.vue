@@ -27,7 +27,8 @@
             </v-menu>
                </v-flex>
            </v-layout>
-        <v-container class="cardS">
+           <h3 class="textN">{{this.username}}</h3>
+        <v-container class="cardNI">
         <v-list >
           <v-list-item-group class="list" v-model="selectedItem" color="primary">
           <v-list-item >
@@ -54,6 +55,30 @@
                 </div>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item @click="$router.push('LesSignalements')">
+              <v-list-item-content >
+                <div class="element">
+                      <v-icon class="ico">report</v-icon> 
+                <v-list-item-title class="text"> Signalements</v-list-item-title>
+                </div>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item @click="$router.push('MesAnnoncesAnnouncer')" v-show="show">
+              <v-list-item-content >
+                <div class="element">
+                      <v-icon class="ico">mdi-bullhorn</v-icon> 
+                <v-list-item-title class="text">Annonces</v-list-item-title>
+                </div>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item @click="$router.push('Statistiques')" v-show="moderator">
+              <v-list-item-content >
+                <div class="element">
+                      <v-icon class="ico">mdi-chart-pie</v-icon> 
+                <v-list-item-title class="text"> Statistiques</v-list-item-title>
+                </div>
+              </v-list-item-content>
+            </v-list-item>
           </v-list-item-group>
         </v-list>
       </v-container>
@@ -71,7 +96,28 @@ export default {
         which:1,
         selectedItem: 0,
         userroles:[],
+        moderator: false,
+        show: false,
+        username:'',
     }),
+    mounted: async function() {
+      try {
+        const acc = localStorage.getItem('xaccesstoken');
+        setAuthHeader(acc);
+        const res = await axios.get(`http://localhost:8080/api/auth/Me`);
+        this.username = res.data.username;
+        this.userroles = res.data.roles;
+        if(this.userroles.includes("ROLE_MODERATOR")){
+          this.show = true;
+          this.moderator = true;
+        }
+        if(this.userroles.includes("ROLE_ANNOUNCER")){
+          this.show = true;
+        }
+      } catch {
+        alert("No name");
+      }
+    },
     methods: {
         
           async Redirect() {
@@ -93,12 +139,6 @@ export default {
           ) {
             this.$router.push("/DashboardResUser");
           } else {
-            if (
-              this.userroles.includes("ROLE_USER") &&
-              this.userroles.includes("ROLE_ADMIN")
-            ) {
-              this.$router.push("/DashboardAdmUser");
-            } else {
               if (
                 this.userroles.includes("ROLE_USER") &&
                 this.userroles.includes("ROLE_EMPLOYER")
@@ -106,10 +146,9 @@ export default {
                 this.$router.push("/DashboardChefUser");
               } else {
                 if (this.userroles.includes("ROLE_USER")) {
-                  this.$router.push("/DashboardUser");
+                  this.$router.push("/MesSignalements");
                 }
               }
-            }
           }
         }
     } catch {
@@ -126,9 +165,9 @@ export default {
     border-left: 5px solid #0ba518 ;
     background-color: rgb(236, 71, 71);
 }
-.cardS{
+.cardNI{
     position: relative;
-    margin-top: 120px;
+    margin-top: 170px;
 }
 .list {
   display: flex;
@@ -149,5 +188,14 @@ export default {
     font-size: 20px;
     width: 170px;
     text-align: left;
+}
+.textN{
+  position: relative;
+  text-align: center;
+  margin-top: 20px;
+  color:rgb(255, 255, 255);
+  text-transform: none;
+  font-size: 20px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 </style>

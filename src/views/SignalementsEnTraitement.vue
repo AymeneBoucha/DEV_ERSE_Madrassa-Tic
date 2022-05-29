@@ -2,6 +2,20 @@
     <div class="LesSignalements">
         <h1 class="subheading grey--text">Signalements En Cours De Traitement</h1>
         <v-container>
+          <v-card-actions class="btnsET">
+        <v-btn outlined color="red" class="btn" to="SignalementsEnAttente">
+          <v-icon>mdi-alert-octagram</v-icon>
+          <span>Signalements En Attente</span>
+        </v-btn>
+        <v-btn outlined color="primary" class="btn" to="SignalementsACompleterRes">
+          <v-icon>mdi-alert-plus</v-icon>
+          <span>Signalements à Completer</span>
+        </v-btn>
+        <v-btn outlined color="orange" class="btn" to="SignalementsSuspendus">
+          <v-icon>mdi-timer-off</v-icon>
+          <span>Signalements Suspendus</span>
+        </v-btn>
+      </v-card-actions>
           <v-col cols="5" xs6 sm4 md2 class="filtre">
                             <v-menu offset-x>
                             <template v-slot:activator="{ on, attrs }">
@@ -562,5 +576,9 @@ export default {
 }
 .img{
   left: -34px;
+}
+.btnsET{
+  position: absolute;
+  margin-left: 230px;
 }
 </style>

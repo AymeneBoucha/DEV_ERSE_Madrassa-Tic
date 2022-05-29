@@ -1,7 +1,21 @@
 <template>
-  <div class="LesSignalements">
+  <div class="MesSignalements">
     <h1 class="subheading grey--text">Mes Signalements</h1>
     <v-container>
+      <v-card-actions class="btns">
+        <v-btn outlined color="primary" class="btn" to="/addSignal">
+          <v-icon>mdi-plus-box-multiple</v-icon>
+          <span>Ajouter Un Signalement</span>
+        </v-btn>
+        <v-btn outlined color="red" class="btn" to="SignalementsACompleter">
+          <v-icon>mdi-alert-plus</v-icon>
+          <span>Signalements à Completer</span>
+        </v-btn>
+        <v-btn outlined color="orange" class="btn" to="SignalementsEnregistres">
+          <v-icon>mdi-pencil</v-icon>
+          <span>Brouillons</span>
+        </v-btn>
+      </v-card-actions>
       <v-col cols="5" xs6 sm4 md2 class="filtre">
         <v-menu offset-x>
           <template v-slot:activator="{ on, attrs }">
@@ -28,13 +42,17 @@
             </v-list-item>
           </v-list>
         </v-menu>
+        <v-btn small outlined color="blue" @click="trierSignalement()" class="mr-2" dark v-bind="attrs" v-on="on">
+              <v-icon left small>check</v-icon>
+              <span class="caption text-lowercase">Trier par date</span>
+            </v-btn>
       </v-col>
       <v-card class="cardS" min-width="950" width="950" tile>
         <v-list dense>
           <v-list-item-group class="lig" v-model="selectedItem" color="primary">
             <v-list-item>
               <v-list-item-content @click="TousSign()">
-                <v-list-item-title>Tous Les Signalements</v-list-item-title>
+                <v-list-item-title>Tous Mes Signalements</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-divider vertical></v-divider>
@@ -447,6 +465,9 @@ export default {
         }
       }
     },
+    trierSignalement(){
+    this.Signalements.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
+    },
     async Filtrer(categorie) {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
@@ -490,7 +511,7 @@ export default {
   text-align: left;
 }
 .etatM {
-  margin-left: 150px;
+  margin-left: 280px;
   line-height: 300%;
 }
 .deleteS {
@@ -511,5 +532,12 @@ export default {
 .img{
   position: relative;
   left: -34px;
+}
+.btn{
+  text-transform: none;
+}
+.btns{
+  position: absolute;
+  margin-left: 350px;
 }
 </style>

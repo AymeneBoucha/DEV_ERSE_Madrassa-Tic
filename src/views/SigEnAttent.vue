@@ -2,13 +2,31 @@
   <div class="Signalementtraiter">
     <h1 class="subheading grey--text">Signalements en Attente de Traitement</h1>
     <v-container>
+      <v-btn small outlined color="blue" @click="trierSignalement()" class="mr-2 TRS" dark v-bind="attrs" v-on="on">
+              <v-icon left small>check</v-icon>
+              <span class="caption text-lowercase">Trier par date</span>
+            </v-btn>
+      <v-card-actions class="btnsChEnAt">
+        <v-btn outlined color="primary" class="btn" to="/SigEnTraitement">
+          <v-icon>mdi-sync</v-icon>
+          <span>En Cours de Traitement</span>
+        </v-btn>
+        <v-btn outlined color="green" class="btn" to="SigTraité">
+          <v-icon>mdi-check-outline</v-icon>
+          <span>Signalements Traités</span>
+        </v-btn>
+        <v-btn outlined color="orange" class="btn" to="SigSuspendu">
+          <v-icon>mdi-alert</v-icon>
+          <span>Signalements Suspendus</span>
+        </v-btn>
+      </v-card-actions>
       <v-layout row wrap>
         <v-flex
           v-for="(Signalement, index) in Signalements"
           :key="Signalement.titre"
         >
           <v-card class="text-center ma-3 card">
-            <div class="img">
+            <div class="imgSEA">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
@@ -16,17 +34,17 @@
       ></v-img>
       </div>
             <v-card-text class="titre4">
-              <div class="subheading sig">{{ Signalement.title }}</div>
-              <div class="grey-text">
+              <div class="subheading sigT">{{ Signalement.title }}</div>
+              <div class="grey-text sig">
                 <strong>Catégorie: </strong>{{ Signalement.category }}
               </div>
-              <div class="grey-text">
+              <div class="grey-text sig">
                 <strong>Affecter le: </strong>{{ Signalement.dateOf }}
               </div>
-              <div class="grey-text">
+              <div class="grey-text sig">
                 <strong>Description: </strong>{{ Signalement.description }}
               </div>
-              <div class="grey-text">
+              <div class="grey-text sig">
                 <strong>Lieu: </strong>{{ Signalement.site,}}, {{ Signalement.etage}}, {{ Signalement.salle}}  
               </div>
             </v-card-text>
@@ -193,44 +211,6 @@
                       >
                       <v-btn class="blue-grey darken-2" @click="ConfirmerTr()"
                         ><span>Confirmer</span></v-btn
-                      >
-                    </div>
-                  </v-card-text>
-                </v-card>
-              </v-dialog>
-              <v-dialog
-                v-model="dialog2"
-                persistent
-                max-width="600px"
-                class="dialog"
-              >
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    outlined
-                    color="red"
-                    class="rf"
-                    @click="Refuser(index)"
-                    v-on="on"
-                  >
-                    <v-icon small left>mdi-cancel</v-icon>
-                    <span>Refuser le traitement</span>
-                  </v-btn>
-                </template>
-                <v-card class="cardT">
-                  <v-card-text>
-                    <v-textarea
-                      clear-icon="mdi-close-circle"
-                      label="Motif"
-                      v-model="motif"
-                      prepend-icon="description"
-                      rows="2"
-                    ></v-textarea>
-                    <div class="bouttonsD">
-                      <v-btn class="" @click="dialog2 = false"
-                        ><span>Annuler</span></v-btn
-                      >
-                      <v-btn class="blue-grey darken-2" @click="envoyer()"
-                        ><span>Envoyer</span></v-btn
                       >
                     </div>
                   </v-card-text>
@@ -447,12 +427,6 @@ export default {
       {return this.site + ' ' + this.etage + ' ' + this.salle}
       else {return ''}
     },
-   //dateOf: function () {
-     //    if (this.date  && this.time )
-    //{return this.date + ' ' + this.time }
-      //else {return ''}
-     
-    //},
   },
   methods: {
     async ConfirmerTr() {
@@ -465,9 +439,10 @@ export default {
           }`
         ),
         this.dialog3=false,
-          alert("Signalemet validé");
+        this.Signalements.splice(this.varIndex, 1);
+          alert("Signalement En cours de traitement");
       } catch (e) {
-        alert("Erreur: Signalement pas validé");
+        alert("Erreur: Signalement pas traité");
       }
     },
     Confirmer(index) {
@@ -514,31 +489,9 @@ export default {
       } catch {
         alert("Missing data from database");
       }
-    } /*
-    async Traiter(index) {
-      try {
-        this.Signalements[index].state = "Accepté";
-        await axios.put(`http://localhost:8080/api/madrasa-tic/employer/acceptReportByEmployer/${index}`, this.Signalements)
-        this.Signalements.splice(index, 1);
-        //this.$router.push('SigEnTraitement')
-      } catch (e) {
-        alert("Il y a un probéme");
-      }
-    },*/,
-    async Refuser(index) {
-       this.varIndex = index;
     },
-    async envoyer() {
-      try {
-        const data = {
-          motif: this.motif,
-        };
-        await axios.post(
-          `http://localhost:8080/api/madrasa-tic/employer/refuseReportByEmployer/${this.Signalements[this.varIndex].id}`,data);
-        this.$router.push("SigRefusé");
-      } catch (e) {
-        alert("Il y a un probéme");
-      }
+    trierSignalement(){
+    this.Signalements.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
     },
   },
 };
@@ -553,15 +506,22 @@ export default {
   min-width: 950px;
   height: 180px;
 }
-.img {
-  margin-left: 35px;
+.imgSEA {
+  margin-left: 105px;
 }
 .sig {
-  font-weight: 550;
-  font-size: 18px;
+  width: 400px;
+  font-size: 15px;
+  text-transform: none;
+}
+.sigT {
+  width: 400px;
+  font-size: 20px;
+  font-weight: 550;;
+  text-transform: none;
 }
 .titre4 {
-  margin-left: -10px;
+  margin-left: 5px;
   line-height: 250%;
   text-align: left;
 }
@@ -578,7 +538,7 @@ export default {
 }
 .boot4{
   position: relative;
-  margin-right: -80px;
+  margin-left: -130px;
 }
 .cn {
   margin-right: 100px;
@@ -598,5 +558,13 @@ export default {
   align-items: center;
   margin-bottom: 30px;
 }
-
+.TRS{
+  position: absolute;
+  margin-top: 13px;
+  margin-left: -580px;
+}
+.btnsChEnAt{
+  position: relative;
+  margin-left: 278px;
+}
 </style>

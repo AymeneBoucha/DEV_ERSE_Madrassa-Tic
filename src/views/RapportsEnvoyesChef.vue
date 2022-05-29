@@ -1,9 +1,19 @@
 <template>
   <div class="Signalementtraiter">
-    <h1 class="subheading grey--text">Rapports Validés</h1>
+    <h1 class="subheading grey--text">Rapports Envoyés</h1>
     <v-container>
+      <v-card-actions class="btnsREC">
+         <v-btn outlined color="primary" class="btn" to="RapportsValidesChef">
+          <v-icon>mdi-check-decagram</v-icon>
+          <span>Rapports Validés</span>
+        </v-btn>
+        <v-btn outlined color="red" class="btn" to="RapportsAcompleterChef">
+          <v-icon>mdi-flag-plus</v-icon>
+          <span>Rapports à Completer</span>
+        </v-btn>
+      </v-card-actions>
       <v-layout row wrap>
-        <v-flex v-for="(Rapport, index) in Rapports" :key="Rapport.titre">
+        <v-flex v-for="(Rapport, index) in Rapports" :key="Rapport.title">
           <v-card class="text-center ma-2 card" color="#F0FFF0">
             <v-responsive class="pt-3">
               <v-avatar size="170" class="red lighten-2">
@@ -29,11 +39,11 @@
                     @click="Consulter(index)"
                     outlined
                     color="blue"
-                    class="cont"
+                    class="DetREC"
                     v-on="on"
                   >
-                    <v-icon small left>mdi-eye</v-icon>
-                    <span class="text-lowercase">Details</span>
+                    
+                    <span >Details</span>
                   </v-btn>
                 </template>
                 <v-card class="text-center cardM">
@@ -117,13 +127,12 @@
                 <template v-slot:activator="{ on }">
                   <v-btn
                     @click="ConsulterSig(index)"
-                    outlined
-                    color="blue"
-                    class="cont"
+                    color="white"
+                    class="SaREC"
                     v-on="on"
                   >
-                    <v-icon small left>mdi-alert</v-icon>
-                    <span class="text-lowercase">Signalement Attaché</span>
+                    
+                    <span >Signalement Attaché</span>
                   </v-btn>
                 </template>
                 <v-card class="text-center cardM">
@@ -271,6 +280,7 @@ export default {
           category: "",
           auteur: "",
           image: [],
+          dateOf: "",
           motif: "",
         },
       ],
@@ -305,7 +315,7 @@ export default {
       categoryR: "",
       auteurR: "",
       imageR: [],
-      materailR:"",
+      materialR:"",
       motifR: "",
 
       sites_options: [
@@ -426,7 +436,7 @@ export default {
 
   async created() {
     try {
-      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/employer/getAllMyValidatedRaportsByEmployer`);
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/employer/getAllMyPendingRaportsByEmployer`);
       this.Rapports = res.data;
 
       let i = 0;
@@ -526,7 +536,7 @@ export default {
   align-items: center;
   width: 300px;
   margin-left: 10px;
-  height: 410px;
+  height: 420px;
 }
 .img {
   align-items: center;
@@ -547,10 +557,18 @@ export default {
   margin-left: 150px;
   line-height: 200%;
 }
-.cont {
+.DetREC {
   align-content: center;
   align-items: center;
   margin-bottom: -20px;
   bottom: 12px;
+  text-transform: none;
+}
+.SaREC{
+  text-transform: none;
+}
+.btnsREC{
+  position: relative;
+  margin-left: 600px;
 }
 </style>

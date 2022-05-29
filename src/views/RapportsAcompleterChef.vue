@@ -2,9 +2,19 @@
   <div class="Signalementtraiter">
     <h1 class="subheading grey--text">Rapports A completer</h1>
     <v-container>
+      <v-card-actions class="btnsRCC">
+         <v-btn outlined color="primary" class="btn" to="RapportsEnvoyesChef">
+          <v-icon>mdi-send-check</v-icon>
+          <span>Rapports Envoyés</span>
+        </v-btn>
+        <v-btn outlined color="green" class="btn" to="RapportsValidesChef">
+          <v-icon>mdi-check-decagram</v-icon>
+          <span>Rapports Validés</span>
+        </v-btn>
+      </v-card-actions>
       <v-layout row wrap>
         <v-flex v-for="(Rapport, index) in Rapports" :key="Rapport.titre">
-          <v-card class="text-center ma-2 card" color="#F0FFF0">
+          <v-card class="text-center ma-2 cardRACC" color="#F0FFF0">
             <v-responsive class="pt-3">
               <v-avatar size="170" class="red lighten-2">
                 <img src="/p.png" alt="" />
@@ -15,8 +25,11 @@
               <div class="grey-text">
                 <strong>Durée de traitement: </strong>{{ Rapport.dateOf }}
               </div>
+              <div class="grey-text">
+                <strong>Motif: </strong>{{ Rapport.motif }}
+              </div>
             </v-card-text>
-            <v-card-actions>
+            <v-card-actions class="boutRCC">
               <v-dialog
                 v-model="dialog3"
                 :retain-focus="false"
@@ -29,11 +42,10 @@
                     @click="Consulter(index)"
                     outlined
                     color="blue"
-                    class="cont"
+                    class="Det"
                     v-on="on"
                   >
-                    <v-icon small left>mdi-eye</v-icon>
-                    <span class="text-lowercase">Details</span>
+                    <span >Details</span>
                   </v-btn>
                 </template>
                 <v-card class="text-center cardM">
@@ -113,9 +125,8 @@
 
                             <v-dialog v-model="dialog4"  :retain-focus="false" persistent max-width="800px" class="dialog">
                        <template v-slot:activator="{ on }">
-                          <v-btn @click="Consulter(index)" outlined color="blue" class="cont" v-on="on">
-                          <v-icon small left>mdi-wrench</v-icon>
-                          <span class="text-lowercase">Modifier</span>
+                          <v-btn @click="Consulter(index)" outlined color="green" class="Modi" v-on="on">
+                          <span >Modifier</span>
                       </v-btn>
                        </template><!--@click="modifier(index)"-->
                         <v-card class="text-center  cardM">
@@ -182,7 +193,7 @@
                   </div>
                   <div class="bouttonsD">
                     <v-btn  @click="dialog4 = false"  ><span>Annuler</span></v-btn>
-                    <v-btn class=" blue-grey darken-2" ><span  @click="Confirmer(), dialog3 = false ">Confirmer</span></v-btn>
+                    <v-btn class=" blue-grey darken-2" ><span  @click="Confirmer(), dialog4 = false ">Confirmer</span></v-btn>
                    </div>
                 </v-card-text>
               </v-card>
@@ -195,9 +206,8 @@
               max-width="600px"
           >
               <template v-slot:activator="{ on }">
-                  <v-btn @click="Motif(index)" outlined color="blue" class="cont" v-on="on" >
-                      <v-icon small left>info</v-icon>
-                      <span class="text-lowercase">Motif</span>
+                  <v-btn @click="Motif(index)" outlined color="red" class="Mot" v-on="on" >
+                      <span >Motif</span>
                   </v-btn>
               </template>
               <v-card class="cardT">
@@ -231,13 +241,11 @@
                 <template v-slot:activator="{ on }">
                   <v-btn
                     @click="ConsulterSig(index)"
-                    outlined
-                    color="blue"
-                    class="cont"
+                    color="white"
+                    class="contRACC"
                     v-on="on"
                   >
-                    <v-icon small left>mdi-alert</v-icon>
-                    <span class="text-lowercase">Signalement Attaché</span>
+                    <span >Signalement Attaché</span>
                   </v-btn>
                 </template>
                 <v-card class="text-center cardM">
@@ -621,7 +629,7 @@ export default {
                 res => {
                     console.log(res)
                     alert(res.data.message);
-                    // if (res.status==201) { router.push("/RapportsEnvoyés");} 
+                    this.Rapports.splice(this.varIndex, 1);
                 }
             ).catch (
                 err => {
@@ -676,14 +684,14 @@ export default {
 
 </script>
 <style scoped>
-.card {
+.cardRACC {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   width: 300px;
   margin-left: 10px;
-  height: 410px;
+  height: 460px;
 }
 .img {
   align-items: center;
@@ -704,10 +712,25 @@ export default {
   margin-left: 150px;
   line-height: 200%;
 }
-.cont {
+.contRACC {
   align-content: center;
   align-items: center;
   margin-bottom: -20px;
   bottom: 12px;
+  text-transform: none;
+}
+.btnsRCC{
+  margin-left: 600px;
+}
+.Modi{
+  margin-left: 15px;
+  text-transform: none;
+}
+.Mot{
+  margin-left: 17px;
+  text-transform: none;
+}
+.Det{
+  text-transform: none;
 }
 </style>

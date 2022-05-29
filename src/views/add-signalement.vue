@@ -1,13 +1,19 @@
 <template>
 <div class="Ajouter Signalement">
     <h1 class="subheading grey--text">Ajouter Signalement</h1>
+    <v-card-actions class="btnsAS">
+          <v-btn outlined color="green" class="btn" to="/MesSignalements">
+          <v-icon>mdi-home-alert</v-icon>
+          <span>Mes Signalements</span>
+        </v-btn>
+        </v-card-actions>
   <v-form>
     <v-container >
       <v-layout class="container" >
         <v-flex class="const" >
-              <v-card class="text-center  card">
-                <v-card-text>
-                  <div class="signal">
+              <v-card class="text-center  cardAS">
+                <v-card-text >
+                  <div class="signalAS">
                         <v-select
                             v-model="category"
                             :items="catégories"
@@ -280,7 +286,7 @@ methods: {
                 res => {
                     console.log(res)
                     alert(res.data.message);
-                     if (res.status==201) { router.push("/SignalDash");}
+                     if (res.status==201) { router.push("/MesSignalements");}
                    // alert('Votre signalement est envoyé avec succès');
                 }
             ).catch (
@@ -294,14 +300,20 @@ methods: {
 }
 </script>
 <style scoped>
+.cardAS{
+  min-width: 1100px;
+}
+.cardTAS{
+  margin-top: -30px;
+}
 .text {
   margin-left: 3cm;
   font-size: 13px;
 }
-.signal {
+.signalAS {
   width: 70%;
   padding: 10px;
-   margin-top: 10px;
+   margin-top: -20px;
    position: relative;
    margin-left: auto;
    margin-right: auto;
@@ -352,5 +364,10 @@ methods: {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+.btnsAS{
+  position: absolute;
+  margin-top: -35px;
+  margin-left: 950px;
 }
 </style>
