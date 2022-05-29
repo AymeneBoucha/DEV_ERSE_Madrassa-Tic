@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import DashboardAdmUser from '../views/DashboardAdm_User.vue'
 import DashboardResAdmUser from '../views/DashboardRes_Adm_User.vue'
 import DashboardResUser from '../views/DashboardRes_User.vue'
-import DashboardUser from '../views/DashboardUser.vue'
 import DashboardChefUser from '../views/DashboardChef_User.vue'
+import DashboardAnnUser from '../views/DashboardAnnUser.vue'
 import Profile from '../views/Profile.vue'      
 import Comptes from '../views/Comptes.vue'
+import ComptesChefdeService from '../views/ComptesChefdeService.vue'
 import Modifier_Profile from '../views/Modifier_Profile.vue'
 import Sign_up_in from '../views/Sign_up_in.vue'
 import Forgot_password from '../views/Forgot_password.vue'
@@ -15,29 +15,36 @@ import MesSignalements from '../views/MesSignalements.vue'
 import LesSignalements from '../views/LesSignalements.vue'
 import addSignal from '../views/add-signalement.vue'
 import SigEnAttent from '../views/SigEnAttent.vue'
-import SigTraité from '../views/SigTraité.vue'
+import SigTraite from '../views/SigTraite.vue'
 import SigSuspendu from '../views/SigSuspendu.vue'
 import SigEnTraitement from '../views/SigEnTraitement.vue'
-import SignalDash from '../views/SignalDash.vue'
-import SignalDashRes from '../views/SignalDashRes.vue'
-import SignalementsEnregistres from '../views/SignalementsEnregistrés.vue'
+import SignalementsEnregistres from '../views/SignalementsEnregistres.vue'
 import CompleterSignalement from '../views/CompleterSignalement.vue'
 import Res_modifier_signalement from '../views/Res_modifier_signalement.vue'
 import SignalementsEnAttente from '../views/SignalementsEnAttente.vue'
-import TraitementSignalements from '../views/TraitementSignalements.vue'
 import SignalementsACompleter from '../views/SignalementsACompleter.vue'
+import SignalementsACompleterRes from '../views/SignalementsACompleterRes.vue'
 import SignalementsSuspendus from '../views/SignalementsSuspendus.vue'
 import SignalementsEnTraitement from '../views/SignalementsEnTraitement.vue'
-import RapportDash from '../views/RapportDash.vue'
-import GestionCategories from '@/views/GestionCategories'
-import SignalementsRefusés from '../views/SignalementsEnTraitement.vue'
-import RapportDashRes from '../views/RapportDashRes.vue'
+import GestionCategories from '@/views/GestionCategories.vue'
 import LesRapportsRes from '../views/LesRapportsRes.vue'
 import RapportsValRes from '../views/RapportsValRes.vue'
 import RapportsACompRes from '../views/RapportsACompRes.vue'
-import RapportsEnvoyésChef from '../views/RapportsEnvoyésChef.vue'
-import RapportsValidésChef from '../views/RapportsValidésChef.vue'
+import RapportsEnvoyesChef from '../views/RapportsEnvoyesChef.vue'
+import RapportsValidesChef from '../views/RapportsValidesChef.vue'
 import RapportsAcompleterChef from '../views/RapportsAcompleterChef.vue'
+import Statistiques from '../views/Statistiques.vue'
+import AnnonceValideRes from '../views/AnnonceValideRes.vue'
+import AnnonceAfficheRes from '../views/AnnonceAfficheRes.vue'
+import AnnonceAnnuleRes from '../views/AnnonceAnnuleRes.vue'
+import AnnonceAnnuleAnnoncer from '../views/AnnonceAnnuleAnnoncer.vue'
+import MesAnnoncesAnnouncer from '../views/MesAnnoncesAnnouncer.vue'
+import AjouterAnnonce from '../views/AjouterAnnonce.vue'
+import AnnonceRejeteAnnoncer from '../views/AnnonceRejeteAnnoncer.vue'
+import DashboardAnnoncerUser from '../views/DashboardAnnoncer_User.vue'
+import DashboardAnnoncerRes from '../views/DashboardAnnoncer_Res.vue'
+import AnnonceExpireRes from '../views/AnnonceExpireRes.vue'
+import AnnonceExpireAnnoncer from '../views/AnnonceExpireAnnoncer.vue'
 
 
 Vue.use(VueRouter)
@@ -49,6 +56,14 @@ const routes = [
     component: Sign_up_in,
   },
   {
+    path: '/Statistiques',
+    name: 'Statistiques',
+    component: Statistiques,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
     path: '/Forgot_password',
     name: 'Forgot_password',
     component: Forgot_password,
@@ -57,22 +72,6 @@ const routes = [
     path: '/Reset_password/:token',
     name: 'Reset_password',
     component: Reset_password,
-  },
-  {
-    path: '/DashboardUser',
-    name: 'Dashboard User',
-    component: DashboardUser,
-    meta: {
-      hideNavbar: true,
-     }
-  },
-  {
-    path: '/DashboardAdmUser',
-    name: 'DashboardAdmUser',
-    component: DashboardAdmUser,
-    meta: {
-      hideNavbar: true,
-     }
   },
   {
     path: '/DashboardResUser',
@@ -86,6 +85,14 @@ const routes = [
     path: '/DashboardChefUser',
     name: 'DashboardChefUSer',
     component: DashboardChefUser,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/DashboardAnnUser',
+    name: 'DashboardAnnUser',
+    component: DashboardAnnUser,
     meta: {
       hideNavbar: true,
      }
@@ -110,6 +117,14 @@ const routes = [
     path: '/Comptes',   //PROFILE
     name: 'ComptesItem',
     component: Comptes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/ComptesChefdeService',   //PROFILE
+    name: 'ComptesChefdeService',
+    component: ComptesChefdeService,
     meta: {
       hideNavbar: true,
      }
@@ -171,9 +186,9 @@ const routes = [
      }
   },
   {
-    path: '/SigTraité',
-    name: 'SigTraité',
-    component: SigTraité,
+    path: '/SigTraite',
+    name: 'SigTraite',
+    component: SigTraite,
     meta: {
       hideNavbar: true,
      }
@@ -182,22 +197,6 @@ const routes = [
     path: '/SigSuspendu',
     name: 'SigSuspendu',
     component: SigSuspendu,
-    meta: {
-      hideNavbar: true,
-     }
-  },
-  {
-    path: '/SignalDash',
-    name: 'SignalDash',
-    component: SignalDash,
-    meta: {
-      hideNavbar: true,
-     }
-  },
-  {
-    path: '/SignalDashRes',
-    name: 'SignalDashRes',
-    component: SignalDashRes,
     meta: {
       hideNavbar: true,
      }
@@ -227,14 +226,6 @@ const routes = [
      }
   },
   {
-    path: '/TraitementSignalements',
-    name: 'TraitementSignalements',
-    component: TraitementSignalements,
-    meta: {
-      hideNavbar: true,
-     }
-  },  
-  {
     path: '/Res_modifier_signalement',
     name: 'Res_modifier_signalement',
     component: Res_modifier_signalement,
@@ -251,6 +242,14 @@ const routes = [
      }
   },
   {
+    path: '/SignalementsACompleterRes',
+    name: 'SignalementsACompleterRes',
+    component: SignalementsACompleterRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
     path: '/SignalementsSuspendus',
     name: 'SignalementsSuspendus',
     component: SignalementsSuspendus,
@@ -259,9 +258,9 @@ const routes = [
      }
   },
   {
-    path: '/SignalementsRefusés',
-    name: 'SignalementsRefusés',
-    component: SignalementsRefusés,
+    path: '/SignalementsEnTraitement',
+    name: 'SignalementsEnTraitement',
+    component: SignalementsEnTraitement,
     meta: {
       hideNavbar: true,
      }
@@ -270,22 +269,6 @@ const routes = [
     path: '/GestionCategories',
     name: 'GestionCategories',
     component: GestionCategories,
-    meta: {
-      hideNavbar: true,
-     }
-  },
-  {
-    path: '/RapportDashRes',
-    name: 'RapportDashRes',
-    component: RapportDashRes,
-    meta: {
-      hideNavbar: true,
-     }
-  },
-  {
-    path: '/RapportDash',
-    name: 'RapportDash',
-    component: RapportDash,
     meta: {
       hideNavbar: true,
      }
@@ -316,17 +299,17 @@ const routes = [
   },
 
   {
-    path: '/RapportsEnvoyésChef',
-    name: 'RapportsEnvoyésChef',
-    component: RapportsEnvoyésChef,
+    path: '/RapportsEnvoyesChef',
+    name: 'RapportsEnvoyesChef',
+    component: RapportsEnvoyesChef,
     meta: {
       hideNavbar: true,
      }
   },
   {
-    path: '/RapportsValidésChef',
-    name: 'RapportsValidésChef',
-    component: RapportsValidésChef,
+    path: '/RapportsValidesChef',
+    name: 'RapportsValidesChef',
+    component: RapportsValidesChef,
     meta: {
       hideNavbar: true,
      }
@@ -335,6 +318,94 @@ const routes = [
     path: '/RapportsAcompleterChef',
     name: 'RapportsAcompleterChef',
     component: RapportsAcompleterChef,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/AnnonceValideRes',
+    name: 'AnnonceValideRes',
+    component: AnnonceValideRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/AnnonceAfficheRes',
+    name: 'AnnonceAfficheRes',
+    component: AnnonceAfficheRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/AnnonceAnnuleRes',
+    name: 'AnnonceAnnuleRes',
+    component: AnnonceAnnuleRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/AnnonceAnnuleAnnoncer',
+    name: 'AnnonceAnnuleAnnoncer',
+    component: AnnonceAnnuleAnnoncer,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/MesAnnoncesAnnouncer',
+    name: 'MesAnnoncesAnnouncer',
+    component: MesAnnoncesAnnouncer,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/AjouterAnnonce',
+    name: 'AjouterAnnonce',
+    component: AjouterAnnonce,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/AnnonceRejeteAnnoncer',
+    name: 'AnnonceRejeteAnnoncer',
+    component: AnnonceRejeteAnnoncer,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/DashboardAnnoncerUser',
+    name: 'DashboardAnnoncerUser',
+    component: DashboardAnnoncerUser,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/DashboardAnnoncerRes',
+    name: 'DashboardAnnoncerRes',
+    component: DashboardAnnoncerRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/AnnonceExpireRes',
+    name: 'AnnonceExpireRes',
+    component: AnnonceExpireRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/AnnonceExpireAnnoncer',
+    name: 'AnnonceExpireAnnoncer',
+    component: AnnonceExpireAnnoncer,
     meta: {
       hideNavbar: true,
      }
