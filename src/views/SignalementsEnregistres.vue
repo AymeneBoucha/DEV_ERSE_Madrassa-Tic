@@ -29,9 +29,6 @@
               <div class="grey--text">
                 <strong>Enregistré le : </strong>{{ Signalement.dateOf }}
               </div>
-              <div class="descriptif grey--text">
-                <strong>Description : </strong>{{ Signalement.description }}
-              </div>
             </v-card-text>
             <v-card-actions class="bouttons">
               <v-dialog
@@ -149,6 +146,7 @@
                       <v-file-input
                         v-model="picture"
                         accept="image/*"
+                         @change="onFileSelected"
                         label="Ajouter une image "
                         prepend-icon="add_a_photo"
                       ></v-file-input>
@@ -195,11 +193,12 @@ export default {
       description: "",
  
       category: "",
-      picture: [],
+      picture: '',
       defaultCatégorie: "",
       catégories: [],
       site: "",
       salle: "",
+      selectedFile:null,
       etage: "",
       defaultsite: "",
       defaultsalle: "",
@@ -393,6 +392,9 @@ export default {
         this.salle = event.target.value;
       }
     },
+      onFileSelected(event){
+      this.selectedFile = event
+    },
     DeleteSignal(index) {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
@@ -420,7 +422,8 @@ export default {
         this.etage = res.data.etage;
         this.salle = res.data.salle;
         this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.picture = res.data.picture;
+        console.log(this.picture)
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
@@ -429,17 +432,15 @@ export default {
     async enregistrer() {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
-      const data = {
-        title: this.title,
-        description: this.description,
-        site: this.site,
-        etage: this.etage,
-        salle: this.salle,
-        category: this.defaultCatégorie,
-        // localisation: this.localisation,
-        picture: this.picture,
-        dateOf: this.dateOf,
-      };
+       const data = new FormData()
+   data.append('picture', this.selectedFile)
+   data.append('title', this.title)
+   data.append('description', this.description)
+   data.append('category', this.category)
+   data.append('site', this.site)
+   data.append('etage', this.etage)
+   data.append('salle', this.salle)
+   data.append('dateOf', this.dateOf)
       await axios
         .put(
           `http://localhost:8080/api/madrasa-tic/user/userEditReportAndSave/${

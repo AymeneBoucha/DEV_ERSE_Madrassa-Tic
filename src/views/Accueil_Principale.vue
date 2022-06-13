@@ -1,6 +1,7 @@
 <template>
   <div>
     <header class="page-header"></header>
+
     <div class="stat">
       <div class="Signalementsemaine">
         <v-col>
@@ -107,10 +108,10 @@
               >
                 <template v-slot:activator="{ on }">
                   <v-btn
+                 @click="Details(index)"
                     outlined
                     color="green darken-1"
                     class="Dt"
-                    @click="Details(index)"
                     v-on="on"
                   >
                     <span>Details</span>
@@ -220,24 +221,21 @@
       <v-subheader class="py-0 d-flex justify-space-between rounded-lg tous">
         <v-btn color="success" router :to="voir.route"> Voir tous </v-btn>
       </v-subheader>
-      <v-flex v-for="Signalement in Signalements" :key="Signalement.title">
+      <v-flex v-for="(Signalement,index) in Signalements" :key="Signalement.title">
         <v-card class="text-center ma-3 card grey lighten-4">
           <v-responsive class="pt-0 imgsig">
-            <v-avatar size="100" class="red lighten-2">
+            <v-avatar size="100" class="white lighten-2">
               <img :src="Signalement.picture" alt="" />
             </v-avatar>
           </v-responsive>
-          <v-card-text class="titre">
+          <v-card-text class="titreACPR">
             <div class="subheading sig">{{ Signalement.title }}</div>
             <div class="grey-text">
               <strong>Catégorie: </strong>{{ Signalement.category }}
             </div>
             <div class="grey-text">
-              <strong>Affecter le: </strong
+              <strong>Date: </strong
               >{{ Signalement.dateOf.split("T")[0] }}
-            </div>
-            <div class="grey-text">
-              <strong>Lieu: </strong>{{ Signalement.localisation }}
             </div>
           </v-card-text>
           <v-card-actions class="bouttons">
@@ -247,14 +245,15 @@
               persistent
               max-width="800px"
               class="dialog"
+             
             >
               <template v-slot:activator="{ on }">
                 <v-btn
                   outlined
                   color="blue"
                   class="consulter"
-                  @click="Consulter(index)"
                   v-on="on"
+                   @click="Consulter(index)"
                 >
                   <v-icon small left> mdi-eye</v-icon>
                   <span>Consulter</span>
@@ -287,6 +286,7 @@
                       label="Description (optionnelle)"
                       v-model="description"
                       disabled
+                      readonly
                       prepend-icon="description"
                       rows="2"
                     ></v-textarea>
@@ -421,10 +421,19 @@ export default {
       pictureA: [],
       stateA: [],
       auteurA: "",
+      title: "",
+          category: "",
+          dateOf: "",
+          state: "",
+          localisation:"",
+          Avatar: "/sig.png",
+          auteur: "",
+          motif: "",
       areaseries: [
         { name: "Signalements déclaré", data: [] },
         { name: "Signalements Validé", data: [] },
-        { name: "Signalements Rejetés", data: [] },
+        { name: "Signalements en cours de traitement", data: [] },
+         { name: "Signalements en obstacle", data: [] },
         { name: "Signalements traités", data: [] },
       ],
       areaChartOptions: {
@@ -617,7 +626,42 @@ export default {
 
   async beforeCreate() {
     try {
-   
+    const res3 = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/user/getStats4ByUser`
+      );
+      this.areaseries[0].data = res3.data.list;
+      window.dispatchEvent(new Event('resize'))
+      
+      // console.log(res3.data.list);
+
+      // console.log(this.areaseries[0].data);
+
+      const res4 = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/user/getStats5ByUser`
+      );
+      this.areaseries[1].data = res4.data.list;
+      window.dispatchEvent(new Event('resize'))
+      // console.log(res4.data.list);
+
+      const res5 = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/user/getStats7ByUser`
+      );
+      this.areaseries[2].data = res5.data.list;
+      window.dispatchEvent(new Event('resize'))
+      // console.log(res5.data.list);
+
+      const res6 = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/user/getStats8ByUser`
+      );
+      this.areaseries[3].data = res6.data.list;
+      window.dispatchEvent(new Event('resize'))
+
+       const res7 = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/user/getStats6ByUser`
+      );
+      this.areaseries[4].data = res7.data.list;
+      window.dispatchEvent(new Event('resize'))
+
 
       const res = await axios.get(
         `http://localhost:8080/api/madrasa-tic/user/getStats1ByUser`
@@ -669,7 +713,10 @@ export default {
         alert("Missing data from database");
       }
     },
+
+
     async Consulter(index) {
+      console.log(index);
       try {
         this.varIndex = index;
         const acc = localStorage.getItem("xaccesstoken");
@@ -711,13 +758,15 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
 }
-.titre {
-  margin-left: 50px;
+.titreACPR {
+  margin-left: -30px;
+
   line-height: 250%;
-  text-align: left;
+  text-align: center;
 }
 .imgsig {
-  margin-left: 35px;
+  position: relative;
+  margin-left: 10px;
 }
 .annonce-scroller {
   display: grid;

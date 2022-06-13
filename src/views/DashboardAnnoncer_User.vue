@@ -83,7 +83,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .const {
   width: 300px;
   height: 200px;

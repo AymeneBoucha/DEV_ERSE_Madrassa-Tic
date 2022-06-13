@@ -70,6 +70,7 @@
                     required
                     prepend-icon="title"
                     disabled
+                    readonly
                   ></v-text-field>
                   <v-text-field
                     label="Lieu"
@@ -78,6 +79,7 @@
                     type="text"
                     required
                     disabled
+                    readonly
                   ></v-text-field>
                   <v-textarea
                     clearable
@@ -100,6 +102,7 @@
                           v-bind="attrs"
                           v-on="on"
                           disabled
+                        
                         ></v-text-field>
                         <v-text-field
                           v-model="dateFinEventA"
@@ -140,6 +143,7 @@
                     label="Ajouter une image "
                     prepend-icon="add_a_photo"
                     disabled
+                    readonly
                   >
                   </v-file-input>
                         <div class="bouttonsD">
@@ -389,7 +393,7 @@ div.flex {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-left: 10px;
+  margin-left: 170px;
 }
 .AAR{
   margin-left: -1034px;

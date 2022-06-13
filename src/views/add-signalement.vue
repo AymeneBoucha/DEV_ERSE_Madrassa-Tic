@@ -170,6 +170,7 @@
                     prepend-icon="place"
                     type="text"
                     disabled
+                    readonly
                   ></v-text-field>
                   <v-file-input
                     v-model="picture"
@@ -375,7 +376,7 @@ export default {
           console.log(res);
           alert(res.data.message);
           if (res.status == 201) {
-            router.push("/SignalDash");
+            router.push("/MesSignalements");
           }
           // alert('Votre signalement est enregistré avec succès');
         })
@@ -428,7 +429,7 @@ export default {
           console.log(res);
           alert(res.data.message);
           if (res.status == 201) {
-            router.push("/SignalDash");
+            router.push("/MesSignalements");
           }
           // alert('Votre signalement est envoyé avec succès');
         })

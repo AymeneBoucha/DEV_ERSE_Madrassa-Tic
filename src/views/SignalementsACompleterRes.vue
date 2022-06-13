@@ -85,6 +85,7 @@
                             :rules="[v => !!v || 'champs obligatoire']"
                             label="Titre"
                             disabled
+                            readonly
                             required
                             prepend-icon="title"
                         ></v-text-field>
@@ -94,6 +95,7 @@
                             label="Description (optionnelle)"
                             v-model="description"
                             disabled
+                            readonly
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
@@ -104,29 +106,6 @@
                         disabled
                         type="text"
                         ></v-text-field>
-                        <div class="lieu">
-                        <div class=" form-group">
-                       <label for="site">Site</label>
-                        <select class="text1 form-control" name="site" id="site" v-model="site" @change="onChange1($event)">
-                          <option value='' disabled selected>Selectionnez le site</option>
-                          <option v-for="option in sites_options" v-bind:value="option.value" v-bind:key="option.text" >{{option.text}}</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="etage">Etage</label>
-                        <select class="text2 form-control " name="etage" id="etage" v-model="etage" @change="onChange2($event)">
-                          <option value="" disabled selected>Selectionnez l'etage</option>
-                          <option v-for="option in etages_options[site]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="salle">Salle</label>
-                        <select class="text3 form-control " name="salle" id="salle" v-model="salle" @change="onChange3($event)">
-                          <option value="" disabled selected>Selectionnez la salle</option>
-                          <option v-for="option in salles_options[etage]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
-                        </select>
-                      </div>
-                       </div>
                       <v-text-field 
                         label="lieu"
                         v-model="localisation"
@@ -137,6 +116,7 @@
                         <v-text-field
                           v-model="motif"
                           disabled
+                          readonly
                           label="Motif "
                           prepend-icon="warning"
                         ></v-text-field>
@@ -348,7 +328,7 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style>
 .card1 {
     display: flex;
     flex-direction: row;

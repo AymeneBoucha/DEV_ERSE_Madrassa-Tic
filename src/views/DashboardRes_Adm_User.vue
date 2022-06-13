@@ -87,7 +87,7 @@ export default {
   }),
 }
 </script>
-<style scoped>
+<style>
 .const {
   max-width: 350px;
   max-height: 170px;

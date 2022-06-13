@@ -97,6 +97,7 @@
                     required
                     prepend-icon="title"
                     disabled
+                    readonly
                   ></v-text-field>
                   <v-text-field
                     label="Lieu"
@@ -105,6 +106,7 @@
                     type="text"
                     required
                     disabled
+                    readonly
                   ></v-text-field>
                   <v-textarea
                     clearable
@@ -115,6 +117,7 @@
                     required
                     prepend-icon="description"
                     disabled
+                    readonly
                   ></v-textarea>
                   <div class="date">
                         <v-text-field
@@ -166,6 +169,7 @@
                     label="Ajouter une image "
                     prepend-icon="add_a_photo"
                     disabled
+                    readonly
                   >
                   </v-file-input>
                         <div class="bouttonsD">
@@ -393,7 +397,7 @@ div.flex {
   margin-left:-10px;
 }
 .elseAAA {
-  margin-left: 20px;
+  margin-left: 170px;
   line-height: 250%;
   margin-top: -10px;
   justify-content: center;

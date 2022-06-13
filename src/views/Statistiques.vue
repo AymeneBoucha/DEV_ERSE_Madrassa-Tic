@@ -165,6 +165,10 @@ export default {
       { name: "Signalements Validé", data: [] },
       { name: "Signalements Rejetés", data: [] },
       { name: "Signalements traités",data: [],},
+      { name: "Signalements en cours de traitements",data: [],},
+       { name: "Signalements en obstacle",data: [],},
+
+
     ],
 
     lineChartOptions: {
@@ -295,6 +299,18 @@ export default {
         `http://localhost:8080/api/madrasa-tic/moderator/getStats7ByModerator`
       );
       this.areaseries[3].data = res6.data.list;
+      window.dispatchEvent(new Event('resize'))
+
+      const res7 = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/moderator/getStats8ByModerator`
+      );
+      this.areaseries[4].data = res7.data.list;
+      window.dispatchEvent(new Event('resize'))
+
+      const res8 = await axios.get(
+        `http://localhost:8080/api/madrasa-tic/moderator/getStats9ByModerator`
+      );
+      this.areaseries[5].data = res8.data.list;
       window.dispatchEvent(new Event('resize'))
       
  

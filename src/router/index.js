@@ -48,7 +48,7 @@ import DashboardAnnoncerUser from '../views/DashboardAnnoncer_User.vue'
 import DashboardAnnoncerRes from '../views/DashboardAnnoncer_Res.vue'
 import AnnonceExpireRes from '../views/AnnonceExpireRes.vue'
 import AnnonceExpireAnnoncer from '../views/AnnonceExpireAnnoncer.vue'
-import Accueil from '../views/Accueil.vue'
+import Accueil_Principale from '../views/Accueil_Principale.vue'
 
 
 Vue.use(VueRouter)
@@ -61,8 +61,8 @@ const routes = [
   },
   {
     path: '/Accueil',
-    name: 'Accueil',
-    component: Accueil,
+    name: 'Accueil_Principale',
+    component: Accueil_Principale,
     meta: {
       hideNavbar: true,
      }

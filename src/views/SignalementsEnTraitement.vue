@@ -32,15 +32,15 @@
                                     <span class="caption text-lowercase">Filtrer par catégories</span>
                                 </v-btn>
                             </template>
-                            <v-list>
+                              <v-list>
                                 <v-list-item
-                                v-for="Service in Services"
-                                :key="Service.nom"
-                                @click="Filtrer(Service.nom)"
+                                  v-for="catégorie in catégories"
+                                  :key="catégorie"
+                                  @click="Filtrer(catégorie)"
                                 >
-                                <v-list-item-title>{{ Service.nom }}</v-list-item-title>
+                                  <v-list-item-title>{{ catégorie }}</v-list-item-title>
                                 </v-list-item>
-                            </v-list>
+                              </v-list>
                             </v-menu>
                 </v-col>
             <v-layout row wrap>
@@ -105,7 +105,7 @@
                         disabled
                         type="text"
                         ></v-text-field>
-                        <div class="lieu">
+                        <!-- <div class="lieu">
                         <div class=" form-group">
                        <label for="site">Site</label>
                         <select class="text1 form-control" name="site" id="site" v-model="site" @change="onChange1($event)">
@@ -127,7 +127,7 @@
                           <option v-for="option in salles_options[etage]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
                         </select>
                       </div>
-                       </div>
+                       </div> -->
                       <v-text-field 
                         label="lieu"
                         v-model="localisation"
@@ -276,7 +276,7 @@ export default {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
       const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/moderator/getAllRefusedReportsByByModerator`
+        `http://localhost:8080/api/madrasa-tic/moderator/getAllAcceptedReportsByByModerator`
       );
       this.Signalements = res.data;
                         let j = 0;
@@ -454,7 +454,7 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style>
 .card1 {
     display: flex;
     flex-direction: row;

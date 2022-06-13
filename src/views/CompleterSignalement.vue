@@ -146,6 +146,7 @@
                         v-model="localisation"
                         prepend-icon="place"
                         disabled
+                        readonly
                         type="text"
                       ></v-text-field>
                       <v-file-input
@@ -159,6 +160,7 @@
                         v-model="Motif"
                         prepend-icon="warning"
                         disabled
+                        readonly
                         type="text"
                       ></v-text-field>
                     </div>

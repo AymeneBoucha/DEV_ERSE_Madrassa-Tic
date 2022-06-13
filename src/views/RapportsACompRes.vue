@@ -28,15 +28,15 @@
               <span class="caption text-lowercase">Filtrer par catégories</span>
             </v-btn>
           </template>
-          <v-list>
-            <v-list-item
-              v-for="Service in Services"
-              :key="Service.nom"
-              @click="Filtrer(Service.nom)"
-            >
-              <v-list-item-title>{{ Service.nom }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
+                              <v-list>
+                                <v-list-item
+                                  v-for="catégorie in catégories"
+                                  :key="catégorie"
+                                  @click="Filtrer(catégorie)"
+                                >
+                                  <v-list-item-title>{{ catégorie }}</v-list-item-title>
+                                </v-list-item>
+                              </v-list>
         </v-menu>
         <v-btn small outlined color="blue" @click="trierSignalement()" class="mr-2 " dark v-bind="attrs" v-on="on">
               <v-icon left small>check</v-icon>
@@ -97,6 +97,7 @@
                         label="Description "
                         v-model="descriptionR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -139,6 +140,7 @@
                         label="Matériel"
                         v-model="materialR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -371,8 +373,8 @@ console.log(this.Rapports)
         this.titleR = res.data.title;
         this.descriptionR = res.data.description;
 this.materialR=res.data.material;
-        this.dateOfR = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOfR = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.motif = res.data.motif;
 
       } catch {
@@ -404,8 +406,8 @@ this.materialR=res.data.material;
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOfS = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOfS = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");

@@ -23,7 +23,7 @@
             <v-card-text class="titre">
               <div class="subheading sig">{{ Rapport.title }}</div>
               <div class="grey-text">
-                <strong>Durée de traitement: </strong>{{ Rapport.dateOf }}
+                <strong>Durée de traitement: </strong>{{ Rapport.dateOf.split("T")[0] }}
               </div>
             </v-card-text>
             <v-card-actions>
@@ -64,6 +64,7 @@
                         label="Description "
                         v-model="descriptionR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -101,6 +102,7 @@
                         label="Matériel"
                         v-model="materialR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -149,76 +151,12 @@
                       <v-textarea
                         clearable
                         disabled
+                        readonly
                         clear-icon="mdi-close-circle"
                         label="Description (optionnelle)"
                         v-model="descriptionS"
                         prepend-icon="description"
                       ></v-textarea>
-                      <div class="lieu">
-                        <div class="form-group">
-                          <label for="site">Site</label>
-                          <select
-                            class="text1 form-control"
-                            name="site"
-                            id="site"
-                            v-model="site"
-                            @change="onChange1($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez le site
-                            </option>
-                            <option
-                              v-for="option in sites_options"
-                              v-bind:value="option.value"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="etage">Etage</label>
-                          <select
-                            class="text2 form-control"
-                            name="etage"
-                            id="etage"
-                            v-model="etage"
-                            @change="onChange2($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez l'etage
-                            </option>
-                            <option
-                              v-for="option in etages_options[site]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="salle">Salle</label>
-                          <select
-                            class="text3 form-control"
-                            name="salle"
-                            id="salle"
-                            v-model="salle"
-                            @change="onChange3($event)"
-                          >
-                            <option disabled value="" selected>
-                              Selectionnez la salle
-                            </option>
-                            <option
-                              v-for="option in salles_options[etage]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
                       <v-text-field
                         label="lieu"
                         v-model="localisation"
@@ -495,7 +433,7 @@ export default {
                 this.materialR = res.data.material;
 
         this.descriptionR = res.data.description;
-        this.dateOfR = res.data.dateOf;
+        this.dateOfR = res.data.dateOf.split("T")[0];
         this.picture = res.data.picture;
      //   this.defaultCatégorie = res.data.category;
       } catch {
@@ -517,7 +455,7 @@ export default {
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOfS = res.data.dateOf;
+        this.dateOfS = res.data.dateOf.split("T")[0];
         //this.pictureS = res.data.picture;
        // this.defaultCatégorieS  = res.data.category;
       } catch {

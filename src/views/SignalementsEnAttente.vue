@@ -32,15 +32,15 @@
                                     <span class="caption text-lowercase">Filtrer par catégories</span>
                                 </v-btn>
                             </template>
-                            <v-list>
+                              <v-list>
                                 <v-list-item
-                                v-for="Service in Services"
-                                :key="Service.nom"
-                                @click="Filtrer(Service.nom)"
+                                  v-for="catégorie in catégories"
+                                  :key="catégorie"
+                                  @click="Filtrer(catégorie)"
                                 >
-                                <v-list-item-title>{{ Service.nom }}</v-list-item-title>
+                                  <v-list-item-title>{{ catégorie }}</v-list-item-title>
                                 </v-list-item>
-                            </v-list>
+                              </v-list>
                             </v-menu>
                 </v-col>
             <v-layout row wrap>
@@ -56,7 +56,7 @@
                     <v-card-text class="titre">
                     <div class="subheading tt">{{Signalement.title}}</div>
                     <div class="grey--text"><strong>Catégorie : </strong>{{Signalement.category}}</div>
-                    <div class="grey--text"><strong>Publié le : </strong>{{Signalement.dateOf}}</div>
+                    <div class="grey--text"><strong>Publié le : </strong>{{Signalement.dateOf.split("T")[0]}}</div>
                      <div class="grey--text">
                 <strong>l'auteur : </strong>{{ Signalement.auteur }}
               </div>
@@ -197,7 +197,8 @@
                             clear-icon="mdi-close-circle"
                             label="Description (optionnelle)"
                             v-model="description"
-                            :disabled="disabled"
+                            disabled
+                            readonly
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
@@ -208,29 +209,6 @@
                         disabled
                         type="text"
                         ></v-text-field>
-                        <div class="lieu">
-                        <div class=" form-group">
-                       <label for="site">Site</label>
-                        <select class="text1 form-control" name="site" id="site" v-model="site" @change="onChange1($event)">
-                          <option value='' disabled selected>Selectionnez le site</option>
-                          <option v-for="option in sites_options" v-bind:value="option.value" v-bind:key="option.text" >{{option.text}}</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="etage">Etage</label>
-                        <select class="text2 form-control " name="etage" id="etage" v-model="etage" @change="onChange2($event)">
-                          <option value="" disabled selected>Selectionnez l'etage</option>
-                          <option v-for="option in etages_options[site]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="salle">Salle</label>
-                        <select class="text3 form-control " name="salle" id="salle" v-model="salle" @change="onChange3($event)">
-                          <option value="" disabled selected>Selectionnez la salle</option>
-                          <option v-for="option in salles_options[etage]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
-                        </select>
-                      </div>
-                       </div>
                       <v-text-field 
                         label="lieu"
                         v-model="localisation"
@@ -291,7 +269,7 @@ export default {
         varIndex: '',
         category:'',
         auteur:'',
-        image: [],
+        picture: '',
         catégories: [],
         site: '',
         motif:'',
@@ -338,7 +316,7 @@ export default {
                     userId: '',
                     auteur:'',
                     state: '',
-                    image: '/sig.png',
+                    picture: '',
                     description: '',
                      site: '',
                     etage:'',
@@ -438,8 +416,9 @@ export default {
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOf = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
+        console.log(this.picture)
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
@@ -543,7 +522,7 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style>
 .card1 {
     display: flex;
     flex-direction: row;

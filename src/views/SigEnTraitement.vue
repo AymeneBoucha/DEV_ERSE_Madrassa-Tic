@@ -3,7 +3,7 @@
     <h1 class="subheading grey--text">Signalements en Cours de Traitement</h1>
     <v-container >
       <v-card-actions class="btnsChEnTr">
-        <v-btn outlined color="red" class="btn" to="/SigEnTraitement">
+        <v-btn outlined color="red" class="btn" to="/SigEnAttent">
           <v-icon>mdi-alert-octagram</v-icon>
           <span>En Attente de Traitement</span>
         </v-btn>
@@ -29,7 +29,7 @@
                   <v-card-text class="titreET">
                       <div class="subheading sig">{{Signalement.title}}</div>
                       <div class="grey-text"><strong>Catégorie: </strong>{{Signalement.category}}</div>
-                      <div class="grey-text"><strong>Debut de traitement le: </strong>{{Signalement.dateOf}}</div>
+                      <div class="grey-text"><strong>Debut de traitement le: </strong>{{Signalement.dateOf.split("T")[0]}}</div>
                   </v-card-text>
                   <v-card-actions class="bout">
                     <v-dialog
@@ -72,6 +72,7 @@
                         label="Description (optionnelle)"
                         v-model="description"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -82,76 +83,18 @@
                         disabled
                         type="text"
                       ></v-text-field>
-                      <div class="lieu">
-                        <div class="form-group">
-                          <label for="site">Site</label>
-                          <select
-                            class="text1 form-control"
-                            name="site"
-                            id="site"
-                            v-model="site"
-                            @change="onChange1($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez le site
-                            </option>
-                            <option
-                              v-for="option in sites_options"
-                              v-bind:value="option.value"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="etage">Etage</label>
-                          <select
-                            class="text2 form-control"
-                            name="etage"
-                            id="etage"
-                            v-model="etage"
-                            @change="onChange2($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez l'etage
-                            </option>
-                            <option
-                              v-for="option in etages_options[site]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="salle">Salle</label>
-                          <select
-                            class="text3 form-control"
-                            name="salle"
-                            id="salle"
-                            v-model="salle"
-                            @change="onChange3($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez la salle
-                            </option>
-                            <option
-                              v-for="option in salles_options[etage]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
                       <v-text-field
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
                         disabled
+                        type="text"
+                      ></v-text-field>
+                      <v-text-field
+                        label="image"
+                        v-model="picture"
+                        prepend-icon="place"
+                        readonly
                         type="text"
                       ></v-text-field>
                     </div>
@@ -255,8 +198,8 @@
 
                   </div>
                   <div class="bouttonsD">
-                    <v-btn  @click="dialog2 = false"  ><span>Annuler</span></v-btn>
-                   <v-btn class=" blue-grey darken-2" ><span  @click="envoyerRapport(), Terminer(), dialog2 = false ">Envoyer</span></v-btn>
+                    <v-btn  @click="empty(), dialog2 = false"  ><span @click="empty()">Annuler</span></v-btn>
+                   <v-btn class=" blue-grey darken-2" @click="envoyerRapport(), Terminer(), dialog2 = false " ><span>Envoyer</span></v-btn>
                    </div>
                    </v-card-text>
               </v-card>
@@ -533,6 +476,15 @@ export default {
         async obstacle(index)  {
          this.varIndex = index;
         },
+        async empty() {
+          console.log(this.descriptionR);
+            this.titleR="";
+            this.selectedFile=null;
+            this.descriptionR="";
+            this.materialR="";
+            this.dateOfR="";
+            console.log(this.descriptionR);
+        },
         async envoyer() {
              try {
         const data = {
@@ -564,8 +516,8 @@ export default {
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOf = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");

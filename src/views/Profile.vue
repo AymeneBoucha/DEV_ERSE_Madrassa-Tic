@@ -4,7 +4,7 @@
     <v-container>
       <v-layout class="container" row wrap>
         <v-flex class="const">
-          <v-card class="text-center ma-3 card">
+          <v-card class="text-center ma-3 cardPro">
             <v-responsive class="pt-4 png">
               <v-avatar size="250" class="red lighten-2">
                 <img src="img1.png" alt="" />
@@ -113,12 +113,13 @@ export default {
   text-align: center;
 }
 
-.card {
+.cardPro {
   display: flex;
   flex-direction: row;
   height: 500px;
   align-items: center;
   text-align: center;
+  width: 950px;
 }
 .fields {
   margin: 120px;

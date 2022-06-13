@@ -57,7 +57,7 @@
                 <strong>Catégorie: </strong>{{ Rapport.category }}
               </div>
               <div class="grey-text">
-                <strong>date du Rapport: </strong>{{ Rapport.dateOf }}
+                <strong>date du Rapport: </strong>{{ Rapport.dateOf.split("T")[0] }}
               </div>
             </v-card-text>
             <div class="btnsLR">
@@ -98,6 +98,7 @@
                         label="Description "
                         v-model="descriptionR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -140,6 +141,7 @@
                         label="Matériel"
                         v-model="materialR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -271,6 +273,7 @@
                         label="Description"
                         v-model="descriptionS"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -420,7 +423,7 @@ console.log(this.Rapports)
         this.titleR = res.data.title;
         this.descriptionR = res.data.description;
 this.materialR=res.data.material;
-        this.dateOfR = res.data.dateOf;
+        this.dateOfR = res.data.dateOf.split("T")[0];
         //this.picture = res.data.picture;
 
       } catch {
@@ -449,8 +452,8 @@ this.materialR=res.data.material;
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOfS = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOfS = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");

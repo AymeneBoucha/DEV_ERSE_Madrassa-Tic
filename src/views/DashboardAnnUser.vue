@@ -35,7 +35,7 @@ export default {
   }),
 }
 </script>
-<style scoped>
+<style>
 .const {
   width: 500px;
   height: 200px;

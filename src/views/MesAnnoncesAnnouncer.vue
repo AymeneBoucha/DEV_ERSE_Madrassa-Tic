@@ -371,7 +371,7 @@ div.flex {
   justify-content: space-between;
   align-items: center;
   width: 300px;
-  margin-top: -43px;
+  margin-top: -10px;
   margin-left: 10px;
   height: 350px;
 }
@@ -403,7 +403,7 @@ div.flex {
   margin-left:-10px;
 }
 .elseMAA {
-  margin-left: 20px;
+  margin-left: 150px;
   line-height: 250%;
   margin-top: -10px;
   width: 300px;

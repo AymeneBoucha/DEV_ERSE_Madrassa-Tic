@@ -33,7 +33,7 @@
                   <v-card-text class="titreChTr">
                       <div class="subheading sig">{{Signalement.title}}</div>
                       <div class="grey-text"><strong>Catégorie: </strong>{{Signalement.category}}</div>
-                      <div class="grey-text"><strong>date: </strong>{{Signalement.dateOf}}</div>
+                      <div class="grey-text"><strong>date: </strong>{{Signalement.dateOf.split("T")[0]}}</div>
                   </v-card-text>
                   <!--<v-card-text class="etat">
                       <div class="subheading ">Etat</div>
@@ -80,6 +80,7 @@
                         label="Description (optionnelle)"
                         v-model="description"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -90,7 +91,7 @@
                         disabled
                         type="text"
                       ></v-text-field>
-                      <div class="lieu">
+                      <!-- <div class="lieu">
                         <div class="form-group">
                           <label for="site">Site</label>
                           <select
@@ -154,7 +155,7 @@
                             </option>
                           </select>
                         </div>
-                      </div>
+                      </div> -->
                       <v-text-field
                         label="lieu"
                         v-model="localisation"
@@ -402,8 +403,8 @@ export default {
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOf = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       
     } ,
