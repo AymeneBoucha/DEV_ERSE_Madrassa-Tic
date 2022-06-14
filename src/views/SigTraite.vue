@@ -21,19 +21,21 @@
         </v-btn>
       </v-card-actions>
       <v-layout row wrap>
-          <v-flex v-for="Signalement in Signalements" :key="Signalement.titre">
+          <v-flex v-for="(Signalement, index) in Signalements" :key="Signalement.titre">
               <v-card class="text-center ma-3 card" color="#F0FFF0">
                    <div class="imgChTr">
+                    <a>
            <v-img
         :aspect-ratio="16/9"
         :width="width"
-        src="p.png"
+        :src="Signalement.picture"
       ></v-img>
+      </a>
       </div>
                   <v-card-text class="titreChTr">
                       <div class="subheading sig">{{Signalement.title}}</div>
                       <div class="grey-text"><strong>Catégorie: </strong>{{Signalement.category}}</div>
-                      <div class="grey-text"><strong>date: </strong>{{Signalement.dateOf}}</div>
+                      <div class="grey-text"><strong>date: </strong>{{Signalement.dateOf.split("T")[0]}}</div>
                   </v-card-text>
                   <!--<v-card-text class="etat">
                       <div class="subheading ">Etat</div>
@@ -80,6 +82,7 @@
                         label="Description (optionnelle)"
                         v-model="description"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -90,7 +93,7 @@
                         disabled
                         type="text"
                       ></v-text-field>
-                      <div class="lieu">
+                      <!-- <div class="lieu">
                         <div class="form-group">
                           <label for="site">Site</label>
                           <select
@@ -154,7 +157,7 @@
                             </option>
                           </select>
                         </div>
-                      </div>
+                      </div> -->
                       <v-text-field
                         label="lieu"
                         v-model="localisation"
@@ -327,41 +330,7 @@ export default {
           userId: "",
           auteur: "",
           state: "",
-          image: "/sig.png",
-          description: "",
-          site: "",
-          etage: "",
-          salle: "",
-          lieu:"",
-          motif: "",
-          probleme: "",
-        },
-          {
-          id: "",
-          title: "",
-          category: "",
-          dateOf: "",
-          userId: "",
-          auteur: "",
-          state: "",
-          image: "/sig.png",
-          description: "",
-          site: "",
-          etage: "",
-          salle: "",
-          lieu:"",
-          motif: "",
-          probleme: "",
-        },
-          {
-          id: "",
-          title: "",
-          category: "",
-          dateOf: "",
-          userId: "",
-          auteur: "",
-          state: "",
-          image: "/sig.png",
+          picture: "",
           description: "",
           site: "",
           etage: "",
@@ -373,6 +342,24 @@ export default {
       ],
     };
   },
+      mounted: async function () {
+    try {
+      const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/getAllCategories`);
+      //this.categrories = res.data.;
+     // console.log(res.data[0].name)
+   //  console.log(res.data.length)
+        let j = 0;
+      while (j < res.data.length) {
+        this.catégories.push(res.data[j].name);
+        j++
+      }
+    } catch {
+      alert("Missing data from database");
+    }
+  },
+  
   async created() {
         try {
         const res = await axios.get(`http://localhost:8080/api/madrasa-tic/employer/getAllMyTraitedReportsByEmployer`);
@@ -388,17 +375,29 @@ export default {
         alert("Missing data from database");
         }
     },
+      computed: {
+    localisation: function () {
+      if (this.site  && this.etage && this.salle)
+      {return this.site + ' ' + this.etage + ' ' + this.salle}
+      else {return ''}
+    },
+   //dateOf: function () {
+     //    if (this.date  && this.time )
+    //{return this.date + ' ' + this.time }
+      //else {return ''}
+     
+    //},
+  },
     methods: {
        async Consulter(index) {
-      try {
-        this.varIndex = index;
-        const acc = localStorage.getItem("xaccesstoken");
-        setAuthHeader(acc);
+     
+
         const res = await axios.get(
           `http://localhost:8080/api/madrasa-tic/employer/selectOneOfMyReportByEmployer/${
-            this.Signalements[this.varIndex].id
-          }`
+            
+         this.Signalements[index].id }`
         );
+        console.log("aa")
         this.title = res.data.title;
         this.description = res.data.description;
         this.category = res.data.category;
@@ -406,15 +405,13 @@ export default {
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOf = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
-      } catch {
-        alert("Missing data from database");
-      }
+      
     } ,
     trierSignalement(){
-    this.Signalements.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
+    this.Signalements.sort((a, b) => (a.dateOf<b.dateOf) ? 1 : -1)
     },
     }
 }
@@ -457,10 +454,14 @@ export default {
   margin-top: 2px;
   left: -17.5px;
 }
+.imgChSu:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+  cursor: pointer;
+}
 .TR{
   position: absolute;
   margin-top: 13px;
-  margin-left: -580px;
+  margin-left: -540px;
 }
 .btnsChTr{
   position: relative;

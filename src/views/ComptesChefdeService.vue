@@ -2,12 +2,6 @@
   <div class="accounts">
     <h1 class="subheading grey--text">Comptes des Chefs de Service</h1>
     <v-container>
-        <v-card-actions class="ComptesC">
-          <v-btn outlined color="primary" class="btn" to="Comptes">
-            <v-icon>mdi-share</v-icon>
-            <span>Comptes des utilisateurs</span>
-          </v-btn>
-        </v-card-actions>
       <v-layout row wrap>
         <v-flex
           xs12
@@ -20,7 +14,7 @@
           <v-card class="text-center ma-3" min-width="270px">
             <v-responsive class="pt-4">
               <v-avatar size="100" class="red lighten-2">
-                <img :src="person.avatar" alt="" />
+                <img :src="person.picture" alt="" />
               </v-avatar>
             </v-responsive>
             <v-card-text>
@@ -92,10 +86,10 @@
                           :items="roles"
                           :menu-props="{ maxHeight: '200' }"
                           label="Modifier les roles"
-                          multiple
+                          
                           persistent-hint
                           prepend-icon="mdi-wrench"
-                          @input="setSelected"
+                  
                         ></v-select>
                         <v-select
                           v-model="defaultSelectedC"
@@ -123,10 +117,10 @@
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="dialog1= false"
+                      <v-btn color="blue darken-1" text @click="dialog1= false, Close()"
                         >Close</v-btn
                       >
-                      <v-btn color="green" text outlined @click="UpdateUser()"
+                      <v-btn color="green" text outlined @click="UpdateUser(),UpdateCatgoriesForEmployer()"
                         >Save</v-btn
                       >
                     </v-card-actions>
@@ -194,8 +188,9 @@ export default {
         avatar: "/img1.png",
       },
       NewAccount: "",
-      roles: ["user", "admin", "moderator", "employer", "announcer"],
-      defaultSelected: ["user"],
+          roles: [["user","moderator", "admin", "announcer"],["user", "moderator", "announcer"] ,["user","employer","announcer"],
+      ["user", "announcer"],["user"]],
+      defaultSelected: [],
       defaultSelectedC: [""],
       catégories: [],
       rolesToAdd: [],
@@ -208,8 +203,9 @@ export default {
         `http://localhost:8080/api/madrasa-tic/admin/viewAllEmployesByAdmin`
       );
       this.accounts = res.data;
-      for(let i=0; i<this.accounts.length; i++){
-        this.accounts[i].avatar = "img1.png"
+     for(let i=0; i<this.accounts.length; i++){
+        if(!this.accounts[i].picture)
+        this.accounts[i].picture = "img1.png"
       }
       console.log(this.accounts);
     } catch (e) {
@@ -238,7 +234,10 @@ export default {
   methods: {
     Delete(index) {
       this.varIndex = index
-    },
+    },Close(){
+  this.defaultSelected= []
+},
+
 
 
 
@@ -264,6 +263,18 @@ export default {
         });
     },
 
+    async UpdateCatgoriesForEmployer(){
+           console.log(this.catégoriesToAdd);
+
+      const acc = localStorage.getItem("xaccesstoken");
+      const categories= this.defaultSelectedC
+      console.log(categories)
+
+      setAuthHeader(acc);
+      
+      await axios.post(`http://localhost:8080/api/madrasa-tic/admin/addCategoriesToEmployerByAdmin/${this.accounts[this.varIndex].id}`,{categories});
+    }
+,
 
 
     
@@ -272,17 +283,14 @@ export default {
 
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
-      await axios.post(`http://localhost:8080/api/madrasa-tic/admin/addCategoriesToEmployerByAdmin/${
-        this.accounts[this.varIndex].id}`, {
-          catégories: this.catégoriesToAdd,
-        });
+
       await axios
         .put(
           `http://localhost:8080/api/madrasa-tic/admin/${
             this.accounts[this.varIndex].id
           }/updateRoles`,
           {
-            roles: this.rolesToAdd,
+            roles: this.defaultSelected,
           }
         )
         .then((res) => {
@@ -303,14 +311,14 @@ export default {
         const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
         const res = await axios.get(
-          `http://localhost:8080/api/madrasa-tic/admin/${this.accounts[index].id}`
+          `http://localhost:8080/api/madrasa-tic/admin/selectOneEmployerByAdmin/${this.accounts[index].id}`
         );
         this.username = res.data.username;
         this.email = res.data.email;
         this.phoneTel = res.data.phoneTel;
         this.birthDay = res.data.birthDay;
         this.defaultSelected = res.data.roles;
-        this.defaultSelectedC = res.data.catégories;
+        this.defaultSelectedC = res.data.categories;
         //this.defaultSelected = res.data.roles;
       } catch {
         alert("Missing data from database");

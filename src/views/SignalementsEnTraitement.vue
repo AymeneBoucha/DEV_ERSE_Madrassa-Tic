@@ -5,15 +5,19 @@
           <v-card-actions class="btnsET">
         <v-btn outlined color="red" class="btn" to="SignalementsEnAttente">
           <v-icon>mdi-alert-octagram</v-icon>
-          <span>Signalements En Attente</span>
+          <span>En Attente</span>
         </v-btn>
         <v-btn outlined color="primary" class="btn" to="SignalementsACompleterRes">
           <v-icon>mdi-alert-plus</v-icon>
-          <span>Signalements à Completer</span>
+          <span>à Completer</span>
         </v-btn>
         <v-btn outlined color="orange" class="btn" to="SignalementsSuspendus">
           <v-icon>mdi-timer-off</v-icon>
-          <span>Signalements Suspendus</span>
+          <span>Suspendus</span>
+        </v-btn>
+        <v-btn outlined color="red" class="btn" to="SignalementsRejetes">
+          <v-icon>mdi-cancel</v-icon>
+          <span>Rejetés</span>
         </v-btn>
       </v-card-actions>
           <v-col cols="5" xs6 sm4 md2 class="filtre">
@@ -32,26 +36,32 @@
                                     <span class="caption text-lowercase">Filtrer par catégories</span>
                                 </v-btn>
                             </template>
-                            <v-list>
+                              <v-list>
                                 <v-list-item
-                                v-for="Service in Services"
-                                :key="Service.nom"
-                                @click="Filtrer(Service.nom)"
+                                  v-for="catégorie in catégories"
+                                  :key="catégorie"
+                                  @click="Filtrer(catégorie)"
                                 >
-                                <v-list-item-title>{{ Service.nom }}</v-list-item-title>
+                                  <v-list-item-title>{{ catégorie }}</v-list-item-title>
                                 </v-list-item>
-                            </v-list>
+                              </v-list>
                             </v-menu>
+                            <v-btn small outlined color="blue" @click="trierSignalement()" class="mr-2" dark v-bind="attrs" v-on="on">
+              <v-icon left small>check</v-icon>
+              <span class="caption text-lowercase">Trier par date</span>
+            </v-btn>
                 </v-col>
             <v-layout row wrap>
                 <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.id">
                     <v-card class="text-center ma-3 card1">
                      <div class="img">
+           <a :href="Signalement.picture">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
-        src="sig.png"
+         :src= "Signalement.picture"
       ></v-img>
+      </a>
       </div>
                     <v-card-text class="titre">
                     <div class="subheading tt">{{Signalement.title}}</div>
@@ -105,7 +115,7 @@
                         disabled
                         type="text"
                         ></v-text-field>
-                        <div class="lieu">
+                        <!-- <div class="lieu">
                         <div class=" form-group">
                        <label for="site">Site</label>
                         <select class="text1 form-control" name="site" id="site" v-model="site" @change="onChange1($event)">
@@ -127,7 +137,7 @@
                           <option v-for="option in salles_options[etage]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
                         </select>
                       </div>
-                       </div>
+                       </div> -->
                       <v-text-field 
                         label="lieu"
                         v-model="localisation"
@@ -276,7 +286,7 @@ export default {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
       const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/moderator/getAllRefusedReportsByByModerator`
+        `http://localhost:8080/api/madrasa-tic/moderator/getAllAcceptedReportsByByModerator`
       );
       this.Signalements = res.data;
                         let j = 0;
@@ -439,6 +449,8 @@ export default {
         info(index){
           this.varIndex = index
         },
+        trierSignalement(){
+    this.Signalements.sort((a, b) => (a.dateOf<b.dateOf) ? 1 : -1)},
         Filtrer(categorie) {
           /*const res = axios.get(`http://localhost:3000/LesSignalements`);
           this.Signalements = res.data;*/
@@ -579,6 +591,6 @@ export default {
 }
 .btnsET{
   position: absolute;
-  margin-left: 230px;
+  margin-left: 442px;
 }
 </style>

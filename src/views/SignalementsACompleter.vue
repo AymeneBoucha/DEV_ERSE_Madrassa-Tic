@@ -24,26 +24,28 @@
                                     <span class="caption text-lowercase">Filtrer par catégories</span>
                                 </v-btn>
                             </template>
-                            <v-list>
+                              <v-list>
                                 <v-list-item
-                                v-for="Service in Services"
-                                :key="Service.nom"
-                                @click="Filtrer(Service.nom)"
+                                  v-for="catégorie in catégories"
+                                  :key="catégorie"
+                                  @click="Filtrer(catégorie)"
                                 >
-                                <v-list-item-title>{{ Service.nom }}</v-list-item-title>
+                                  <v-list-item-title>{{ catégorie }}</v-list-item-title>
                                 </v-list-item>
-                            </v-list>
+                              </v-list>
                             </v-menu>
                 </v-col>
             <v-layout row wrap>
                 <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.id">
                     <v-card class="text-center ma-3 card1">
                          <div class="img">
+           <a :href="Signalement.picture">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
-        src="sig.png"
+         :src= "Signalement.picture"
       ></v-img>
+      </a>
       </div>
                     <v-card-text class="titre1">
                     <div class="subheading tt">{{Signalement.title}}</div>
@@ -86,46 +88,82 @@
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
-                       <v-text-field 
-                        label="Date"
-                        v-model="dateOf"
-                        disabled
-                        prepend-icon="mdi-calendar"
-                        type="text"
-                        ></v-text-field>
-                        <div class="lieu">
-                        <div class=" form-group">
-                       <label for="site">Site</label>
-                        <select class="text1 form-control" name="site" id="site" v-model="site" @change="onChange1($event)">
-                          <option value='' disabled selected>Selectionnez le site</option>
-                          <option v-for="option in sites_options" v-bind:value="option.value" v-bind:key="option.text" >{{option.text}}</option>
-                        </select>
+                       <div class="lieu">
+                        <div class="form-group">
+                          <label for="site">Site</label>
+                          <select
+                            class="text1 form-control"
+                            name="site"
+                            id="site"
+                            v-model="site"
+                            @change="onChange1($event)"
+                          >
+                            <option value="" disabled selected>
+                              Selectionnez le site
+                            </option>
+                            <option
+                              v-for="option in sites_options"
+                              v-bind:value="option.value"
+                              v-bind:key="option.text"
+                            >
+                              {{ option.text }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="etage">Etage</label>
+                          <select
+                            class="text2 form-control"
+                            name="etage"
+                            id="etage"
+                            v-model="etage"
+                            @change="onChange2($event)"
+                          >
+                            <option value="" disabled selected>
+                              Selectionnez l'etage
+                            </option>
+                            <option
+                              v-for="option in etages_options[site]"
+                              v-bind:value="option.text"
+                              v-bind:key="option.text"
+                            >
+                              {{ option.text }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="salle">Salle</label>
+                          <select
+                            class="text3 form-control"
+                            name="salle"
+                            id="salle"
+                            v-model="salle"
+                            @change="onChange3($event)"
+                          >
+                            <option value="" disabled selected>
+                              Selectionnez la salle
+                            </option>
+                            <option
+                              v-for="option in salles_options[etage]"
+                              v-bind:value="option.text"
+                              v-bind:key="option.text"
+                            >
+                              {{ option.text }}
+                            </option>
+                          </select>
+                        </div>
                       </div>
-                      <div class="form-group">
-                        <label for="etage">Etage</label>
-                        <select class="text2 form-control " name="etage" id="etage" v-model="etage" @change="onChange2($event)">
-                          <option value="" disabled selected>Selectionnez l'etage</option>
-                          <option v-for="option in etages_options[site]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="salle">Salle</label>
-                        <select class="text3 form-control " name="salle" id="salle" v-model="salle" @change="onChange3($event)">
-                          <option value="" disabled selected>Selectionnez la salle</option>
-                          <option v-for="option in salles_options[etage]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
-                        </select>
-                      </div>
-                       </div>
-                      <v-text-field 
+                      <v-text-field
                         label="lieu"
                         v-model="localisation"
-                        disabled
                         prepend-icon="place"
                         type="text"
-                        ></v-text-field>
+                        disabled
+                      ></v-text-field>
                         <v-text-field
                           v-model="motif"
                           disabled
+                          readonly
                           label="Motif "
                           prepend-icon="warning"
                         ></v-text-field>
@@ -264,7 +302,7 @@ export default {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
       const res = await axios.get(
-        `http://localhost:8080/api/madrasa-tic/moderator/getAllNeedMoreInfosReportsByByModerator`
+        `http://localhost:8080/api/madrasa-tic/user/getAllMyNeedMoreInfosReportsByUser`
       );
       this.Signalements = res.data;
        let j = 0;
@@ -310,7 +348,7 @@ export default {
         const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
         const res = await axios.get(
-          `http://localhost:8080/api/madrasa-tic/moderator/selectOneReportByModerator/${this.Signalements[this.varIndex].id}`
+          `http://localhost:8080/api/madrasa-tic/user/selectOneOfMyReportsByUser/${this.Signalements[this.varIndex].id}`
         );
         this.title = res.data.title;
         this.description = res.data.description;
@@ -463,7 +501,7 @@ export default {
 }
 .text3 {
   position: relative;
-  left: 10px;
+  left: 20px;
   border: 1px solid grey;
   border-radius: 3px;
   
@@ -487,6 +525,10 @@ export default {
 }
 .img{
   left: -33px;
+}
+.img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+  cursor: pointer;
 }
 .btn{
   text-transform: none;

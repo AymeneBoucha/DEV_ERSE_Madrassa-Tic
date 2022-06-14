@@ -28,15 +28,15 @@
               <span class="caption text-lowercase">Filtrer par catégories</span>
             </v-btn>
           </template>
-          <v-list>
-            <v-list-item
-              v-for="Service in Services"
-              :key="Service.nom"
-              @click="Filtrer(Service.nom)"
-            >
-              <v-list-item-title>{{ Service.nom }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
+                              <v-list>
+                                <v-list-item
+                                  v-for="catégorie in catégories"
+                                  :key="catégorie"
+                                  @click="Filtrer(catégorie)"
+                                >
+                                  <v-list-item-title>{{ catégorie }}</v-list-item-title>
+                                </v-list-item>
+                              </v-list>
         </v-menu>
         <v-btn small outlined color="blue" @click="trierSignalement()" class="mr-2 " dark v-bind="attrs" v-on="on">
               <v-icon left small>check</v-icon>
@@ -46,11 +46,18 @@
       <v-layout row wrap>
         <v-flex v-for="(Rapport, index) in Rapports" :key="Rapport.title">
           <v-card class="text-center ma-3 card" color="#E5E4E2">
+            <a :href="Rapport.picture">
             <v-responsive class="pt-4">
-              <v-avatar size="170" class="red lighten-2">
-                <img src="/p.png" alt="" />
+              <v-avatar size="170" class="lighten-2">
+                
+           <v-img
+        :aspect-ratio="16/9"
+        :width="width"
+         :src= "Rapport.picture"
+      ></v-img>
               </v-avatar>
             </v-responsive>
+             </a>
             <v-card-text class="titreAC">
               <div class="subheading sig">{{ Rapport.title }}</div>
               <div class="grey-text">
@@ -97,6 +104,7 @@
                         label="Description "
                         v-model="descriptionR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -139,6 +147,7 @@
                         label="Matériel"
                         v-model="materialR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -201,7 +210,7 @@
                         v-model="descriptionS"
                         disabled
                         prepend-icon="description"
-                        rows="2"
+                        rows="3"
                       ></v-textarea>
                       <v-text-field
                         label="Date de debut de traitement"
@@ -214,6 +223,13 @@
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
+                        disabled
+                        type="text"
+                      ></v-text-field>
+                      <v-text-field
+                        label="L'image"
+                        v-model="pictureS"
+                        prepend-icon="image"
                         disabled
                         type="text"
                       ></v-text-field>
@@ -371,8 +387,8 @@ console.log(this.Rapports)
         this.titleR = res.data.title;
         this.descriptionR = res.data.description;
 this.materialR=res.data.material;
-        this.dateOfR = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOfR = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.motif = res.data.motif;
 
       } catch {
@@ -404,8 +420,8 @@ this.materialR=res.data.material;
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOfS = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOfS = res.data.dateOf.split("T")[0];
+        this.pictureS = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
@@ -459,7 +475,7 @@ this.materialR=res.data.material;
       }
     },
      trierSignalement(){
-    this.Rapports.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
+    this.Rapports.sort((a, b) => (a.dateOf<b.dateOf) ? 1 : -1)
     },
   },
 };

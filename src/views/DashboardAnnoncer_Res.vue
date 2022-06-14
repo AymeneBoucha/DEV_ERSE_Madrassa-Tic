@@ -70,7 +70,7 @@ export default {
   }),
 }
 </script>
-<style>
+<style> 
 .const {
   width: 300px;
   height: 200px;

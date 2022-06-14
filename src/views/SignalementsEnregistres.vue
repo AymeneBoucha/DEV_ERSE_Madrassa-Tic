@@ -15,11 +15,13 @@
         >
           <v-card class="text-center ma-3 card1">
             <div class="img">
+              <a :href="Signalement.picture">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
-        src="sig.png"
+         :src= "Signalement.picture"
       ></v-img>
+      </a>
       </div>
             <v-card-text class="titre">
               <div class="subheading tt">{{ Signalement.title }}</div>
@@ -28,9 +30,6 @@
               </div>
               <div class="grey--text">
                 <strong>Enregistré le : </strong>{{ Signalement.dateOf }}
-              </div>
-              <div class="descriptif grey--text">
-                <strong>Description : </strong>{{ Signalement.description }}
               </div>
             </v-card-text>
             <v-card-actions class="bouttons">
@@ -149,6 +148,7 @@
                       <v-file-input
                         v-model="picture"
                         accept="image/*"
+                         @change="onFileSelected"
                         label="Ajouter une image "
                         prepend-icon="add_a_photo"
                       ></v-file-input>
@@ -195,11 +195,12 @@ export default {
       description: "",
  
       category: "",
-      picture: [],
+      picture: '',
       defaultCatégorie: "",
       catégories: [],
       site: "",
       salle: "",
+      selectedFile:null,
       etage: "",
       defaultsite: "",
       defaultsalle: "",
@@ -393,6 +394,9 @@ export default {
         this.salle = event.target.value;
       }
     },
+      onFileSelected(event){
+      this.selectedFile = event
+    },
     DeleteSignal(index) {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
@@ -420,7 +424,8 @@ export default {
         this.etage = res.data.etage;
         this.salle = res.data.salle;
         this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.picture = res.data.picture;
+        console.log(this.picture)
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
@@ -429,17 +434,15 @@ export default {
     async enregistrer() {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
-      const data = {
-        title: this.title,
-        description: this.description,
-        site: this.site,
-        etage: this.etage,
-        salle: this.salle,
-        category: this.defaultCatégorie,
-        // localisation: this.localisation,
-        picture: this.picture,
-        dateOf: this.dateOf,
-      };
+       const data = new FormData()
+   data.append('picture', this.selectedFile)
+   data.append('title', this.title)
+   data.append('description', this.description)
+   data.append('category', this.defaultCatégorie)
+   data.append('site', this.site)
+   data.append('etage', this.etage)
+   data.append('salle', this.salle)
+   data.append('dateOf', this.dateOf)
       await axios
         .put(
           `http://localhost:8080/api/madrasa-tic/user/userEditReportAndSave/${
@@ -450,9 +453,7 @@ export default {
         .then((res) => {
           console.log(res);
           alert(res.data.message);
-          if (res.status == 201) {
-            router.push("/SignalDash");
-          }
+      this.dialog = false;
         })
         .catch((err) => {
           console.log(err);
@@ -462,17 +463,15 @@ export default {
     async envoyer() {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
-      const data = {
-        title: this.title,
-        description: this.description,
-        category: this.defaultCatégorie,
-        //  localisation: this.localisation,
-        site: this.site,
-        etage: this.etage,
-        salle: this.salle,
-        picture: this.picture,
-        dateOf: this.dateOf,
-      };
+      const data = new FormData()
+   data.append('picture', this.selectedFile)
+   data.append('title', this.title)
+   data.append('description', this.description)
+   data.append('category', this.defaultCatégorie)
+   data.append('site', this.site)
+   data.append('etage', this.etage)
+   data.append('salle', this.salle)
+   data.append('dateOf', this.dateOf)
       await axios
         .put(
           `http://localhost:8080/api/madrasa-tic/user/userEditReportAndSubmit/${
@@ -484,7 +483,7 @@ export default {
           console.log(res);
           alert(res.data.message);
           if (res.status == 201) {
-            router.push("/SignalDash");
+            router.push("/MesSignalements");
           }
         })
         .catch((err) => {
@@ -508,9 +507,7 @@ export default {
   min-width: 950px;
   height: 164px;
 }
-.img {
-  margin-left: 35px;
-}
+
 .tt {
   font-weight: 550;
   font-size: 18px;
@@ -604,6 +601,10 @@ export default {
 .img{
   position: absolute;
   left: -34px;
+}
+.img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+  cursor: pointer;
 }
 .btnsE{
   position: absolute;

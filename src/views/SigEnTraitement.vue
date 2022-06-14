@@ -3,7 +3,7 @@
     <h1 class="subheading grey--text">Signalements en Cours de Traitement</h1>
     <v-container >
       <v-card-actions class="btnsChEnTr">
-        <v-btn outlined color="red" class="btn" to="/SigEnTraitement">
+        <v-btn outlined color="red" class="btn" to="/SigEnAttent">
           <v-icon>mdi-alert-octagram</v-icon>
           <span>En Attente de Traitement</span>
         </v-btn>
@@ -20,16 +20,18 @@
           <v-flex v-for="(Signalement, index) in Signalements" :key="Signalement.titre">
               <v-card class="text-center ma-3 card" color="#F0FFF0">
                   <div class="imgCH">
+                    <a :href="Signalement.picture">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
-        src="p.png"
+        :src="Signalement.picture"
       ></v-img>
+      </a>
       </div>
                   <v-card-text class="titreET">
                       <div class="subheading sig">{{Signalement.title}}</div>
                       <div class="grey-text"><strong>Catégorie: </strong>{{Signalement.category}}</div>
-                      <div class="grey-text"><strong>Debut de traitement le: </strong>{{Signalement.dateOf}}</div>
+                      <div class="grey-text"><strong>Debut de traitement le: </strong>{{Signalement.dateOf.split("T")[0]}}</div>
                   </v-card-text>
                   <v-card-actions class="bout">
                     <v-dialog
@@ -72,6 +74,7 @@
                         label="Description (optionnelle)"
                         v-model="description"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -82,76 +85,18 @@
                         disabled
                         type="text"
                       ></v-text-field>
-                      <div class="lieu">
-                        <div class="form-group">
-                          <label for="site">Site</label>
-                          <select
-                            class="text1 form-control"
-                            name="site"
-                            id="site"
-                            v-model="site"
-                            @change="onChange1($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez le site
-                            </option>
-                            <option
-                              v-for="option in sites_options"
-                              v-bind:value="option.value"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="etage">Etage</label>
-                          <select
-                            class="text2 form-control"
-                            name="etage"
-                            id="etage"
-                            v-model="etage"
-                            @change="onChange2($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez l'etage
-                            </option>
-                            <option
-                              v-for="option in etages_options[site]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="salle">Salle</label>
-                          <select
-                            class="text3 form-control"
-                            name="salle"
-                            id="salle"
-                            v-model="salle"
-                            @change="onChange3($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez la salle
-                            </option>
-                            <option
-                              v-for="option in salles_options[etage]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
                       <v-text-field
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
                         disabled
+                        type="text"
+                      ></v-text-field>
+                      <v-text-field
+                        label="image"
+                        v-model="picture"
+                        prepend-icon="place"
+                        readonly
                         type="text"
                       ></v-text-field>
                     </div>
@@ -245,7 +190,9 @@
                             rows="2"
                         ></v-textarea>
                         <v-file-input
-                          v-model="imageR"
+                          v-model="pictureR"
+                                                     @change="onFileSelected"
+
                           accept="image/*"
                           label="Ajouter une image "
                           prepend-icon="add_a_photo"
@@ -253,8 +200,8 @@
 
                   </div>
                   <div class="bouttonsD">
-                    <v-btn  @click="dialog2 = false"  ><span>Annuler</span></v-btn>
-                   <v-btn class=" blue-grey darken-2" ><span  @click="envoyerRapport(), Terminer(), dialog2 = false ">Envoyer</span></v-btn>
+                    <v-btn  @click="empty(), dialog2 = false"  ><span @click="empty()">Annuler</span></v-btn>
+                   <v-btn class=" blue-grey darken-2" @click="envoyerRapport(), Terminer(), dialog2 = false " ><span>Envoyer</span></v-btn>
                    </div>
                    </v-card-text>
               </v-card>
@@ -295,14 +242,13 @@ export default {
       category: "",
       auteur: "",
       lieu:"",
-      image: [],
+          picture: "",
       catégories: [],
       site: "",
       salle: "",
       etage: "",
       motif: "",
         description:'',
-        picture:[],
         material:'',
         categorie_rapport: '',
         datefin: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
@@ -419,41 +365,7 @@ export default {
           userId: "",
           auteur: "",
           state: "",
-          image: "/sig.png",
-          description: "",
-          site: "",
-          etage: "",
-          salle: "",
-          lieu:"",
-          motif: "",
-          probleme: "",
-        },
-         {
-          id: "",
-          title: "",
-          category: "",
-          dateOf: "",
-          userId: "",
-          auteur: "",
-          state: "",
-          image: "/sig.png",
-          description: "",
-          site: "",
-          etage: "",
-          salle: "",
-          lieu:"",
-          motif: "",
-          probleme: "",
-        },
-         {
-          id: "",
-          title: "",
-          category: "",
-          dateOf: "",
-          userId: "",
-          auteur: "",
-          state: "",
-          image: "/sig.png",
+          picture: "",
           description: "",
           site: "",
           etage: "",
@@ -511,18 +423,30 @@ export default {
     //},
   },
     methods : {
+        onFileSelected(event){
+      console.log(event)
+            console.log("this. beyna picture")
+
+      this.selectedFile = event
+
+      console.log(this.selectedFile)
+
+    },
       Rapport(index) {
         this.varIndex = index
       },
       async envoyerRapport () {
-        const data = {
-             title:this.titleR,
-             description:this.descriptionR,
-             picture:this.pictureR,
-             material:this.materialR,
-            // categorie_rapport:this.categorie_rapport,
-            dateOf:this.dateOfR,
-            };
+       
+           const data = new FormData()
+
+   
+   data.append('picture', this.selectedFile)
+      data.append('title', this.titleR)
+         data.append('description', this.descriptionR)
+   data.append('material', this.materialR)
+ 
+   data.append('dateOf', this.dateOfR)
+    
           axios.post(`http://localhost:8080/api/madrasa-tic/employer/submitRaportByEmployer/${this.Signalements[this.varIndex].id}`,data)
         .then(
                 res => {
@@ -553,6 +477,15 @@ export default {
         },
         async obstacle(index)  {
          this.varIndex = index;
+        },
+        async empty() {
+          console.log(this.descriptionR);
+            this.titleR="";
+            this.selectedFile=null;
+            this.descriptionR="";
+            this.materialR="";
+            this.dateOfR="";
+            console.log(this.descriptionR);
         },
         async envoyer() {
              try {
@@ -585,8 +518,8 @@ export default {
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOf = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
@@ -655,6 +588,10 @@ export default {
 .imgCH{
   margin-top: 2px;
   left: -17.5px;
+}
+.imgCH:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+  cursor: pointer;
 }
 .titreET{
   position: absolute;

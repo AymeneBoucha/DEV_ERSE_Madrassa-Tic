@@ -10,11 +10,11 @@
       class="flex"
       flat
       tile
-      color="blue-grey darken-4"
+      color="grey darken-1"
       :elevation="10"
     >
 
-      <v-card-text class="py-2 white--text text-center">
+      <v-card-text class="py-2 white--text text-center ">
           <strong>DEV_ERSE</strong> — {{ new Date().getFullYear() }}
       </v-card-text>
     </v-card>

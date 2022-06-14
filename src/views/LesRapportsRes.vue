@@ -46,18 +46,24 @@
       <v-layout row wrap>
         <v-flex v-for="(Rapport, index) in Rapports" :key="Rapport.title">
           <v-card class="text-center ma-3 card" color="#E5E4E2">
+             <a :href="Rapport.picture">
             <v-responsive class="pt-4">
               <v-avatar size="170" class="red lighten-2">
-                <img src="/p.png" alt="" />
+           <v-img
+        :aspect-ratio="16/9"
+        :width="width"
+         :src= "Rapport.picture"
+      ></v-img>
               </v-avatar>
             </v-responsive>
+            </a>
             <v-card-text class="titreLR">
               <div class="subheading sig">{{ Rapport.title }}</div>
               <div class="grey-text">
                 <strong>Catégorie: </strong>{{ Rapport.category }}
               </div>
               <div class="grey-text">
-                <strong>date du Rapport: </strong>{{ Rapport.dateOf }}
+                <strong>date du Rapport: </strong>{{ Rapport.dateOf.split("T")[0] }}
               </div>
             </v-card-text>
             <div class="btnsLR">
@@ -98,6 +104,7 @@
                         label="Description "
                         v-model="descriptionR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -140,16 +147,10 @@
                         label="Matériel"
                         v-model="materialR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
-                      <v-file-input
-                        v-model="imageR"
-                        accept="image/*"
-                        disabled
-                        label="Ajouter une image "
-                        prepend-icon="add_a_photo"
-                      ></v-file-input>
                     </div>
                     <div class="bouttonsD">
                       <v-btn @click="dialog3 = false"
@@ -271,6 +272,7 @@
                         label="Description"
                         v-model="descriptionS"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -285,6 +287,13 @@
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
+                        disabled
+                        type="text"
+                      ></v-text-field>
+                      <v-text-field
+                        label="image"
+                        v-model="picture"
+                        prepend-icon="image"
                         disabled
                         type="text"
                       ></v-text-field>
@@ -365,28 +374,6 @@ export default {
           motif: "",
           Avatar: "/p.png",
         },
-         {
-          title: "",
-          description: "",
-          category: "",
-          state: "",
-          dateOf: "",
-          auteur: "",
-          image: [],
-          motif: "",
-          Avatar: "/p.png",
-        },
-         {
-          title: "",
-          description: "",
-          category: "",
-          state: "",
-          dateOf: "",
-          auteur: "",
-          image: [],
-          motif: "",
-          Avatar: "/p.png",
-        },
       ],
       Services: [
         { nom: "Sécurité" },
@@ -442,7 +429,7 @@ console.log(this.Rapports)
         this.titleR = res.data.title;
         this.descriptionR = res.data.description;
 this.materialR=res.data.material;
-        this.dateOfR = res.data.dateOf;
+        this.dateOfR = res.data.dateOf.split("T")[0];
         //this.picture = res.data.picture;
 
       } catch {
@@ -471,8 +458,9 @@ this.materialR=res.data.material;
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOfS = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOfS = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
+
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
@@ -530,7 +518,7 @@ this.materialR=res.data.material;
       }
     },
     trierSignalement(){
-    this.Rapports.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
+    this.Rapports.sort((a, b) => (a.dateOf<b.dateOf) ? 1 : -1)
     },
   },
 };
@@ -546,7 +534,7 @@ div.flex {
   align-items: center;
   width: 300px;
   margin-left: 10px;
-  height: 480px;
+  height: 400px;
 }
 .cardT {
   height: 150px;
@@ -558,6 +546,10 @@ div.flex {
 }
 .img {
   align-items: center;
+}
+.img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+  cursor: pointer;
 }
 .sig {
   font-weight: 550;
@@ -578,6 +570,7 @@ div.flex {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  margin-top: -10px;
 }
 .Dt {
   text-transform: none;
@@ -593,9 +586,10 @@ div.flex {
   text-transform: none;
 }
 .SaLR {
-  position: relative;
+  position: absolute;
   text-transform: none;
-  margin-top: -20px;
+  margin-top: -100px;
+  margin-left: -90px;
 }
 .bouttonsD {
   display: flex;
@@ -607,10 +601,10 @@ div.flex {
 }
 .btnsLR{
   position: absolute;
-  margin-top: 380px;
+  margin-top: 310px;
 }
 .btnsLRR{
   position: absolute;
-  margin-left: 600px;
+  margin-left: 550px;
 }
 </style>

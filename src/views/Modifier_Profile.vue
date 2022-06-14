@@ -7,19 +7,28 @@
           class="text-center ma-3 card"
           height="auto"
           padding="50px"
+          min-width='950px'
           fluid
         >
           <div>
             <v-responsive class="pt-4 png">
-              <v-avatar size="250" class="red lighten-2">
-                <img src="img1.png" alt="" />
+              <v-avatar size="250" class="white lighten-2">
+                <img :src="this.picture" alt="" />
               </v-avatar>
             </v-responsive>
             <v-card-text>
-              <v-btn outlined color="orange" class="picButton">
-                <v-icon small left>mdi-wrench</v-icon>
-                <span>Modifier</span>
-              </v-btn>
+
+                  <v-file-input
+                    v-model="picture"
+                    @change="onFileSelected"
+                    accept="image/*"
+                    label="Ajouter une image "
+                    prepend-icon="add_a_photo"
+                    dense
+                    outlined
+                  ></v-file-input>
+
+
             </v-card-text>
           </div>
           <div>
@@ -134,10 +143,12 @@ export default {
       step: 1,
       show1: false,
       username: "",
+      //selectedFile:null,
       email: "",
       password: "**********",
       phoneTel: "",
       birthDay: "",
+      picture:'',
     };
   },
   mounted: async function () {
@@ -149,21 +160,46 @@ export default {
       this.email = res.data.email;
       this.phoneTel = res.data.phoneTel;
       this.birthDay = res.data.birthDay;
+      if(res.data.picture){
+        this.picture = res.data.picture;
+        
+      }else{
+        this.picture = "img1.png"
+      }
+      
+
       
     } catch {
       alert("error");
     }
   },
+  
   methods: {
+     async  onFileSelected(event){
+      this.selectedFile = event
+      alert("Veuillez enregistrer votre modification pour voir l'image !")
+      console.log(this.selectedFile.name);
+    /*  this.picture=
+      `http://localhost:8080/${this.selectedFile.path}`*/
+    },
     async modifier() {
-        const data = {
-                username: this.username,
-                phoneTel: this.phoneTel,
-                birthDay: this.birthDay,
-                currentpassword: this.currentpassword,
-                newpassword: this.newpassword,
-                confirmpassword: this.confirmpassword
-            };
+    const data = new FormData()
+
+          if(this.selectedFile){
+
+   data.append('picture', this.selectedFile)}
+      if(this.username){
+   data.append('username', this.username)}
+      if(this.phoneTel){
+   data.append('phoneTel', this.phoneTel)}
+         if(this.birthDay){
+
+   data.append('birthDay', this.birthDay)}
+   if(this.currentpassword){
+   data.append('currentpassword', this.currentpassword)
+   data.append('newpassword', this.newpassword)
+   data.append('confirmpassword', this.confirmpassword)}
+
 
       const acc = localStorage.getItem('xaccesstoken');
       setAuthHeader(acc);
@@ -173,13 +209,14 @@ export default {
           console.log(res);
           //alert("Vous avez modifier votre profil");
                     alert(res.data.message);
-               if (res.status==201) { router.push("/Profile");}
+               if (res.status==201) {   router.push("/Profile"),  window.location.reload() ;}
         })
         .catch((err) => {
           console.log(err);
           alert("Veillez remplir tout les champs correctement.");
         });
     },
+   
   },
 };
 </script>

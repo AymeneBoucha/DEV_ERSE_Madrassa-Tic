@@ -172,6 +172,8 @@
                   </div>
                   <v-file-input
                     v-model="picture"
+                                        @change="onFileSelected"
+
                     accept="image/*"
                     label="Ajouter une image "
                     prepend-icon="add_a_photo"
@@ -214,6 +216,8 @@ export default {
         dateFinEvent: "",
 
     dateDebutDisplay: "",
+        selectedFile:null,
+
 
     dateFinDisplay: "",
 
@@ -228,20 +232,26 @@ export default {
     }
   },
   methods: {
+       onFileSelected(event){
+      console.log(event)
+            console.log("this. beyna picture")
+      this.selectedFile = event
+      console.log(this.selectedFile)
+    },
     async envoyer() {
-      const data = {
-        title: this.title,
-        description: this.description,
-        picture: this.picture,
-                        localisation: this.localisation,
 
-        dateDebutEvent: this.dateDebutEvent,
-        dateFinEvent: this.dateFinEvent,
+           const data = new FormData()
+    
+   data.append('picture', this.selectedFile)
+      data.append('title', this.title)
+         data.append('description', this.description)
+                  data.append('localisation', this.localisation)
 
-        dateDebutDisplay: this.dateDebutDisplay,
-        dateFinDisplay: this.dateFinDisplay,
+   data.append('dateDebutEvent', this.dateDebutEvent)
+   data.append('dateFinEvent', this.dateFinEvent)
+   data.append('dateDebutDisplay', this.dateDebutDisplay)
+   data.append('dateFinDisplay', this.dateFinDisplay)
 
-      };
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
       axios

@@ -11,7 +11,7 @@
           <v-icon>mdi-sync</v-icon>
           <span>En Cours de Traitement</span>
         </v-btn>
-        <v-btn outlined color="green" class="btn" to="SigTraité">
+        <v-btn outlined color="green" class="btn" to="SigTraite">
           <v-icon>mdi-check-outline</v-icon>
           <span>Signalements Traités</span>
         </v-btn>
@@ -27,11 +27,13 @@
         >
           <v-card class="text-center ma-3 card">
             <div class="imgSEA">
+           <a :href="Signalement.picture">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
-        src="sig.png"
+         :src= "Signalement.picture"
       ></v-img>
+      </a>
       </div>
             <v-card-text class="titre4">
               <div class="subheading sigT">{{ Signalement.title }}</div>
@@ -39,10 +41,7 @@
                 <strong>Catégorie: </strong>{{ Signalement.category }}
               </div>
               <div class="grey-text sig">
-                <strong>Affecter le: </strong>{{ Signalement.dateOf }}
-              </div>
-              <div class="grey-text sig">
-                <strong>Description: </strong>{{ Signalement.description }}
+                <strong>Affecter le: </strong>{{ Signalement.dateOf.split("T")[0] }}
               </div>
               <div class="grey-text sig">
                 <strong>Lieu: </strong>{{ Signalement.site,}}, {{ Signalement.etage}}, {{ Signalement.salle}}  
@@ -90,6 +89,7 @@
                         label="Description (optionnelle)"
                         v-model="description"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -100,76 +100,18 @@
                         disabled
                         type="text"
                       ></v-text-field>
-                      <div class="lieu">
-                        <div class="form-group">
-                          <label for="site">Site</label>
-                          <select
-                            class="text1 form-control"
-                            name="site"
-                            id="site"
-                            v-model="site"
-                            @change="onChange1($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez le site
-                            </option>
-                            <option
-                              v-for="option in sites_options"
-                              v-bind:value="option.value"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="etage">Etage</label>
-                          <select
-                            class="text2 form-control"
-                            name="etage"
-                            id="etage"
-                            v-model="etage"
-                            @change="onChange2($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez l'etage
-                            </option>
-                            <option
-                              v-for="option in etages_options[site]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="salle">Salle</label>
-                          <select
-                            class="text3 form-control"
-                            name="salle"
-                            id="salle"
-                            v-model="salle"
-                            @change="onChange3($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez la salle
-                            </option>
-                            <option
-                              v-for="option in salles_options[etage]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
                       <v-text-field
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
                         disabled
+                        type="text"
+                      ></v-text-field>
+                      <v-text-field
+                        label="image"
+                        v-model="picture"
+                        prepend-icon="place"
+                        readonly
                         type="text"
                       ></v-text-field>
                     </div>
@@ -483,15 +425,15 @@ export default {
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOf = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
       }
     },
     trierSignalement(){
-    this.Signalements.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
+    this.Signalements.sort((a, b) => (a.dateOf<b.dateOf) ? 1 : -1)
     },
   },
 };
@@ -509,21 +451,27 @@ export default {
 .imgSEA {
   margin-left: 105px;
 }
+.imgSEA:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+  cursor: pointer;
+}
 .sig {
   width: 400px;
   font-size: 15px;
   text-transform: none;
+  text-align: left;
 }
 .sigT {
   width: 400px;
   font-size: 20px;
-  font-weight: 550;;
+  font-weight: 750;
   text-transform: none;
 }
 .titre4 {
   margin-left: 5px;
   line-height: 250%;
   text-align: left;
+  align-items: left;
 }
 .etat {
   margin-left: 150px;

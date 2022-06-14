@@ -4,10 +4,10 @@
     <v-container>
       <v-layout class="container" row wrap>
         <v-flex class="const">
-          <v-card class="text-center ma-3 card">
+          <v-card class="text-center ma-3 cardPro">
             <v-responsive class="pt-4 png">
-              <v-avatar size="250" class="red lighten-2">
-                <img src="img1.png" alt="" />
+              <v-avatar size="250" class="white lighten-2">
+                <img :src=this.picture alt="" />
               </v-avatar>
             </v-responsive>
             <v-card-text class="fields">
@@ -89,6 +89,7 @@ export default {
       password: "**********",
       phoneTel: "",
       birthDay: "",
+      picture:'',
     };
   },
   mounted: async function () {
@@ -100,6 +101,14 @@ export default {
       this.email = res.data.email;
       this.phoneTel = res.data.phoneTel;
       this.birthDay = res.data.birthDay;
+      if(res.data.picture){
+        this.picture = res.data.picture;
+      }else{
+        this.picture = "img1.png"
+      }
+      
+      
+
     } catch {
       alert("Missing data from database");
     }
@@ -107,18 +116,19 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .container {
   align-items: center;
   text-align: center;
 }
 
-.card {
+.cardPro {
   display: flex;
   flex-direction: row;
   height: 500px;
   align-items: center;
   text-align: center;
+  width: 950px;
 }
 .fields {
   margin: 120px;

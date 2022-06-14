@@ -7,6 +7,9 @@ import DashboardAnnUser from '../views/DashboardAnnUser.vue'
 import Profile from '../views/Profile.vue'      
 import Comptes from '../views/Comptes.vue'
 import ComptesChefdeService from '../views/ComptesChefdeService.vue'
+import ComptesRes from '../views/ComptesRes.vue'
+import ComptesAnn from '../views/ComptesAnn.vue'
+import ComptesAdm from '../views/ComptesAdm'
 import Modifier_Profile from '../views/Modifier_Profile.vue'
 import Sign_up_in from '../views/Sign_up_in.vue'
 import Forgot_password from '../views/Forgot_password.vue'
@@ -19,13 +22,13 @@ import SigTraite from '../views/SigTraite.vue'
 import SigSuspendu from '../views/SigSuspendu.vue'
 import SigEnTraitement from '../views/SigEnTraitement.vue'
 import SignalementsEnregistres from '../views/SignalementsEnregistres.vue'
-import CompleterSignalement from '../views/CompleterSignalement.vue'
 import Res_modifier_signalement from '../views/Res_modifier_signalement.vue'
 import SignalementsEnAttente from '../views/SignalementsEnAttente.vue'
 import SignalementsACompleter from '../views/SignalementsACompleter.vue'
 import SignalementsACompleterRes from '../views/SignalementsACompleterRes.vue'
 import SignalementsSuspendus from '../views/SignalementsSuspendus.vue'
 import SignalementsEnTraitement from '../views/SignalementsEnTraitement.vue'
+import SignalementsRejetes from '../views/SignalementsRejetes.vue'
 import GestionCategories from '@/views/GestionCategories.vue'
 import LesRapportsRes from '../views/LesRapportsRes.vue'
 import RapportsValRes from '../views/RapportsValRes.vue'
@@ -45,6 +48,9 @@ import DashboardAnnoncerUser from '../views/DashboardAnnoncer_User.vue'
 import DashboardAnnoncerRes from '../views/DashboardAnnoncer_Res.vue'
 import AnnonceExpireRes from '../views/AnnonceExpireRes.vue'
 import AnnonceExpireAnnoncer from '../views/AnnonceExpireAnnoncer.vue'
+import Accueil_Principale from '../views/Accueil_Principale.vue'
+import aide from "../views/AideApp.vue"
+import propos from "../views/ProposApp.vue"
 
 
 Vue.use(VueRouter)
@@ -54,6 +60,30 @@ const routes = [
     path: '/',
     name: 'Sign_up_in',
     component: Sign_up_in,
+  },
+  {
+    path: '/Accueil',
+    name: 'Accueil_Principale',
+    component: Accueil_Principale,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/aide',
+    name: 'aide',
+    component: aide,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/propos',
+    name: 'propos',
+    component: propos,
+    meta: {
+      hideNavbar: false,
+     }
   },
   {
     path: '/Statistiques',
@@ -130,6 +160,38 @@ const routes = [
      }
   },
   {
+    path: '/ComptesRes',   //PROFILE
+    name: 'ComptesRes',
+    component: ComptesRes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/ComptesAnn',   //PROFILE
+    name: 'ComptesAnn',
+    component: ComptesAnn,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/ComptesAdm',   //PROFILE
+    name: 'ComptesAdm',
+    component: ComptesAdm,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
+    path: '/ComptesChefdeService',   //PROFILE
+    name: 'ComptesChefdeService',
+    component: ComptesChefdeService,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
     path: '/Modifier_Profile',
     name: 'Modifier_Profile',
     component: Modifier_Profile,
@@ -186,6 +248,14 @@ const routes = [
      }
   },
   {
+    path: '/SignalementsRejetes',
+    name: 'SignalementsRejetes',
+    component: SignalementsRejetes,
+    meta: {
+      hideNavbar: true,
+     }
+  },
+  {
     path: '/SigTraite',
     name: 'SigTraite',
     component: SigTraite,
@@ -205,14 +275,6 @@ const routes = [
     path: '/SignalementsEnregistres',
     name: 'SignalementsEnregistres',
     component: SignalementsEnregistres,
-    meta: {
-      hideNavbar: true,
-     }
-  },
-  {
-    path: '/CompleterSignalement',
-    name: 'CompleterSignalement',
-    component: CompleterSignalement,
     meta: {
       hideNavbar: true,
      }

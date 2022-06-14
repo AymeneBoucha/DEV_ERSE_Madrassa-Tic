@@ -3,9 +3,21 @@
     <h1 class="subheading grey--text">Comptes Utilisateurs</h1>
     <v-container>
       <v-card-actions class="ComptesU">
+          <v-btn outlined color="primary" class="btn" to="ComptesRes">
+            <v-icon>mdi-share</v-icon>
+            <span>Comptes Responsables</span>
+          </v-btn>
+          <v-btn outlined color="primary" class="btn" to="ComptesAdm">
+            <v-icon>mdi-share</v-icon>
+            <span>Comptes Admins</span>
+          </v-btn>
           <v-btn outlined color="primary" class="btn" to="ComptesChefdeService">
             <v-icon>mdi-share</v-icon>
             <span>Comptes des chefs de service</span>
+          </v-btn>
+          <v-btn outlined color="primary" class="btn" to="ComptesAnn">
+            <v-icon>mdi-share</v-icon>
+            <span>Comptes Annonceurs</span>
           </v-btn>
         </v-card-actions>
       <v-layout row wrap>
@@ -20,7 +32,7 @@
           <v-card class="text-center ma-3" min-width="270px">
             <v-responsive class="pt-4">
               <v-avatar size="100" class="red lighten-2">
-                <img :src="person.avatar" alt="" />
+                <img :src="person.picture" alt="" />
               </v-avatar>
             </v-responsive>
             <v-card-text>
@@ -92,10 +104,9 @@
                           :items="roles"
                           :menu-props="{ maxHeight: '200' }"
                           label="Modifier les roles"
-                          multiple
                           persistent-hint
                           prepend-icon="mdi-wrench"
-                          @input="setSelected"
+                  
                         ></v-select>
                         <v-card-actions>
                           <v-btn outlined color="primary">
@@ -113,7 +124,7 @@
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="dialog1= false"
+                      <v-btn color="blue darken-1" text @click="dialog1= false , Close()"
                         >Close</v-btn
                       >
                       <v-btn color="green" text outlined @click="UpdateUser()"
@@ -184,8 +195,9 @@ export default {
         avatar: "/img1.png",
       },
       NewAccount: "",
-      roles: ["user", "admin", "moderator", "employer", "announcer"],
-      defaultSelected: ["user"],
+      roles: [["user","moderator", "admin", "announcer"],["user", "moderator", "announcer"] ,["user","employer","announcer"],
+      ["user", "announcer"],["user"]],
+      defaultSelected: [],
       rolesToAdd: [],
     };
   },
@@ -196,7 +208,8 @@ export default {
       );
       this.accounts = res.data;
        for(let i=0; i<this.accounts.length; i++){
-        this.accounts[i].avatar = "img1.png"
+        if(!this.accounts[i].picture)
+        this.accounts[i].picture = "img1.png"
       }
       console.log(this.accounts);
     } catch (e) {
@@ -208,7 +221,9 @@ export default {
       this.varIndex = index
     },
 
-
+Close(){
+  this.defaultSelected= []
+},
 
 
     DeleteUser() {
@@ -246,7 +261,7 @@ export default {
             this.accounts[this.varIndex].id
           }/updateRoles`,
           {
-            roles: this.rolesToAdd,
+            roles: this.defaultSelected,
           }
         )
         .then((res) => {
@@ -273,7 +288,13 @@ export default {
         this.email = res.data.email;
         this.phoneTel = res.data.phoneTel;
         this.birthDay = res.data.birthDay;
-        this.defaultSelected = res.data.roles;
+           console.log(this.defaultSelected)
+           console.log(res.data.roles)
+                   this.defaultSelected = res.data.roles
+
+        // this.defaultSelected.push(res.data.roles)
+                   console.log(this.defaultSelected)
+
         //this.defaultSelected = res.data.roles;
       } catch {
         alert("Missing data from database");

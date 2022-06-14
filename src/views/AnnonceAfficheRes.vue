@@ -23,11 +23,13 @@
       <v-layout row wrap>
         <v-flex v-for="(Annonce, index) in Annonces" :key="Annonce.title">
           <v-card class="text-center cardAAR" color="#E5E4E2">
+           <a :href="Annonce.picture">
             <v-responsive >
               <v-avatar tile width="300" height="200" class="white lighten-2">
-                <img src="/.png" alt="" />
+                <img  :src="Annonce.picture" alt="" />
               </v-avatar>
             </v-responsive>
+            </a>
             <v-card-text class="under">
               <v-col cols="7" class="titre">
                 <div class="subheading sig">{{ Annonce.title }}</div>
@@ -70,6 +72,7 @@
                     required
                     prepend-icon="title"
                     disabled
+                    readonly
                   ></v-text-field>
                   <v-text-field
                     label="Lieu"
@@ -78,6 +81,7 @@
                     type="text"
                     required
                     disabled
+                    readonly
                   ></v-text-field>
                   <v-textarea
                     clearable
@@ -100,6 +104,7 @@
                           v-bind="attrs"
                           v-on="on"
                           disabled
+                        
                         ></v-text-field>
                         <v-text-field
                           v-model="dateFinEventA"
@@ -140,6 +145,7 @@
                     label="Ajouter une image "
                     prepend-icon="add_a_photo"
                     disabled
+                    readonly
                   >
                   </v-file-input>
                         <div class="bouttonsD">
@@ -320,7 +326,7 @@ export default {
       }
     },
     trierAnnonce(){
-    this.Annonces.sort((a, b) => (a.dateDebutEvent> b.dateDebutEvent) ? 1 : -1)},
+    this.Annonces.sort((a, b) => (a.dateDebutEvent<b.dateDebutEvent) ? 1 : -1)},
   },
 };
 </script>

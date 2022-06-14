@@ -1,6 +1,24 @@
 <template>
   <v-content>
-    <div class="topnav elevation-12"><h1>MADRASA-TIC</h1></div>
+    <nav>
+    <v-app-bar  app elevate-on-scroll elevation="3" class="grey lighten-2">
+      <img class="img" src="../assets/LogoOrange.png" width="50" height="50" />
+      <v-toolbar-title class="text-uppercase">
+        <span class="font-weight-light"><h3>MADRASSA-TIC</h3></span>
+      </v-toolbar-title>
+      <v-spacer />
+       <v-btn text>
+        <router-link to="/propos" class="black--text">
+          <span><h3>A propos</h3></span>
+        </router-link>
+      </v-btn>
+      <v-btn text>
+        <router-link to="/aide" class="black--text">
+          <span><h3>FAQ</h3></span>
+        </router-link>
+      </v-btn>
+      </v-app-bar>
+    </nav>
     <div class="card" padding="50px">
       <v-container class="fill-height" padding="50px" fluid>
         <v-row align="center" justify="center">
@@ -63,14 +81,14 @@
                         <v-btn
                           class="cnx"
                           rounded
-                          color="#37474F"
+                          color="#008000"
                           dark
                           @click="login()"
                           >Se connecter</v-btn
                         >
                       </div>
                     </v-col>
-                    <v-col cols="12" md="4" class="blue-grey darken-4">
+                    <v-col cols="12" md="4" class="avez">
                       <v-card-text class="white--text mt-12">
                         <h1 class="text-center display-1">
                           Vous n'avez pas de compte?
@@ -87,7 +105,7 @@
                 </v-window-item>
                 <v-window-item :value="2">
                   <v-row class="fill-height">
-                    <v-col cols="12" md="4" class="blue-grey darken-4">
+                    <v-col cols="12" md="4" class="avez">
                       <v-card-text class="white--text mt-12">
                         <h1 class="text-center display-1">
                           Vous avez déja un compte?
@@ -102,7 +120,7 @@
                     </v-col>
 
                     <v-col cols="12" md="8">
-                      <v-card-text class="mt-1">
+                      <v-card-text >
                         <h1
                           class="
                             text-center
@@ -207,7 +225,7 @@
                         <v-btn
                           class="creat"
                           rounded
-                          color="#37474F"
+                          color="#008000"
                           dark
                           @click="handleSubmit()"
                           >S'inscrire</v-btn
@@ -351,26 +369,28 @@ export default {
 };
 </script>
 <style scoped>
-.topnav {
-  background-color: #263238;
-  color: white;
-  text-align: center;
-  width: 100%;
-  height: 50px;
-  float: left;
-}
 .card {
   position: absolute;
   width: 100%;
-  top: 100px;
   left: 50%;
+  margin-top:-1cm;
   margin-right: -50%;
   transform: translate(-50%, 0);
+}
+.avez{
+  background-color: #142850;
 }
 .cnx {
   margin: 20px;
 }
 .creat {
   margin: 20px;
+}
+.text-uppercase {
+  left: 0cm;
+  position: relative;
+}
+.img{
+  left:-0.5cm;
 }
 </style>

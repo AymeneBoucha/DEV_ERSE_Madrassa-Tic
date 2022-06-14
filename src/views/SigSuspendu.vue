@@ -20,11 +20,13 @@
           <v-flex v-for="(Signalement, index) in Signalements" :key="Signalement.titre">
               <v-card class="text-center ma-3 card" color="#F0FFF0">
                   <div class="imgChSu">
+           <a :href="Signalement.picture">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
-        src="p.png"
+         :src= "Signalement.picture"
       ></v-img>
+      </a>
       </div>
                   <v-card-text class="titreChSu">
                       <div class="subheading sig">{{Signalement.title}}</div>
@@ -86,71 +88,6 @@
                         disabled
                         type="text"
                       ></v-text-field>
-                      <div class="lieu">
-                        <div class="form-group">
-                          <label for="site">Site</label>
-                          <select
-                            class="text1 form-control"
-                            name="site"
-                            id="site"
-                            v-model="site"
-                            @change="onChange1($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez le site
-                            </option>
-                            <option
-                              v-for="option in sites_options"
-                              v-bind:value="option.value"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="etage">Etage</label>
-                          <select
-                            class="text2 form-control"
-                            name="etage"
-                            id="etage"
-                            v-model="etage"
-                            @change="onChange2($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez l'etage
-                            </option>
-                            <option
-                              v-for="option in etages_options[site]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="salle">Salle</label>
-                          <select
-                            class="text3 form-control"
-                            name="salle"
-                            id="salle"
-                            v-model="salle"
-                            @change="onChange3($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez la salle
-                            </option>
-                            <option
-                              v-for="option in salles_options[etage]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
                       <v-text-field
                         label="lieu"
                         v-model="localisation"
@@ -332,42 +269,25 @@ export default {
           motif: "",
           probleme: "",
         },
-         {
-          id: "",
-          title: "",
-          category: "",
-          dateOf: "",
-          userId: "",
-          auteur: "",
-          state: "",
-          image: "/sig.png",
-          description: "",
-          site: "",
-          etage: "",
-          salle: "",
-          lieu:"",
-          motif: "",
-          probleme: "",
-        },
-         {
-          id: "",
-          title: "",
-          category: "",
-          dateOf: "",
-          userId: "",
-          auteur: "",
-          state: "",
-          image: "/sig.png",
-          description: "",
-          site: "",
-          etage: "",
-          salle: "",
-          lieu:"",
-          motif: "",
-          probleme: "",
-        },
       ],
     };
+  },
+   mounted: async function () {
+    try {
+      const acc = localStorage.getItem('xaccesstoken');
+      setAuthHeader(acc);
+      const res = await axios.get(`http://localhost:8080/api/madrasa-tic/getAllCategories`);
+      //this.categrories = res.data.;
+     // console.log(res.data[0].name)
+   //  console.log(res.data.length)
+        let j = 0;
+      while (j < res.data.length) {
+        this.catégories.push(res.data[j].name);
+        j++
+      }
+    } catch {
+      alert("Missing data from database");
+    }
   },
     async created() {
         try {
@@ -431,8 +351,8 @@ export default {
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOf = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOf = res.data.dateOf.split("T")[0];
+        this.picture = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
@@ -485,11 +405,18 @@ export default {
   margin-top: 2px;
   left: -17.5px;
 }
+.imgChSu:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+  cursor: pointer;
+}
 .trait1{
   text-transform: none;
 }
 .btnsChSu{
   position: relative;
   margin-left: 36%;
+}
+div.flex{
+  max-width: 370px;
 }
 </style>

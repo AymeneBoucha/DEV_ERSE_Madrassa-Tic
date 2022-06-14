@@ -46,18 +46,26 @@
       <v-layout row wrap>
         <v-flex v-for="(Rapport, index) in Rapports" :key="Rapport.title">
           <v-card class="text-center ma-3 card" color="#E5E4E2">
+            <a :href="Rapport.picture">
             <v-responsive class="pt-4">
               <v-avatar size="170" class="red lighten-2">
-                <img src="/p.png" alt="" />
+                
+           <v-img
+        :aspect-ratio="16/9"
+        :width="width"
+         :src= "Rapport.picture"
+      ></v-img>
+      
               </v-avatar>
             </v-responsive>
+            </a>
             <v-card-text class="titreRV">
               <div class="subheading sig">{{ Rapport.title }}</div>
               <div class="grey-text">
                 <strong>Catégorie: </strong>{{ Rapport.category }}
               </div>
               <div class="grey-text">
-                <strong>date du Rapport: </strong>{{ Rapport.dateOf }}
+                <strong>date du Rapport: </strong>{{ Rapport.dateOf.split("T")[0]  }}
               </div>
             </v-card-text>
             <v-card-actions class="bout5">
@@ -142,13 +150,7 @@
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
-                      <v-file-input
-                        v-model="imageR"
-                        accept="image/*"
-                        disabled
-                        label="Ajouter une image "
-                        prepend-icon="add_a_photo"
-                      ></v-file-input>
+                     
                     </div>
                     <div class="bouttonsD">
                       <v-btn @click="dialog3 = false"
@@ -213,6 +215,13 @@
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
+                        disabled
+                        type="text"
+                      ></v-text-field>
+                       <v-text-field
+                        label="L'image"
+                        v-model="imageS"
+                        prepend-icon="image"
                         disabled
                         type="text"
                       ></v-text-field>
@@ -281,41 +290,7 @@ export default {
           auteur: "",
         },
       ],
-      Rapports: [
-        {
-          title: "",
-          description: "",
-          category: "",
-          state: "",
-          dateOf: "",
-          auteur: "",
-          image: [],
-          motif: "",
-          Avatar: "/p.png",
-        },
-        {
-          title: "",
-          description: "",
-          category: "",
-          state: "",
-          dateOf: "",
-          auteur: "",
-          image: [],
-          motif: "",
-          Avatar: "/p.png",
-        },
-        {
-          title: "",
-          description: "",
-          category: "",
-          state: "",
-          dateOf: "",
-          auteur: "",
-          image: [],
-          motif: "",
-          Avatar: "/p.png",
-        },
-      ],
+      Rapports: [],
       Services: [
         { nom: "Sécurité" },
         { nom: "Plomberie" },
@@ -370,7 +345,7 @@ console.log(this.Rapports)
         this.titleR = res.data.title;
         this.descriptionR = res.data.description;
 this.materialR=res.data.material;
-        this.dateOfR = res.data.dateOf;
+        this.dateOfR = res.data.dateOf.split("T")[0] ;
         //this.picture = res.data.picture;
 
       } catch {
@@ -402,8 +377,8 @@ this.materialR=res.data.material;
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOfS = res.data.dateOf;
-        //this.picture = res.data.picture;
+        this.dateOfS = res.data.dateOf.split("T")[0] ;
+        this.imageS = res.data.picture;
         this.defaultCatégorie = res.data.category;
       } catch {
         alert("Missing data from database");
@@ -457,7 +432,7 @@ this.materialR=res.data.material;
       }
     },
     trierSignalement(){
-    this.Rapports.sort((a, b) => (a.dateOf> b.dateOf) ? 1 : -1)
+    this.Rapports.sort((a, b) => (a.dateOf<b.dateOf) ? 1 : -1)
     },
   },
 };

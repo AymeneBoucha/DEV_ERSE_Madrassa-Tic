@@ -52,7 +52,7 @@
           <v-card class="text-center cardAAA" color="#E5E4E2">
             <v-responsive >
               <v-avatar tile width="300" height="200" class="white lighten-2">
-                <img src="" alt="" />
+                <img :src= Annonce.picture alt="" />
               </v-avatar>
             </v-responsive>
             <v-card-text class="under">
@@ -97,6 +97,7 @@
                     required
                     prepend-icon="title"
                     disabled
+                    readonly
                   ></v-text-field>
                   <v-text-field
                     label="Lieu"
@@ -105,6 +106,7 @@
                     type="text"
                     required
                     disabled
+                    readonly
                   ></v-text-field>
                   <v-textarea
                     clearable
@@ -115,6 +117,7 @@
                     required
                     prepend-icon="description"
                     disabled
+                    readonly
                   ></v-textarea>
                   <div class="date">
                         <v-text-field
@@ -166,6 +169,7 @@
                     label="Ajouter une image "
                     prepend-icon="add_a_photo"
                     disabled
+                    readonly
                   >
                   </v-file-input>
                         <div class="bouttonsD">
@@ -345,7 +349,7 @@ export default {
           this.Annonces = res.data;
         },
                 trierAnnonce(){
-    this.Annonces.sort((a, b) => (a.dateDebutEvent> b.dateDebutEvent) ? 1 : -1)},
+    this.Annonces.sort((a, b) => (a.dateDebutEvent<b.dateDebutEvent) ? 1 : -1)},
   },
 };
 </script>
@@ -376,8 +380,7 @@ div.flex {
 .Dt {
   text-transform: none;
 }
-
-.Sa {
+a {
   position: relative;
   text-transform: none;
   

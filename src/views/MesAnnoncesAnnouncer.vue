@@ -61,11 +61,15 @@
       <v-layout row wrap>
         <v-flex v-for="(Annonce, index) in Annonces" :key="Annonce.title">
           <v-card class="text-center cardMAA" color="#E5E4E2">
+           
             <v-responsive >
-              <v-avatar tile width="300" height="200" class="white lighten-2">
-                <img src="/.png" alt="" />
+              <a :href="Annonce.picture">
+              <v-avatar tile width="300" height="200" class="white lighten-2 img">
+                <img  :src="Annonce.picture" alt="" />
               </v-avatar>
+              </a>
             </v-responsive>
+            
             <v-card-text class="under">
               <v-col cols="7" class="titre">
                 <div class="subheading sig">{{ Annonce.title }}</div>
@@ -355,7 +359,7 @@ export default {
           this.Annonces = res.data;
         },
             trierAnnonce(){
-    this.Annonces.sort((a, b) => (a.dateDebutEvent> b.dateDebutEvent) ? 1 : -1)},
+    this.Annonces.sort((a, b) => (a.dateDebutEvent<b.dateDebutEvent) ? 1 : -1)},
   },
 };
 </script>
@@ -371,7 +375,7 @@ div.flex {
   justify-content: space-between;
   align-items: center;
   width: 300px;
-  margin-top: -43px;
+  margin-top: -10px;
   margin-left: 10px;
   height: 350px;
 }
@@ -403,7 +407,7 @@ div.flex {
   margin-left:-10px;
 }
 .elseMAA {
-  margin-left: 160px;
+  margin-left: 150px;
   line-height: 250%;
   margin-top: -10px;
   width: 300px;

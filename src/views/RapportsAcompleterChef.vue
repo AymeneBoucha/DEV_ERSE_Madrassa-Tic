@@ -15,15 +15,20 @@
       <v-layout row wrap>
         <v-flex v-for="(Rapport, index) in Rapports" :key="Rapport.titre">
           <v-card class="text-center ma-2 cardRACC" color="#F0FFF0">
-            <v-responsive class="pt-3">
+            <a :href="Rapport.picture">
+            <v-responsive class="pt-4">
               <v-avatar size="170" class="red lighten-2">
-                <img src="/p.png" alt="" />
+           <v-img
+        :aspect-ratio="16/9"
+        :width="width"
+         :src= "Rapport.picture"
+      ></v-img>
               </v-avatar>
-            </v-responsive>
+            </v-responsive></a>
             <v-card-text class="titre">
               <div class="subheading sig">{{ Rapport.title }}</div>
               <div class="grey-text">
-                <strong>Durée de traitement: </strong>{{ Rapport.dateOf }}
+                <strong>Durée de traitement: </strong>{{ Rapport.dateOf.split("T")[0] }}
               </div>
               <div class="grey-text">
                 <strong>Motif: </strong>{{ Rapport.motif }}
@@ -66,6 +71,7 @@
                         label="Description "
                         v-model="descriptionR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
@@ -103,16 +109,10 @@
                         label="Matériel"
                         v-model="materialR"
                         disabled
+                        readonly
                         prepend-icon="description"
                         rows="2"
                       ></v-textarea>
-                      <v-file-input
-                        v-model="imageR"
-                        accept="image/*"
-                        disabled
-                        label="Ajouter une image "
-                        prepend-icon="add_a_photo"
-                      ></v-file-input>
                     </div>
                     <div class="bouttonsD">
                       <v-btn @click="dialog3 = false"
@@ -132,7 +132,7 @@
                         <v-card class="text-center  cardM">
                 <v-card-text>
                   <div >
-                      <h2 class="subheading">Rapport</h2>
+                      <h2 class="subheading">Signalemet attaché</h2>
                         <v-text-field
                             v-model="titleR"
                             :rules="[v => !!v || 'champs obligatoire']"
@@ -221,6 +221,7 @@
                           label="Information manquante"
                           v-model="motifR"
                           disabled
+                          readonly
                           rows="3"
                           ></v-textarea>
                   </div>
@@ -245,7 +246,7 @@
                     class="contRACC"
                     v-on="on"
                   >
-                    <span >Signalement Attaché</span>
+                    <span >Rapport</span>
                   </v-btn>
                 </template>
                 <v-card class="text-center cardM">
@@ -262,76 +263,13 @@
                       <v-textarea
                         clearable
                         disabled
+                        readonly
+                        rows="3"
                         clear-icon="mdi-close-circle"
                         label="Description (optionnelle)"
                         v-model="descriptionS"
                         prepend-icon="description"
                       ></v-textarea>
-                      <div class="lieu">
-                        <div class="form-group">
-                          <label for="site">Site</label>
-                          <select
-                            class="text1 form-control"
-                            name="site"
-                            id="site"
-                            v-model="site"
-                            @change="onChange1($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez le site
-                            </option>
-                            <option
-                              v-for="option in sites_options"
-                              v-bind:value="option.value"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="etage">Etage</label>
-                          <select
-                            class="text2 form-control"
-                            name="etage"
-                            id="etage"
-                            v-model="etage"
-                            @change="onChange2($event)"
-                          >
-                            <option value="" disabled selected>
-                              Selectionnez l'etage
-                            </option>
-                            <option
-                              v-for="option in etages_options[site]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="salle">Salle</label>
-                          <select
-                            class="text3 form-control"
-                            name="salle"
-                            id="salle"
-                            v-model="salle"
-                            @change="onChange3($event)"
-                          >
-                            <option disabled value="" selected>
-                              Selectionnez la salle
-                            </option>
-                            <option
-                              v-for="option in salles_options[etage]"
-                              v-bind:value="option.text"
-                              v-bind:key="option.text"
-                            >
-                              {{ option.text }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
                       <v-text-field
                         label="lieu"
                         v-model="localisation"
@@ -339,13 +277,13 @@
                         type="text"
                         disabled
                       ></v-text-field>
-                      <v-file-input
+                      <v-text-field
                         v-model="imageS"
                         accept="image/*"
-                        label="Ajouter une image "
-                        prepend-icon="add_a_photo"
+                        label="L'image"
+                        prepend-icon="image"
                         disabled
-                      ></v-file-input>
+                      ></v-text-field>
                     </div>
                     <div class="bouttonsD">
                       <v-btn class="" @click="dialog = false"
@@ -621,7 +559,7 @@ export default {
                 // category: this.defaultCatégorie,               
                  material: this.materialR,
                 picture: this.pictureR,
-                dateOf: this.dateOfR
+                dateOf: this.dateOfR.split("T")[0]
             };
             console.log(this.materialR)
          await  axios.put(`http://localhost:8080/api/madrasa-tic/employer/employerEditRaportAndSubmit/${this.Rapports[this.varIndex].id}`,data)
@@ -650,7 +588,7 @@ export default {
                 this.materialR = res.data.material;
 
         this.descriptionR = res.data.description;
-        this.dateOfR = res.data.dateOf;
+        this.dateOfR = res.data.dateOf.split("T")[0];
         this.pictureR = res.data.picture;
      //   this.defaultCatégorie = res.data.category;
       } catch {
@@ -672,8 +610,8 @@ export default {
         this.site = res.data.site;
         this.etage = res.data.etage;
         this.salle = res.data.salle;
-        this.dateOfS = res.data.dateOf;
-        //this.pictureS = res.data.picture;
+        this.dateOfS = res.data.dateOf.split("T")[0];
+        this.imageS = res.data.picture;
        // this.defaultCatégorieS  = res.data.category;
       } catch {
         alert("Missing data from database");
@@ -732,5 +670,8 @@ export default {
 }
 .Det{
   text-transform: none;
+}
+div.flex{
+  max-width: 350px;
 }
 </style>

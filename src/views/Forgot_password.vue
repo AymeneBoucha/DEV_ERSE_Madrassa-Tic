@@ -89,7 +89,7 @@
 .envoie{
   background-color: #0E84D9;
   text-align: center;
-  right: 23%;
+  left: 63%;
   position:absolute;
   color:white;
   top:80%;
@@ -100,7 +100,7 @@
   background-color: #0E84D9;
   text-align: center;
   position:absolute;
-  left: 18%;
+  left: 8%;
   color:white;
   top:80%;
   border: 1px solid #238DEF;

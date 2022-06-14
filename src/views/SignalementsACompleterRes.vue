@@ -3,17 +3,21 @@
         <h1 class="subheading grey--text">Signalements à Completer par l'Utilisateur</h1>
         <v-container>
           <v-card-actions class="btnsAC">
-        <v-btn outlined color="red" class="btn" to="/SignalementsEnAttente">
+        <v-btn outlined color="red" class="btn" to="SignalementsEnAttente">
           <v-icon>mdi-alert-octagram</v-icon>
-          <span>Signalements En Attente</span>
+          <span>En Attente</span>
         </v-btn>
         <v-btn outlined color="primary" class="btn" to="SignalementsEnTraitement">
           <v-icon>mdi-tire</v-icon>
-          <span>Signalements En Traitement</span>
+          <span>En Traitement</span>
         </v-btn>
         <v-btn outlined color="orange" class="btn" to="SignalementsSuspendus">
           <v-icon>mdi-timer-off</v-icon>
-          <span>Signalements Suspendus</span>
+          <span>Suspendus</span>
+        </v-btn>
+        <v-btn outlined color="red" class="btn" to="SignalementsRejetes">
+          <v-icon>mdi-cancel</v-icon>
+          <span>Rejetés</span>
         </v-btn>
       </v-card-actions>
           <v-col cols="5" xs6 sm4 md2 class="filtre">
@@ -47,11 +51,13 @@
                 <v-flex  v-for="(Signalement, index) in Signalements" :key="Signalement.id">
                     <v-card class="text-center ma-3 card1">
                          <div class="img">
+           <a :href="Signalement.picture">
            <v-img
         :aspect-ratio="16/9"
         :width="width"
-        src="sig.png"
+         :src= "Signalement.picture"
       ></v-img>
+      </a>
       </div>
                     <v-card-text class="titre1">
                     <div class="subheading tt">{{Signalement.title}}</div>
@@ -62,9 +68,9 @@
                     <v-card-actions class="bouttons">
                         <v-dialog v-model="dialog"  :retain-focus="false" persistent max-width="800px" class="dialog">
                         <template v-slot:activator="{ on }">
-                        <v-btn outlined color="blue" class="consulter1" v-on="on" >
+                        <v-btn outlined color="blue" @click="Modifier(index)" class="consulter1" v-on="on" >
                              <v-icon small left > mdi-eye</v-icon>
-                             <span @click="Modifier(index)">Consulter</span>
+                             <span >Consulter</span>
                         </v-btn>
                         </template>
                         <v-card class="text-center  cardM">
@@ -85,6 +91,7 @@
                             :rules="[v => !!v || 'champs obligatoire']"
                             label="Titre"
                             disabled
+                            readonly
                             required
                             prepend-icon="title"
                         ></v-text-field>
@@ -94,6 +101,7 @@
                             label="Description (optionnelle)"
                             v-model="description"
                             disabled
+                            readonly
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
@@ -104,29 +112,6 @@
                         disabled
                         type="text"
                         ></v-text-field>
-                        <div class="lieu">
-                        <div class=" form-group">
-                       <label for="site">Site</label>
-                        <select class="text1 form-control" name="site" id="site" v-model="site" @change="onChange1($event)">
-                          <option value='' disabled selected>Selectionnez le site</option>
-                          <option v-for="option in sites_options" v-bind:value="option.value" v-bind:key="option.text" >{{option.text}}</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="etage">Etage</label>
-                        <select class="text2 form-control " name="etage" id="etage" v-model="etage" @change="onChange2($event)">
-                          <option value="" disabled selected>Selectionnez l'etage</option>
-                          <option v-for="option in etages_options[site]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="salle">Salle</label>
-                        <select class="text3 form-control " name="salle" id="salle" v-model="salle" @change="onChange3($event)">
-                          <option value="" disabled selected>Selectionnez la salle</option>
-                          <option v-for="option in salles_options[etage]" v-bind:value="option.text" v-bind:key="option.text">{{option.text}}</option>
-                        </select>
-                      </div>
-                       </div>
                       <v-text-field 
                         label="lieu"
                         v-model="localisation"
@@ -137,6 +122,7 @@
                         <v-text-field
                           v-model="motif"
                           disabled
+                          readonly
                           label="Motif "
                           prepend-icon="warning"
                         ></v-text-field>
@@ -252,9 +238,6 @@ export default {
       const acc = localStorage.getItem('xaccesstoken');
       setAuthHeader(acc);
       const res = await axios.get(`http://localhost:8080/api/madrasa-tic/getAllCategories`);
-      //this.categrories = res.data.;
-     // console.log(res.data[0].name)
-   //  console.log(res.data.length)
         let j = 0;
       while (j < res.data.length) {
         this.catégories.push(res.data[j].name);
@@ -461,8 +444,12 @@ export default {
 .img{
   left: -33px;
 }
+.img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+  cursor: pointer;
+}
 .btnsAC{
   position: absolute;
-  margin-left: 218px
+  margin-left: 428px
 }
 </style>
