@@ -527,7 +527,7 @@ div.flex {
   align-items: center;
   width: 300px;
   margin-left: 10px;
-  height: 480px;
+  height: 400px;
 }
 .cardT {
   height: 150px;
@@ -559,6 +559,7 @@ div.flex {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  margin-top: -10px;
 }
 .Dt {
   text-transform: none;
@@ -574,9 +575,10 @@ div.flex {
   text-transform: none;
 }
 .SaLR {
-  position: relative;
+  position: absolute;
   text-transform: none;
-  margin-top: -20px;
+  margin-top: -100px;
+  margin-left: -90px;
 }
 .bouttonsD {
   display: flex;
@@ -588,10 +590,10 @@ div.flex {
 }
 .btnsLR{
   position: absolute;
-  margin-top: 380px;
+  margin-top: 310px;
 }
 .btnsLRR{
   position: absolute;
-  margin-left: 600px;
+  margin-left: 550px;
 }
 </style>

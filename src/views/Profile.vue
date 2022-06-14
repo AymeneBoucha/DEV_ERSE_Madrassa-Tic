@@ -7,7 +7,7 @@
           <v-card class="text-center ma-3 cardPro">
             <v-responsive class="pt-4 png">
               <v-avatar size="250" class="red lighten-2">
-                <img src="img1.png" alt="" />
+                <img :src=this.picture alt="" />
               </v-avatar>
             </v-responsive>
             <v-card-text class="fields">
@@ -89,6 +89,7 @@ export default {
       password: "**********",
       phoneTel: "",
       birthDay: "",
+      picture:'',
     };
   },
   mounted: async function () {
@@ -100,6 +101,8 @@ export default {
       this.email = res.data.email;
       this.phoneTel = res.data.phoneTel;
       this.birthDay = res.data.birthDay;
+      this.picture = res.data.picture;
+
     } catch {
       alert("Missing data from database");
     }

@@ -78,7 +78,7 @@
       <v-layout column align-center>
         <v-flex class="mt-5">
           <v-avatar size="100">
-            <v-img src="/img2.png"></v-img>
+            <v-img :src=this.picture></v-img>
           </v-avatar>
           <v-menu offset-y>
             <v-btn text v-on="on">
@@ -175,7 +175,8 @@ export default {
     userroles: [],
     moderator: false,
     show: false,
-    username: "Aymen",
+    username: "",
+    picture:'',
     menus: [
       { text: "Profile", icon: "mdi-account", route: "Profile" },
       { text: "Modifier Profile", icon: "mdi-key", route: "Modifier_Profile" },
@@ -188,6 +189,7 @@ export default {
       setAuthHeader(acc);
       const res = await axios.get(`http://localhost:8080/api/auth/Me`);
       this.username = res.data.username;
+      this.picture=res.data.picture;
       this.userroles = res.data.roles;
       if (this.userroles.includes("ROLE_MODERATOR")) {
         this.show = true;

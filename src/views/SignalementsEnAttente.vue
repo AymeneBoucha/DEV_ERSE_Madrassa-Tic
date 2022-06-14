@@ -197,7 +197,7 @@
                             clear-icon="mdi-close-circle"
                             label="Description (optionnelle)"
                             v-model="description"
-                            disabled
+                            :disabled="disabled"
                             readonly
                             prepend-icon="description"
                             rows="2"
@@ -206,14 +206,14 @@
                         label="Date"
                         v-model="dateOf"
                         prepend-icon="mdi-calendar"
-                        disabled
+                        :disabled="disabled"
                         type="text"
                         ></v-text-field>
                       <v-text-field 
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
-                        disabled
+                        :disabled="disabled"
                         type="text"
                         ></v-text-field>
                         <v-file-input

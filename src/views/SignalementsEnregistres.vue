@@ -463,17 +463,15 @@ export default {
     async envoyer() {
       const acc = localStorage.getItem("xaccesstoken");
       setAuthHeader(acc);
-      const data = {
-        title: this.title,
-        description: this.description,
-        category: this.defaultCatégorie,
-        //  localisation: this.localisation,
-        site: this.site,
-        etage: this.etage,
-        salle: this.salle,
-        picture: this.picture,
-        dateOf: this.dateOf,
-      };
+      const data = new FormData()
+   data.append('picture', this.selectedFile)
+   data.append('title', this.title)
+   data.append('description', this.description)
+   data.append('category', this.category)
+   data.append('site', this.site)
+   data.append('etage', this.etage)
+   data.append('salle', this.salle)
+   data.append('dateOf', this.dateOf)
       await axios
         .put(
           `http://localhost:8080/api/madrasa-tic/user/userEditReportAndSubmit/${

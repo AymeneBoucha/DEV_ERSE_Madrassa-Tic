@@ -89,7 +89,7 @@
                        <v-text-field 
                         label="Date"
                         v-model="dateOf"
-                        disabled
+                        
                         prepend-icon="mdi-calendar"
                         type="text"
                         ></v-text-field>
