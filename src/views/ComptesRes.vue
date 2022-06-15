@@ -166,6 +166,8 @@ export default {
       varIndex: "",
       username: "",
       email: "",
+      active: '',
+      isActive: '',
       phoneTel: "",
       due: null,
       date: new Date().toISOString().substr(0, 10),
@@ -271,14 +273,12 @@ Close(){
         this.email = res.data.email;
         this.phoneTel = res.data.phoneTel;
         this.birthDay = res.data.birthDay;
-           console.log(this.defaultSelected)
-           console.log(res.data.roles)
-                   this.defaultSelected = res.data.roles
-
-        // this.defaultSelected.push(res.data.roles)
-                   console.log(this.defaultSelected)
-
-        //this.defaultSelected = res.data.roles;
+        this.defaultSelected = res.data.roles
+        if (res.data.isActive){
+          this.active = true;
+        }else{
+          this.active = false;
+        }
       } catch {
         alert("Missing data from database");
       }

@@ -208,7 +208,6 @@
                             label="Description (optionnelle)"
                             v-model="description"
                             :disabled="disabled"
-                            readonly
                             prepend-icon="description"
                             rows="2"
                         ></v-textarea>
@@ -216,23 +215,84 @@
                         label="Date"
                         v-model="dateOf"
                         prepend-icon="mdi-calendar"
-                        :disabled="disabled"
+                        disabled
                         type="text"
                         ></v-text-field>
-                      <v-text-field 
+                     <div class="lieu">
+                        <div class="form-group">
+                          <label for="site">Site</label>
+                          <select
+                            class="text1 form-control"
+                            name="site"
+                            id="site"
+                            v-model="site"
+                            :disabled="disabled"
+                            @change="onChange1($event)"
+                          >
+                            <option value="" disabled selected>
+                              Selectionnez le site
+                            </option>
+                            <option
+                              v-for="option in sites_options"
+                              v-bind:value="option.value"
+                              v-bind:key="option.text"
+                            >
+                              {{ option.text }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="etage">Etage</label>
+                          <select
+                            class="text2 form-control"
+                            name="etage"
+                            id="etage"
+                            v-model="etage"
+                            :disabled="disabled"
+                            @change="onChange2($event)"
+                          >
+                            <option value="" disabled selected>
+                              Selectionnez l'etage
+                            </option>
+                            <option
+                              v-for="option in etages_options[site]"
+                              v-bind:value="option.text"
+                              v-bind:key="option.text"
+                            >
+                              {{ option.text }}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="salle">Salle</label>
+                          <select
+                            class="text3 form-control"
+                            name="salle"
+                            id="salle"
+                            v-model="salle"
+                            :disabled="disabled"
+                            @change="onChange3($event)"
+                          >
+                            <option value="" disabled selected>
+                              Selectionnez la salle
+                            </option>
+                            <option
+                              v-for="option in salles_options[etage]"
+                              v-bind:value="option.text"
+                              v-bind:key="option.text"
+                            >
+                              {{ option.text }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <v-text-field
                         label="lieu"
                         v-model="localisation"
                         prepend-icon="place"
-                        :disabled="disabled"
                         type="text"
-                        ></v-text-field>
-                        <v-file-input
-                          v-model="picture"
-                          accept="image/*"
-                          :disabled="disabled"
-                          label="Ajouter une image "
-                          prepend-icon="add_a_photo"
-                        ></v-file-input>
+                        disabled
+                      ></v-text-field>
                   </div>
                   <div class="bouttonsD">
                     <v-btn @click="dialog = false, disabled = true, conf = false"  ><span>Annuler</span></v-btn>
@@ -445,6 +505,7 @@ export default {
                 localisation: this.localisation,
                 site : this.site,
                 etage : this.etage,
+                dateOf : this.dateOf,
                 salle : this.salle,
                 picture: this.picture,
             };

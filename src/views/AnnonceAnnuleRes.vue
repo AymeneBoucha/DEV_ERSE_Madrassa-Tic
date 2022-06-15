@@ -369,7 +369,7 @@ div.flex {
   width: 300px;
   margin-top: 7px;
   margin-left: 10px;
-  height: 350px;
+  height: 370px;
 }
 .img {
   align-items: center;

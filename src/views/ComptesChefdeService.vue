@@ -102,15 +102,15 @@
                           @input="setSelected1"
                         ></v-select>
                         <v-card-actions>
-                          <v-btn outlined color="primary">
+                          <v-btn outlined color="primary" @click="actUser()" :disabled="active">
                             <v-icon small left
                               >mdi-checkbox-marked-circle</v-icon
                             >
-                            <span @click="actUser()">Activer le compte</span>
+                            <span  >Activer le compte</span>
                           </v-btn>
-                          <v-btn outlined color="red">
+                          <v-btn outlined color="red" @click="desUser()" :disabled="!active">
                             <v-icon small left> mdi-cancel</v-icon>
-                            <span @click="desUser()">Desactiver le compte</span>
+                            <span >Desactiver le compte</span>
                           </v-btn>
                         </v-card-actions>
                       </v-col>
@@ -175,6 +175,8 @@ export default {
       dialog2: false,
       varIndex: "",
       username: "",
+      active: '',
+      isActive: '',
       email: "",
       phoneTel: "",
       due: null,
@@ -319,7 +321,11 @@ export default {
         this.birthDay = res.data.birthDay;
         this.defaultSelected = res.data.roles;
         this.defaultSelectedC = res.data.categories;
-        //this.defaultSelected = res.data.roles;
+        if (res.data.isActive){
+          this.active = true;
+        }else{
+          this.active = false;
+        }
       } catch {
         alert("Missing data from database");
       }

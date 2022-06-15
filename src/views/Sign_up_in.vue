@@ -295,14 +295,22 @@ export default {
       this.$refs.menu.save(birthDay);
     },
     async login() {
-      try {
-        const res = await axios.post(
+      
+         await axios.post(
           "http://localhost:8080/api/auth/signin",
           this.object
-        );
-        localStorage.se;
+        )
+
+          .then((res) => {
+          console.log(res.status);
+          //alert(res.data.message);
+          if (res.status == 201) {
+            alert('Loged In !')
+                localStorage.se;
         console.log(res);
-        alert("Logged in !");
+
+        
+       
         localStorage.setItem("xaccesstoken", res.data.accessToken);
         setAuthHeader(res.data.accessToken);
         //  router.push({ name: 'Dashboard User' });7
@@ -335,9 +343,17 @@ export default {
               }
           }
         }
-    } catch {
-      alert("Missing data from database");
-    }
+          }  
+            if (res.status == 200) {
+            alert(res.data);
+          }
+          // alert('Votre signalement est envoyé avec succès');
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("Addresse ou mot de passe incorrect.");
+        });
+
     },
     async handleSubmit() {
       //c'est tout ce que dont tu as besoin
@@ -357,7 +373,10 @@ export default {
             "Vous vous etes inscrit!, Veuillez verfiez votre email pour pouvoir vous authentifier "
           );*/
           alert(res.data.message);
-
+          if (res.status === 201){
+            this.step --;
+          }
+          
           this.$router.push("/");
         })
         .catch((err) => {

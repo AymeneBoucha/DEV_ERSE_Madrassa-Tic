@@ -331,7 +331,7 @@ div.flex {
   align-items: center;
   width: 300px;
   margin-left: 10px;
-  height: 350px;
+  height: 370px;
 }
 .img {
   align-items: center;

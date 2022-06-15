@@ -20,7 +20,7 @@
         </v-btn>
       </v-card-actions>
   <div class="containAVR">
-    <v-card class="cardS" min-width="1050" width="350" tile>
+    <v-card class="cardS" min-width="1000" tile>
       <v-list dense >
         <v-list-item-group class="ligAVR" v-model="selectedItem" color="primary">
           <v-list-item>
@@ -158,15 +158,6 @@
                                 disabled
                               ></v-text-field>
                         </div>
-                        <v-file-input
-                          v-model="pictureA"
-                          accept="image/*"
-                          label="Ajouter une image "
-                          prepend-icon="add_a_photo"
-                          disabled
-                          readonly
-                        >
-                        </v-file-input>
                         <div class="bouttonsD">
                           <v-btn @click="dialog3 = false"
                             ><span>Annuler</span></v-btn
@@ -365,7 +356,7 @@ div.flex {
   align-items: center;
   width: 300px;
   margin-left: 10px;
-  height: 350px;
+  height: 370px;
 }
 .img {
   align-items: center;
@@ -425,7 +416,7 @@ div.flex {
   height: 25px;
 }
 .btnsAVR{
-  margin-left: 500px;
+  margin-left: 440px;
   margin-top: -40px;
 }
 </style>

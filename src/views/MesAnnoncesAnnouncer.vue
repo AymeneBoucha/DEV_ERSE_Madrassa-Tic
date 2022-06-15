@@ -175,14 +175,6 @@
                           disabled
                         ></v-text-field>
                   </div>
-                  <v-file-input
-                    v-model="pictureA"
-                    accept="image/*"
-                    label="Ajouter une image "
-                    prepend-icon="add_a_photo"
-                    disabled
-                  >
-                  </v-file-input>
                         <div class="bouttonsD">
                           <v-btn @click="dialog3 = false"
                             ><span>Annuler</span></v-btn
@@ -377,7 +369,7 @@ div.flex {
   width: 300px;
   margin-top: -10px;
   margin-left: 10px;
-  height: 350px;
+  height: 370px;
 }
 .img {
   align-items: center;
@@ -433,5 +425,8 @@ div.flex {
 .btnsMAA{
   margin-left: 298px;
   margin-top: -40px;
+}
+div.card-text.under{
+  margin-bottom: 20px;
 }
 </style>

@@ -132,7 +132,7 @@
                         <v-card class="text-center  cardM">
                 <v-card-text>
                   <div >
-                      <h2 class="subheading">Signalemet attaché</h2>
+                      <h2 class="subheading">Rapport</h2>
                         <v-text-field
                             v-model="titleR"
                             :rules="[v => !!v || 'champs obligatoire']"
@@ -150,30 +150,37 @@
                         ></v-textarea>
                       <div class="date">
                 
-
-                        <v-menu
-                          ref="menu"
-                          v-model="menu"
-                          :close-on-content-click="false"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                        >
-                          <template v-slot:activator="{ on }">
-                            <v-text-field
-                              v-model="dateOfR"
-                              label="Fin de traitement"
-                              prepend-icon="mdi-calendar"
-                              readonly
-                              v-on="on"
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
-                                    v-model="dateOf"
-                                    :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
-                                    min="1950-01-01"
-                                ></v-date-picker>
-                        </v-menu>
+ <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="dateOfR"
+                          label="date "
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="dateOfR"
+                        :max="
+                          new Date(
+                            Date.now() - new Date().getTimezoneOffset() * 60000
+                          )
+                            .toISOString()
+                            .substr(0, 10)
+                        "
+                        min="1950-01-01"
+                        @change="save"
+                      ></v-date-picker>
+                    </v-menu>
                       </div>
                         <v-textarea
                             clearable
@@ -185,6 +192,7 @@
                         ></v-textarea>
                         <v-file-input
                           v-model="pictureR"
+                           @change="onFileSelected"
                           accept="image/*"
                           label="Ajouter une image "
                           prepend-icon="add_a_photo"
@@ -246,10 +254,11 @@
                     class="contRACC"
                     v-on="on"
                   >
-                    <span >Rapport</span>
+                    <span >Signalement attaché</span>
                   </v-btn>
                 </template>
                 <v-card class="text-center cardM">
+                  <h2>Signalement attaché</h2>
                   <v-card-text>
                     <div>
                       <v-text-field
@@ -346,6 +355,9 @@ export default {
       descriptionS: "",
       categoryS: "",
       dateOfS: "",
+      dateOfR:"" ,
+
+      selectedFile:null,
 
       auteurS: "",
       imageS: [],
@@ -524,6 +536,10 @@ export default {
   
   
   methods:{
+     onFileSelected(event){
+      this.selectedFile = event
+      console.log(this.selectedFile)
+    },
         onChange1(event) {
             {this.site = event.target.value;
             this.etage='';
@@ -553,15 +569,16 @@ export default {
       async Confirmer () {
         const acc = localStorage.getItem("xaccesstoken");
         setAuthHeader(acc);
-         const data =  {
-                title: this.titleR,
-                description: this.descriptionR,
-                // category: this.defaultCatégorie,               
-                 material: this.materialR,
-                picture: this.pictureR,
-                dateOf: this.dateOfR.split("T")[0]
-            };
-            console.log(this.materialR)
+      
+
+          const data = new FormData()
+   data.append('picture', this.selectedFile)
+   data.append('title', this.titleR)
+   data.append('description', this.descriptionR)
+   data.append('material', this.materialR)
+   data.append('dateOf', this.dateOfR)
+
+
          await  axios.put(`http://localhost:8080/api/madrasa-tic/employer/employerEditRaportAndSubmit/${this.Rapports[this.varIndex].id}`,data)
         .then(
                 res => {

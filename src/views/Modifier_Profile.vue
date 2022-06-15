@@ -244,10 +244,7 @@ export default {
 .picButton {
   margin-top: 3%;
 }
-.button {
-  margin-top: 3%;
-  right: 18%;
-}
+
 .confirm {
   left: 60%;
   width: 90%;

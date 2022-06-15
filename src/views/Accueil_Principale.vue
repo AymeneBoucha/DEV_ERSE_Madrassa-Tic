@@ -85,7 +85,7 @@
     <br /><br /><br /><br />
     <h1 class="section-title subheading" style="margin-left:12px;">L'actualité</h1>
     <div class="annonce-scroller">
-      <v-flex v-for="(Annonce, index) in Annonces" :key="Annonce.titre">
+      <v-flex v-for="(Annonce, index) in Annonces" :key="Annonce.titre" >
         <v-card class="text-center ma-3 card2 grey lighten-3">
           <div class="annonce-element">
             
@@ -180,26 +180,6 @@
                       ></v-text-field>
                     </div>
                     <div class="date">
-                      <v-text-field
-                        v-model="dateDebutDisplayA"
-                        label="Date d'Affichage"
-                        prepend-icon="mdi-calendar"
-                        readonly
-                        required
-                        v-bind="attrs"
-                        v-on="on"
-                        disabled
-                      ></v-text-field>
-                      <v-text-field
-                        v-model="dateFinDisplayA"
-                        label="Date d'Expiration"
-                        prepend-icon="mdi-calendar"
-                        readonly
-                        required
-                        v-bind="attrs"
-                        v-on="on"
-                        disabled
-                      ></v-text-field>
                     </div>
                     <div class="bouttonsD">
                       <v-btn @click="dialog3 = false"
@@ -831,5 +811,8 @@ export default {
 .Dt {
   position: relative;
   left: 2cm;
+}
+div.flex{
+  max-width: 320px;
 }
 </style>

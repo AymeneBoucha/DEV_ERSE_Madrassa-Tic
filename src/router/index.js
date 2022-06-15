@@ -74,7 +74,7 @@ const routes = [
     name: 'aide',
     component: aide,
     meta: {
-      hideNavbar: true,
+      hideNavbar: false,
      }
   },
   {

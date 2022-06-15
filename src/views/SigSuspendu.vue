@@ -11,7 +11,7 @@
           <v-icon>mdi-sync</v-icon>
           <span>En Cours de Traitement</span>
         </v-btn>
-        <v-btn outlined color="green" class="btn" to="SigTraité">
+        <v-btn outlined color="green" class="btn" to="SigTraite">
           <v-icon>mdi-check-outline</v-icon>
           <span>Signalements Traités</span>
         </v-btn>

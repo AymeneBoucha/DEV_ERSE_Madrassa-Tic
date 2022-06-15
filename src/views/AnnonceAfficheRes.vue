@@ -139,15 +139,6 @@
                           disabled
                         ></v-text-field>
                   </div>
-                  <v-file-input
-                    v-model="pictureA"
-                    accept="image/*"
-                    label="Ajouter une image "
-                    prepend-icon="add_a_photo"
-                    disabled
-                    readonly
-                  >
-                  </v-file-input>
                         <div class="bouttonsD">
                           <v-btn @click="dialog3 = false"
                             ><span>Annuler</span></v-btn

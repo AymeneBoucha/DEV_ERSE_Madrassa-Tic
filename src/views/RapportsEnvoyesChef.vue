@@ -433,7 +433,7 @@ export default {
         this.materialR = res.data.material;
         this.descriptionR = res.data.description;
         this.dateOfR = res.data.dateOf.split("T")[0];
-        this.picture = res.data.picture;
+        this.imageS = res.data.picture;
       } catch {
         alert("Missing data from database");
       }
@@ -502,5 +502,8 @@ export default {
 .btnsREC{
   position: relative;
   margin-left: 600px;
+}
+div.flex{
+  max-width: 350px;
 }
 </style>

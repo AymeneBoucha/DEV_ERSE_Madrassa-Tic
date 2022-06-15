@@ -92,13 +92,6 @@
                         disabled
                         type="text"
                       ></v-text-field>
-                      <v-text-field
-                        label="image"
-                        v-model="picture"
-                        prepend-icon="place"
-                        readonly
-                        type="text"
-                      ></v-text-field>
                     </div>
                     <div class="bouttonsD">
                       <v-btn class="" @click="dialog1 = false"
